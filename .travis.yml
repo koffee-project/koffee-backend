@@ -7,7 +7,7 @@ matrix:
     # Headed Linux
     - os: linux
       dist: trusty
-      jdk: openjdk14
+      jdk: openjdk13
 
 before_install:
   - chmod +x gradlew
