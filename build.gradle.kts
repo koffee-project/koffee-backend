@@ -44,6 +44,7 @@ dependencies {
     implementation("io.ktor:ktor-client-core:$ktor_version")
     implementation("io.ktor:ktor-client-core-jvm:$ktor_version")
     implementation("io.ktor:ktor-client-cio:$ktor_version")
+    implementation("org.litote.kmongo:kmongo-coroutine:3.12.2")
     testImplementation("io.ktor:ktor-server-tests:$ktor_version")
     testImplementation("io.ktor:ktor-client-mock:$ktor_version")
     testImplementation("io.ktor:ktor-client-mock-jvm:$ktor_version")
@@ -55,6 +56,6 @@ tasks {
     }
 
     withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
-        archiveBaseName.set("koffee-backend")
+        archiveFileName.set("${project.name}.jar")
     }
 }

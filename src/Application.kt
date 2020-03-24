@@ -10,6 +10,9 @@ import io.ktor.http.*
 import io.ktor.auth.*
 import com.fasterxml.jackson.databind.*
 import io.ktor.jackson.*
+import org.litote.kmongo.coroutine.coroutine
+import org.litote.kmongo.eq
+import org.litote.kmongo.reactivestreams.KMongo
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
@@ -40,6 +43,24 @@ fun Application.module(testing: Boolean = false) {
             call.respondText("HELLO WORLD!", contentType = ContentType.Text.Plain)
         }
 
+        get("/users") {
+            val users = users.find().toList()
+            call.respond(users)
+        }
+
+        get("/users/{name}") {
+            val userName = call.parameters["name"]!!
+            val user = users.findOne(filter = User::name eq userName)
+            val response = user ?: "User does not exist"
+            call.respond(response)
+        }
+
+        post("/users") {
+            val user = call.receive<User>()
+            val result = users.insertOne(user)
+            call.respond(result)
+        }
+
         install(StatusPages) {
             exception<AuthenticationException> {
                 call.respond(HttpStatusCode.Unauthorized)
@@ -57,3 +78,9 @@ fun Application.module(testing: Boolean = false) {
 
 class AuthenticationException : RuntimeException()
 class AuthorizationException : RuntimeException()
+
+data class User(val name: String)
+
+val client = KMongo.createClient("mongodb://mongodb:27017").coroutine
+val database = client.getDatabase("koffee-backend")
+val users = database.getCollection<User>()
