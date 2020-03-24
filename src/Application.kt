@@ -47,7 +47,6 @@ fun Application.module(testing: Boolean = false) {
             exception<AuthorizationException> {
                 call.respond(HttpStatusCode.Forbidden)
             }
-
         }
 
         get("/json/jackson") {

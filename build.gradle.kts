@@ -49,10 +49,12 @@ dependencies {
     testImplementation("io.ktor:ktor-client-mock-jvm:$ktor_version")
 }
 
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
-}
+tasks {
+    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+        kotlinOptions.jvmTarget = "1.8"
+    }
 
-tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>  {
-    archiveBaseName.set("${project.name}-all")
+    withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
+        archiveBaseName.set("koffee-backend")
+    }
 }
