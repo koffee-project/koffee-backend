@@ -1,24 +1,43 @@
 package eu.yeger
 
-import io.ktor.application.*
-import io.ktor.response.*
-import io.ktor.request.*
-import io.ktor.features.*
-import org.slf4j.event.*
-import io.ktor.routing.*
-import io.ktor.http.*
-import io.ktor.auth.*
-import com.fasterxml.jackson.databind.*
-import io.ktor.jackson.*
-import org.litote.kmongo.coroutine.coroutine
-import org.litote.kmongo.eq
-import org.litote.kmongo.reactivestreams.KMongo
+import com.fasterxml.jackson.databind.SerializationFeature
+import eu.yeger.di.koffeeModule
+import eu.yeger.model.User
+import eu.yeger.service.UserService
+import eu.yeger.service.respondWithResult
+import io.ktor.application.Application
+import io.ktor.application.call
+import io.ktor.application.install
+import io.ktor.auth.Authentication
+import io.ktor.features.CallLogging
+import io.ktor.features.ContentNegotiation
+import io.ktor.features.DefaultHeaders
+import io.ktor.features.StatusPages
+import io.ktor.http.ContentType
+import io.ktor.http.HttpStatusCode
+import io.ktor.jackson.jackson
+import io.ktor.request.path
+import io.ktor.request.receive
+import io.ktor.response.respond
+import io.ktor.response.respondText
+import io.ktor.routing.get
+import io.ktor.routing.post
+import io.ktor.routing.routing
+import org.koin.ktor.ext.Koin
+import org.koin.ktor.ext.inject
+import org.slf4j.event.Level
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
 @Suppress("unused") // Referenced in application.conf
 @kotlin.jvm.JvmOverloads
 fun Application.module(testing: Boolean = false) {
+
+    install(Koin) {
+        modules(koffeeModule)
+    }
+
+    val userService: UserService by inject()
 
     install(CallLogging) {
         level = Level.INFO
@@ -44,24 +63,27 @@ fun Application.module(testing: Boolean = false) {
         }
 
         get("/users") {
-            val users = users.find().toList()
+            val users = userService.getAllUsers()
             call.respond(users)
         }
 
         get("/users/{name}") {
-            val userName = call.parameters["name"]!!
-            val user = users.findOne(filter = User::name eq userName)
-            val response = user ?: "User does not exist"
-            call.respond(response)
+            val name = call.parameters["name"]!!
+            val result = userService.getUserByName(name = name)
+            call.respondWithResult(result)
         }
 
         post("/users") {
             val user = call.receive<User>()
-            val result = users.insertOne(user)
-            call.respond(result)
+            val result = userService.saveUser(user)
+            call.respondWithResult(result)
         }
 
         install(StatusPages) {
+            exception<Throwable> { cause ->
+                call.respond(HttpStatusCode.InternalServerError)
+                throw cause
+            }
             exception<AuthenticationException> {
                 call.respond(HttpStatusCode.Unauthorized)
             }
@@ -69,18 +91,8 @@ fun Application.module(testing: Boolean = false) {
                 call.respond(HttpStatusCode.Forbidden)
             }
         }
-
-        get("/json/jackson") {
-            call.respond(mapOf("hello" to "world"))
-        }
     }
 }
 
 class AuthenticationException : RuntimeException()
 class AuthorizationException : RuntimeException()
-
-data class User(val name: String)
-
-val client = KMongo.createClient("mongodb://mongodb:27017").coroutine
-val database = client.getDatabase("koffee-backend")
-val users = database.getCollection<User>()
