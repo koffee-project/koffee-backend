@@ -13,9 +13,9 @@ import io.ktor.http.headersOf
 import io.ktor.server.testing.handleRequest
 import io.ktor.server.testing.withTestApplication
 import io.ktor.utils.io.ByteReadChannel
-import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlinx.coroutines.runBlocking
 
 class ApplicationTest {
 
