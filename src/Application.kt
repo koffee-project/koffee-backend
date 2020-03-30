@@ -18,6 +18,7 @@ import io.ktor.request.path
 import io.ktor.response.respond
 import io.ktor.response.respondText
 import io.ktor.routing.get
+import io.ktor.routing.route
 import io.ktor.routing.routing
 import org.koin.ktor.ext.Koin
 import org.slf4j.event.Level
@@ -50,11 +51,13 @@ fun Application.module(testing: Boolean = false) {
     }
 
     routing {
-        get("/") {
-            call.respondText("HELLO WORLD!", contentType = ContentType.Text.Plain)
-        }
+        route("/") {
+            get {
+                call.respondText("HELLO WORLD!", contentType = ContentType.Text.Plain)
+            }
 
-        userRoutes()
+            userRoutes()
+        }
 
         install(StatusPages) {
             exception<Throwable> { cause ->
