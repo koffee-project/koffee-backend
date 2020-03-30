@@ -1,6 +1,6 @@
-koffee-backend
+# koffee-backend
 
-
+[![Build Status](https://travis-ci.com/DerYeger/koffee-backend.svg?token=juB9bV6tFyoA5v7Hx1o4&branch=develop)](https://travis-ci.com/DerYeger/koffee-backend)
 
 ### Timetable
 
