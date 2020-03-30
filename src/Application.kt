@@ -2,9 +2,7 @@ package eu.yeger
 
 import com.fasterxml.jackson.databind.SerializationFeature
 import eu.yeger.di.koffeeModule
-import eu.yeger.model.User
-import eu.yeger.service.UserService
-import eu.yeger.service.respondWithResult
+import eu.yeger.routing.userRoutes
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -17,14 +15,11 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.jackson.jackson
 import io.ktor.request.path
-import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.response.respondText
 import io.ktor.routing.get
-import io.ktor.routing.post
 import io.ktor.routing.routing
 import org.koin.ktor.ext.Koin
-import org.koin.ktor.ext.inject
 import org.slf4j.event.Level
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
@@ -32,12 +27,9 @@ fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 @Suppress("unused") // Referenced in application.conf
 @kotlin.jvm.JvmOverloads
 fun Application.module(testing: Boolean = false) {
-
     install(Koin) {
         modules(koffeeModule)
     }
-
-    val userService: UserService by inject()
 
     install(CallLogging) {
         level = Level.INFO
@@ -62,22 +54,7 @@ fun Application.module(testing: Boolean = false) {
             call.respondText("HELLO WORLD!", contentType = ContentType.Text.Plain)
         }
 
-        get("/users") {
-            val users = userService.getAllUsers()
-            call.respond(users)
-        }
-
-        get("/users/{name}") {
-            val name = call.parameters["name"]!!
-            val result = userService.getUserByName(name = name)
-            call.respondWithResult(result)
-        }
-
-        post("/users") {
-            val user = call.receive<User>()
-            val result = userService.saveUser(user)
-            call.respondWithResult(result)
-        }
+        userRoutes()
 
         install(StatusPages) {
             exception<Throwable> { cause ->
