@@ -19,7 +19,7 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
                 data = null
             )
             else -> Result(
-                statusCode = HttpStatusCode.Created,
+                statusCode = HttpStatusCode.OK,
                 data = user
             )
         }
