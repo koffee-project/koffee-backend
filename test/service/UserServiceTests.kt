@@ -1,6 +1,5 @@
 package eu.yeger.service
 
-import eu.yeger.model.Item
 import eu.yeger.model.User
 import eu.yeger.repository.TestUserRepository
 import io.ktor.http.HttpStatusCode
