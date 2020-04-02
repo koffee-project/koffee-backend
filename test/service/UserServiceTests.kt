@@ -1,6 +1,7 @@
 package eu.yeger.service
 
 import eu.yeger.model.User
+import eu.yeger.repository.TestUserRepository
 import io.ktor.http.HttpStatusCode
 import kotlin.test.BeforeTest
 import kotlin.test.Test

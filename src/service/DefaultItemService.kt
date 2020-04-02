@@ -6,11 +6,20 @@ import eu.yeger.repository.ItemRepository
 import io.ktor.http.HttpStatusCode
 
 class DefaultItemService(private val itemRepository: ItemRepository) : ItemService {
+
     override suspend fun getAllItems(): Result<List<Item>> =
         Result(
             status = HttpStatusCode.OK,
             data = itemRepository.getAll()
         )
+
+    override suspend fun getItemByName(name: String): Result<Item?> =
+        itemRepository.getItemByName(name = name).let { item ->
+            Result(
+                status = if (item == null) HttpStatusCode.NotFound else HttpStatusCode.OK,
+                data = item
+            )
+        }
 
     override suspend fun createItem(item: Item): Result<String> =
         when (itemRepository.hasItemWithName(name = item.name)) {

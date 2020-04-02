@@ -1,7 +1,6 @@
-package eu.yeger.service
+package eu.yeger.repository
 
 import eu.yeger.model.User
-import eu.yeger.repository.UserRepository
 
 class TestUserRepository : UserRepository {
 

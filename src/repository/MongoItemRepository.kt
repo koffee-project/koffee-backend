@@ -12,8 +12,11 @@ class MongoItemRepository(database: CoroutineDatabase) : ItemRepository {
     override suspend fun getAll(): List<Item> =
         itemCollection.find().toList()
 
+    override suspend fun getItemByName(name: String): Item? =
+        itemCollection.findOne(Item::name eq name)
+
     override suspend fun hasItemWithName(name: String): Boolean =
-        itemCollection.findOne(Item::name eq name) != null
+        getItemByName(name) != null
 
     override suspend fun insert(item: Item) {
         itemCollection.upsert(item.name, item)
