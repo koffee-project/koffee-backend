@@ -9,18 +9,18 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
 
     override suspend fun getAllUsers(): Result<List<User>> =
         Result(
-            statusCode = HttpStatusCode.OK,
+            status = HttpStatusCode.OK,
             data = userRepository.getAll()
         )
 
     override suspend fun getUserByName(name: String): Result<User?> =
         when (val user = userRepository.getByName(name = name)) {
             null -> Result(
-                statusCode = HttpStatusCode.NotFound,
+                status = HttpStatusCode.NotFound,
                 data = null
             )
             else -> Result(
-                statusCode = HttpStatusCode.OK,
+                status = HttpStatusCode.OK,
                 data = user
             )
         }
@@ -30,12 +30,12 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
             null -> {
                 userRepository.insert(user)
                 Result(
-                    statusCode = HttpStatusCode.Created,
+                    status = HttpStatusCode.Created,
                     data = "Created $user"
                 )
             }
             else -> Result(
-                statusCode = HttpStatusCode.Conflict,
+                status = HttpStatusCode.Conflict,
                 data = "User with that name already exists"
             )
         }

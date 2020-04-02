@@ -21,11 +21,11 @@ class UserServiceTests {
         runBlocking {
             // when user is saved
             val user = User(name = "UserName")
-            assertEquals(HttpStatusCode.Created, userService.saveUser(user).statusCode)
+            assertEquals(HttpStatusCode.Created, userService.saveUser(user).status)
 
             // then user can be retrieved
             val result = userService.getUserByName(user.name)
-            assertEquals(HttpStatusCode.OK, result.statusCode)
+            assertEquals(HttpStatusCode.OK, result.status)
             assertEquals(user, result.data)
         }
     }
@@ -35,13 +35,13 @@ class UserServiceTests {
         runBlocking {
             // when user is saved
             val user = User(name = "UserName")
-            assertEquals(HttpStatusCode.Created, userService.saveUser(user).statusCode)
+            assertEquals(HttpStatusCode.Created, userService.saveUser(user).status)
 
             // then user can not be saved again
             val result = userService.getUserByName(user.name)
-            assertEquals(HttpStatusCode.OK, result.statusCode)
+            assertEquals(HttpStatusCode.OK, result.status)
             assertEquals(user, result.data)
-            assertEquals(HttpStatusCode.Conflict, userService.saveUser(user).statusCode)
+            assertEquals(HttpStatusCode.Conflict, userService.saveUser(user).status)
         }
     }
 
@@ -51,12 +51,12 @@ class UserServiceTests {
             // when multiple users are saved
             val firstUser = User(name = "FirstUser")
             val secondUser = User(name = "SecondUser")
-            assertEquals(HttpStatusCode.Created, userService.saveUser(firstUser).statusCode)
-            assertEquals(HttpStatusCode.Created, userService.saveUser(secondUser).statusCode)
+            assertEquals(HttpStatusCode.Created, userService.saveUser(firstUser).status)
+            assertEquals(HttpStatusCode.Created, userService.saveUser(secondUser).status)
 
             // then all users are retrieved
             val result = userService.getAllUsers()
-            assertEquals(HttpStatusCode.OK, result.statusCode)
+            assertEquals(HttpStatusCode.OK, result.status)
             val expected = listOf(firstUser, secondUser).sortedBy(User::name)
             val actual = result.data.sortedBy(User::name)
             assertEquals(expected, actual)
