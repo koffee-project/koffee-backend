@@ -8,5 +8,7 @@ interface UserRepository {
 
     suspend fun getByName(name: String): User?
 
+    suspend fun hasUserWithName(name: String): Boolean
+
     suspend fun insert(user: User)
 }

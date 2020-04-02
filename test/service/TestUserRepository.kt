@@ -11,6 +11,9 @@ class TestUserRepository : UserRepository {
 
     override suspend fun getByName(name: String): User? = users[name]
 
+    override suspend fun hasUserWithName(name: String): Boolean =
+        getByName(name) != null
+
     override suspend fun insert(user: User) {
         users[user.name] = user
     }

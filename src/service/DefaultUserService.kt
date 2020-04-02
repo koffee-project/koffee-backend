@@ -14,29 +14,25 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
         )
 
     override suspend fun getUserByName(name: String): Result<User?> =
-        when (val user = userRepository.getByName(name = name)) {
-            null -> Result(
-                status = HttpStatusCode.NotFound,
-                data = null
-            )
-            else -> Result(
-                status = HttpStatusCode.OK,
+        userRepository.getByName(name = name).let { user ->
+            Result(
+                status = if (user == null) HttpStatusCode.NotFound else HttpStatusCode.OK,
                 data = user
             )
         }
 
     override suspend fun saveUser(user: User): Result<String> =
-        when (getUserByName(name = user.name).data) {
-            null -> {
+        when (userRepository.hasUserWithName(name = user.name)) {
+            true -> Result(
+                status = HttpStatusCode.Conflict,
+                data = "User with that name already exists"
+            )
+            false -> {
                 userRepository.insert(user)
                 Result(
                     status = HttpStatusCode.Created,
                     data = "Created $user"
                 )
             }
-            else -> Result(
-                status = HttpStatusCode.Conflict,
-                data = "User with that name already exists"
-            )
         }
 }

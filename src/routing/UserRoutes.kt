@@ -5,7 +5,6 @@ import eu.yeger.model.respondWithResult
 import eu.yeger.service.UserService
 import io.ktor.application.call
 import io.ktor.request.receive
-import io.ktor.response.respond
 import io.ktor.routing.*
 import org.koin.ktor.ext.inject
 
@@ -15,7 +14,7 @@ fun Route.userRoutes() {
     route("users") {
         get {
             val users = userService.getAllUsers()
-            call.respond(users)
+            call.respondWithResult(users)
         }
 
         post {

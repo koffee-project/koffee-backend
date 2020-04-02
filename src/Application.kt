@@ -1,7 +1,10 @@
 package eu.yeger
 
 import com.fasterxml.jackson.databind.SerializationFeature
-import eu.yeger.di.koffeeModule
+import eu.yeger.di.databaseModule
+import eu.yeger.di.repositoryModule
+import eu.yeger.di.serviceModule
+import eu.yeger.routing.itemRoutes
 import eu.yeger.routing.userRoutes
 import io.ktor.application.Application
 import io.ktor.application.call
@@ -29,7 +32,7 @@ fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 @kotlin.jvm.JvmOverloads
 fun Application.module(testing: Boolean = false) {
     install(Koin) {
-        modules(koffeeModule)
+        modules(serviceModule + repositoryModule + databaseModule)
     }
 
     install(CallLogging) {
@@ -57,6 +60,7 @@ fun Application.module(testing: Boolean = false) {
             }
 
             userRoutes()
+            itemRoutes()
         }
 
         install(StatusPages) {
