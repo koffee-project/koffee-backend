@@ -35,6 +35,12 @@ fun Route.userRoutes() {
                 val result = userService.getUserByName(name = name)
                 call.respondWithResult(result)
             }
+
+            delete {
+                val name = call.parameters["name"]!!
+                val result = userService.deleteUserByName(name)
+                call.respondWithResult(result)
+            }
         }
     }
 }

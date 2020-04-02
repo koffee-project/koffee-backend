@@ -16,4 +16,8 @@ class TestUserRepository : UserRepository {
     override suspend fun insert(user: User) {
         users[user.name] = user
     }
+
+    override suspend fun removeByName(name: String) {
+        users.remove(name)
+    }
 }

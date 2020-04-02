@@ -11,4 +11,6 @@ interface ItemRepository {
     suspend fun hasItemWithName(name: String): Boolean
 
     suspend fun insert(item: Item)
+
+    suspend fun removeByName(name: String)
 }

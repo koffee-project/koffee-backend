@@ -13,12 +13,16 @@ class MongoItemRepository(database: CoroutineDatabase) : ItemRepository {
         itemCollection.find().toList()
 
     override suspend fun getItemByName(name: String): Item? =
-        itemCollection.findOne(Item::name eq name)
+        itemCollection.findOne(filter = Item::name eq name)
 
     override suspend fun hasItemWithName(name: String): Boolean =
         getItemByName(name) != null
 
     override suspend fun insert(item: Item) {
-        itemCollection.upsert(item.name, item)
+        itemCollection.upsert(id = item.name, entity = item)
+    }
+
+    override suspend fun removeByName(name: String) {
+        itemCollection.deleteOneById(id = name)
     }
 }

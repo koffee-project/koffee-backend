@@ -13,12 +13,16 @@ class MongoUserRepository(database: CoroutineDatabase) : UserRepository {
         userCollection.find().toList()
 
     override suspend fun getByName(name: String): User? =
-        userCollection.findOne(User::name eq name)
+        userCollection.findOne(filter = User::name eq name)
 
     override suspend fun hasUserWithName(name: String): Boolean =
         getByName(name) != null
 
     override suspend fun insert(user: User) {
-        userCollection.upsert(user.name, user)
+        userCollection.upsert(id = user.name, entity = user)
+    }
+
+    override suspend fun removeByName(name: String) {
+        userCollection.deleteOneById(id = name)
     }
 }

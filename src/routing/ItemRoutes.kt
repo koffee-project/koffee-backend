@@ -28,5 +28,19 @@ fun Route.itemRoutes() {
             val result = itemService.updateItem(item)
             call.respondWithResult(result)
         }
+
+        route("{name}") {
+            get {
+                val name = call.parameters["name"]!!
+                val result = itemService.getItemByName(name)
+                call.respondWithResult(result)
+            }
+
+            delete {
+                val name = call.parameters["name"]!!
+                val result = itemService.deleteItemByName(name)
+                call.respondWithResult(result)
+            }
+        }
     }
 }

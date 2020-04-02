@@ -11,4 +11,6 @@ interface UserRepository {
     suspend fun hasUserWithName(name: String): Boolean
 
     suspend fun insert(user: User)
+
+    suspend fun removeByName(name: String)
 }

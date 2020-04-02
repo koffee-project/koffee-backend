@@ -50,4 +50,19 @@ class DefaultItemService(private val itemRepository: ItemRepository) : ItemServi
                 data = "Item with that name does not exist"
             )
         }
+
+    override suspend fun deleteItemByName(name: String): Result<String> =
+        when (itemRepository.hasItemWithName(name = name)) {
+            true -> {
+                itemRepository.removeByName(name)
+                Result(
+                    status = HttpStatusCode.OK,
+                    data = "Deleted $name"
+                )
+            }
+            false -> Result(
+                status = HttpStatusCode.NotFound,
+                data = "Item with that name does not exist"
+            )
+        }
 }

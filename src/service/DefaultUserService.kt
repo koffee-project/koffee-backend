@@ -50,4 +50,19 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
                 data = "User with that name does not exist"
             )
         }
+
+    override suspend fun deleteUserByName(name: String): Result<String> =
+        when (userRepository.hasUserWithName(name = name)) {
+            true -> {
+                userRepository.removeByName(name)
+                Result(
+                    status = HttpStatusCode.OK,
+                    data = "Deleted $name"
+                )
+            }
+            false -> Result(
+                status = HttpStatusCode.NotFound,
+                data = "User with that name does not exist"
+            )
+        }
 }

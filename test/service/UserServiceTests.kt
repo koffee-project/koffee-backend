@@ -1,5 +1,6 @@
 package eu.yeger.service
 
+import eu.yeger.model.Item
 import eu.yeger.model.User
 import eu.yeger.repository.TestUserRepository
 import io.ktor.http.HttpStatusCode
@@ -71,6 +72,35 @@ class UserServiceTests {
 
             // then user was not created either
             val result = userService.getUserByName(user.name)
+            assertEquals(HttpStatusCode.NotFound, result.status)
+            assertEquals(null, result.data)
+        }
+    }
+
+    @Test
+    fun `test deleting user`() {
+        runBlocking {
+            // when user is created and deleted
+            val user = User(name = "UserName", balance = 100.0)
+            assertEquals(HttpStatusCode.Created, userService.createUser(user).status)
+            assertEquals(HttpStatusCode.OK, userService.deleteUserByName(user.name).status)
+
+            // then user can not be retrieved
+            val result = userService.getUserByName(user.name)
+            assertEquals(HttpStatusCode.NotFound, result.status)
+            assertEquals(null, result.data)
+        }
+    }
+
+    @Test
+    fun `test deleting user that does not exist`() {
+        runBlocking {
+            val name = "UserName"
+            // when non-existent user is deleted
+            assertEquals(HttpStatusCode.NotFound, userService.deleteUserByName(name).status)
+
+            // then user was not created either
+            val result = userService.getUserByName(name)
             assertEquals(HttpStatusCode.NotFound, result.status)
             assertEquals(null, result.data)
         }

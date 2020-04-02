@@ -17,4 +17,8 @@ class TestItemRepository : ItemRepository {
     override suspend fun insert(item: Item) {
         items[item.name] = item
     }
+
+    override suspend fun removeByName(name: String) {
+        items.remove(name)
+    }
 }

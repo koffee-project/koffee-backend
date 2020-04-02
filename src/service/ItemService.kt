@@ -12,4 +12,6 @@ interface ItemService {
     suspend fun createItem(item: Item): Result<String>
 
     suspend fun updateItem(item: Item): Result<String>
+
+    suspend fun deleteItemByName(name: String): Result<String>
 }

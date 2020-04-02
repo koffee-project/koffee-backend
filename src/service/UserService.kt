@@ -12,4 +12,6 @@ interface UserService {
     suspend fun createUser(user: User): Result<String>
 
     suspend fun updateUser(user: User): Result<String>
+
+    suspend fun deleteUserByName(name: String): Result<String>
 }
