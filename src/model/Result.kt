@@ -10,6 +10,5 @@ data class Result<T>(
 )
 
 suspend fun ApplicationCall.respondWithResult(result: Result<*>) {
-    response.status(result.statusCode)
-    respond(result)
+    respond(status = result.statusCode, message = result)
 }
