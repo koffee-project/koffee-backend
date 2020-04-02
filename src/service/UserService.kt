@@ -9,5 +9,7 @@ interface UserService {
 
     suspend fun getUserByName(name: String): Result<User?>
 
-    suspend fun saveUser(user: User): Result<String>
+    suspend fun createUser(user: User): Result<String>
+
+    suspend fun updateUser(user: User): Result<String>
 }

@@ -1,8 +1,8 @@
 package eu.yeger.routing
 
 import eu.yeger.model.User
-import eu.yeger.model.respondWithResult
 import eu.yeger.service.UserService
+import eu.yeger.utility.respondWithResult
 import io.ktor.application.call
 import io.ktor.request.receive
 import io.ktor.routing.*
@@ -19,7 +19,13 @@ fun Route.userRoutes() {
 
         post {
             val user = call.receive<User>()
-            val result = userService.saveUser(user)
+            val result = userService.createUser(user)
+            call.respondWithResult(result)
+        }
+
+        put {
+            val user = call.receive<User>()
+            val result = userService.updateUser(user)
             call.respondWithResult(result)
         }
 

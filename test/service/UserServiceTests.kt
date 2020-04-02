@@ -18,11 +18,11 @@ class UserServiceTests {
     }
 
     @Test
-    fun `test saving user`() {
+    fun `test creating user`() {
         runBlocking {
-            // when user is saved
-            val user = User(name = "UserName")
-            assertEquals(HttpStatusCode.Created, userService.saveUser(user).status)
+            // when user is created
+            val user = User(name = "UserName", balance = 100.0)
+            assertEquals(HttpStatusCode.Created, userService.createUser(user).status)
 
             // then user can be retrieved
             val result = userService.getUserByName(user.name)
@@ -32,28 +32,58 @@ class UserServiceTests {
     }
 
     @Test
-    fun `test saving user twice`() {
+    fun `test creating user twice`() {
         runBlocking {
-            // when user is saved
-            val user = User(name = "UserName")
-            assertEquals(HttpStatusCode.Created, userService.saveUser(user).status)
+            // when user is created
+            val user = User(name = "UserName", balance = 100.0)
+            assertEquals(HttpStatusCode.Created, userService.createUser(user).status)
 
-            // then user can not be saved again
+            // then user can not be created again
             val result = userService.getUserByName(user.name)
             assertEquals(HttpStatusCode.OK, result.status)
             assertEquals(user, result.data)
-            assertEquals(HttpStatusCode.Conflict, userService.saveUser(user).status)
+            assertEquals(HttpStatusCode.Conflict, userService.createUser(user).status)
+        }
+    }
+
+    @Test
+    fun `test updating user`() {
+        runBlocking {
+            // when user is created and updated
+            val user = User(name = "UserName", balance = 100.0)
+            assertEquals(HttpStatusCode.Created, userService.createUser(user).status)
+            val updatedItem = user.copy(balance = 50.0)
+            assertEquals(HttpStatusCode.OK, userService.updateUser(updatedItem).status)
+
+            // then retrieved user has new values
+            val result = userService.getUserByName(user.name)
+            assertEquals(HttpStatusCode.OK, result.status)
+            assertEquals(updatedItem, result.data)
+        }
+    }
+
+    @Test
+    fun `test updating user that does not exist`() {
+        runBlocking {
+            // when non-existent user is updated
+            val user = User(name = "UserName", balance = 100.0)
+            assertEquals(HttpStatusCode.Conflict, userService.updateUser(user).status)
+
+            // then user was not created either
+            val result = userService.getUserByName(user.name)
+            assertEquals(HttpStatusCode.NotFound, result.status)
+            assertEquals(null, result.data)
         }
     }
 
     @Test
     fun `test getting all users`() {
         runBlocking {
-            // when multiple users are saved
-            val firstUser = User(name = "FirstUser")
-            val secondUser = User(name = "SecondUser")
-            assertEquals(HttpStatusCode.Created, userService.saveUser(firstUser).status)
-            assertEquals(HttpStatusCode.Created, userService.saveUser(secondUser).status)
+            // when multiple users are created
+            val firstUser = User(name = "FirstUser", balance = 100.0)
+            val secondUser = User(name = "SecondUser", balance = 200.0)
+            assertEquals(HttpStatusCode.Created, userService.createUser(firstUser).status)
+            assertEquals(HttpStatusCode.Created, userService.createUser(secondUser).status)
 
             // then all users are retrieved
             val result = userService.getAllUsers()

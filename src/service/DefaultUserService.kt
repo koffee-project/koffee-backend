@@ -21,7 +21,7 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
             )
         }
 
-    override suspend fun saveUser(user: User): Result<String> =
+    override suspend fun createUser(user: User): Result<String> =
         when (userRepository.hasUserWithName(name = user.name)) {
             true -> Result(
                 status = HttpStatusCode.Conflict,
@@ -34,5 +34,20 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
                     data = "Created $user"
                 )
             }
+        }
+
+    override suspend fun updateUser(user: User): Result<String> =
+        when (userRepository.hasUserWithName(name = user.name)) {
+            true -> {
+                userRepository.insert(user)
+                Result(
+                    status = HttpStatusCode.OK,
+                    data = "Updated $user"
+                )
+            }
+            false -> Result(
+                status = HttpStatusCode.Conflict,
+                data = "User with that name does not exist"
+            )
         }
 }
