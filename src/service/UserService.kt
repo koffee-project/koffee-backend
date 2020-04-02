@@ -7,11 +7,11 @@ interface UserService {
 
     suspend fun getAllUsers(): Result<List<User>>
 
-    suspend fun getUserByName(name: String): Result<User?>
+    suspend fun getUserById(id: String): Result<User?>
 
     suspend fun createUser(user: User): Result<String>
 
     suspend fun updateUser(user: User): Result<String>
 
-    suspend fun deleteUserByName(name: String): Result<String>
+    suspend fun deleteUserById(id: String): Result<String>
 }

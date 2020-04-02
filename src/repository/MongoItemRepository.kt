@@ -3,7 +3,6 @@ package eu.yeger.repository
 import eu.yeger.model.Item
 import eu.yeger.utility.upsert
 import org.litote.kmongo.coroutine.CoroutineDatabase
-import org.litote.kmongo.eq
 
 class MongoItemRepository(database: CoroutineDatabase) : ItemRepository {
 
@@ -12,17 +11,17 @@ class MongoItemRepository(database: CoroutineDatabase) : ItemRepository {
     override suspend fun getAll(): List<Item> =
         itemCollection.find().toList()
 
-    override suspend fun getItemByName(name: String): Item? =
-        itemCollection.findOne(filter = Item::name eq name)
+    override suspend fun getById(id: String): Item? =
+        itemCollection.findOneById(id)
 
-    override suspend fun hasItemWithName(name: String): Boolean =
-        getItemByName(name) != null
+    override suspend fun hasItemWithId(id: String): Boolean =
+        getById(id) != null
 
     override suspend fun insert(item: Item) {
-        itemCollection.upsert(id = item.name, entity = item)
+        itemCollection.upsert(entity = item)
     }
 
-    override suspend fun removeByName(name: String) {
-        itemCollection.deleteOneById(id = name)
+    override suspend fun removeById(id: String) {
+        itemCollection.deleteOneById(id = id)
     }
 }

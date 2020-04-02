@@ -21,11 +21,11 @@ class ItemServiceTests {
     fun `test creating item`() {
         runBlocking {
             // when item is created
-            val item = Item(name = "Water", amount = 42, price = 0.5)
+            val item = Item(id = "water", name = "Water", amount = 42, price = 0.5)
             assertEquals(HttpStatusCode.Created, itemService.createItem(item).status)
 
             // then item can be retrieved
-            val result = itemService.getItemByName(item.name)
+            val result = itemService.getItemById(item.id)
             assertEquals(HttpStatusCode.OK, result.status)
             assertEquals(item, result.data)
         }
@@ -35,11 +35,11 @@ class ItemServiceTests {
     fun `test creating item twice`() {
         runBlocking {
             // when item is created
-            val item = Item(name = "Water", amount = 42, price = 0.5)
+            val item = Item(id = "water", name = "Water", amount = 42, price = 0.5)
             assertEquals(HttpStatusCode.Created, itemService.createItem(item).status)
 
             // then item can not be created again
-            val result = itemService.getItemByName(item.name)
+            val result = itemService.getItemById(item.id)
             assertEquals(HttpStatusCode.OK, result.status)
             assertEquals(item, result.data)
             assertEquals(HttpStatusCode.Conflict, itemService.createItem(item).status)
@@ -50,13 +50,13 @@ class ItemServiceTests {
     fun `test updating item`() {
         runBlocking {
             // when item is created and updated
-            val item = Item(name = "Water", amount = 42, price = 0.5)
+            val item = Item(id = "water", name = "Water", amount = 42, price = 0.5)
             assertEquals(HttpStatusCode.Created, itemService.createItem(item).status)
             val updatedItem = item.copy(amount = 10, price = 1.5)
             assertEquals(HttpStatusCode.OK, itemService.updateItem(updatedItem).status)
 
             // then retrieved item has new values
-            val result = itemService.getItemByName(item.name)
+            val result = itemService.getItemById(item.id)
             assertEquals(HttpStatusCode.OK, result.status)
             assertEquals(updatedItem, result.data)
         }
@@ -66,11 +66,11 @@ class ItemServiceTests {
     fun `test updating item that does not exist`() {
         runBlocking {
             // when non-existent item is updated
-            val item = Item(name = "Water", amount = 42, price = 0.5)
+            val item = Item(id = "water", name = "Water", amount = 42, price = 0.5)
             assertEquals(HttpStatusCode.Conflict, itemService.updateItem(item).status)
 
             // then item was not created either
-            val result = itemService.getItemByName(item.name)
+            val result = itemService.getItemById(item.id)
             assertEquals(HttpStatusCode.NotFound, result.status)
             assertEquals(null, result.data)
         }
@@ -80,12 +80,12 @@ class ItemServiceTests {
     fun `test deleting item`() {
         runBlocking {
             // when item is created and deleted
-            val item = Item(name = "Water", amount = 42, price = 0.5)
+            val item = Item(id = "water", name = "Water", amount = 42, price = 0.5)
             assertEquals(HttpStatusCode.Created, itemService.createItem(item).status)
-            assertEquals(HttpStatusCode.OK, itemService.deleteItemByName(item.name).status)
+            assertEquals(HttpStatusCode.OK, itemService.deleteItemById(item.id).status)
 
             // then item can not be retrieved
-            val result = itemService.getItemByName(item.name)
+            val result = itemService.getItemById(item.id)
             assertEquals(HttpStatusCode.NotFound, result.status)
             assertEquals(null, result.data)
         }
@@ -94,12 +94,12 @@ class ItemServiceTests {
     @Test
     fun `test deleting item that does not exist`() {
         runBlocking {
-            val name = "Water"
+            val id = "water"
             // when non-existent item is deleted
-            assertEquals(HttpStatusCode.NotFound, itemService.deleteItemByName(name).status)
+            assertEquals(HttpStatusCode.NotFound, itemService.deleteItemById(id).status)
 
             // then item was not created either
-            val result = itemService.getItemByName(name)
+            val result = itemService.getItemById(id)
             assertEquals(HttpStatusCode.NotFound, result.status)
             assertEquals(null, result.data)
         }
@@ -109,16 +109,16 @@ class ItemServiceTests {
     fun `test getting all items`() {
         runBlocking {
             // when multiple items are created
-            val firstItem = Item(name = "Water", amount = 42, price = 0.5)
-            val secondItem = Item(name = "Coffee", amount = 100, price = 1.0)
+            val firstItem = Item(id = "water", name = "Water", amount = 42, price = 0.5)
+            val secondItem = Item(id = "coffee", name = "Coffee", amount = 100, price = 1.0)
             assertEquals(HttpStatusCode.Created, itemService.createItem(firstItem).status)
             assertEquals(HttpStatusCode.Created, itemService.createItem(secondItem).status)
 
             // then all items are retrieved
             val result = itemService.getAllItems()
             assertEquals(HttpStatusCode.OK, result.status)
-            val expected = listOf(firstItem, secondItem).sortedBy(Item::name)
-            val actual = result.data.sortedBy(Item::name)
+            val expected = listOf(firstItem, secondItem).sortedBy(Item::id)
+            val actual = result.data.sortedBy(Item::id)
             assertEquals(expected, actual)
         }
     }

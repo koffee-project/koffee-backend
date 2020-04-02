@@ -6,11 +6,11 @@ interface ItemRepository {
 
     suspend fun getAll(): List<Item>
 
-    suspend fun getItemByName(name: String): Item?
+    suspend fun getById(id: String): Item?
 
-    suspend fun hasItemWithName(name: String): Boolean
+    suspend fun hasItemWithId(id: String): Boolean
 
     suspend fun insert(item: Item)
 
-    suspend fun removeByName(name: String)
+    suspend fun removeById(id: String)
 }

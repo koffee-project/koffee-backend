@@ -29,16 +29,16 @@ fun Route.userRoutes() {
             call.respondWithResult(result)
         }
 
-        route("{name}") {
+        route("{id}") {
             get {
-                val name = call.parameters["name"]!!
-                val result = userService.getUserByName(name = name)
+                val id = call.parameters["id"]!!
+                val result = userService.getUserById(id = id)
                 call.respondWithResult(result)
             }
 
             delete {
-                val name = call.parameters["name"]!!
-                val result = userService.deleteUserByName(name)
+                val id = call.parameters["id"]!!
+                val result = userService.deleteUserById(id)
                 call.respondWithResult(result)
             }
         }

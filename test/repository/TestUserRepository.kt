@@ -8,16 +8,16 @@ class TestUserRepository : UserRepository {
 
     override suspend fun getAll(): List<User> = users.values.toList()
 
-    override suspend fun getByName(name: String): User? = users[name]
+    override suspend fun getById(id: String): User? = users[id]
 
-    override suspend fun hasUserWithName(name: String): Boolean =
-        getByName(name) != null
+    override suspend fun hasUserWithId(id: String): Boolean =
+        getById(id) != null
 
     override suspend fun insert(user: User) {
-        users[user.name] = user
+        users[user.id] = user
     }
 
-    override suspend fun removeByName(name: String) {
-        users.remove(name)
+    override suspend fun removeById(id: String) {
+        users.remove(id)
     }
 }

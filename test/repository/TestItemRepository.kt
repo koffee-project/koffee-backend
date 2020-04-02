@@ -8,17 +8,17 @@ class TestItemRepository : ItemRepository {
 
     override suspend fun getAll(): List<Item> = items.values.toList()
 
-    override suspend fun getItemByName(name: String): Item? =
-        items[name]
+    override suspend fun getById(id: String): Item? =
+        items[id]
 
-    override suspend fun hasItemWithName(name: String): Boolean =
-        getItemByName(name) != null
+    override suspend fun hasItemWithId(id: String): Boolean =
+        getById(id) != null
 
     override suspend fun insert(item: Item) {
-        items[item.name] = item
+        items[item.id] = item
     }
 
-    override suspend fun removeByName(name: String) {
-        items.remove(name)
+    override suspend fun removeById(id: String) {
+        items.remove(id)
     }
 }

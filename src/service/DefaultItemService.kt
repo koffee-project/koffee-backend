@@ -13,8 +13,8 @@ class DefaultItemService(private val itemRepository: ItemRepository) : ItemServi
             data = itemRepository.getAll()
         )
 
-    override suspend fun getItemByName(name: String): Result<Item?> =
-        itemRepository.getItemByName(name = name).let { item ->
+    override suspend fun getItemById(id: String): Result<Item?> =
+        itemRepository.getById(id = id).let { item ->
             Result(
                 status = if (item == null) HttpStatusCode.NotFound else HttpStatusCode.OK,
                 data = item
@@ -22,10 +22,10 @@ class DefaultItemService(private val itemRepository: ItemRepository) : ItemServi
         }
 
     override suspend fun createItem(item: Item): Result<String> =
-        when (itemRepository.hasItemWithName(name = item.name)) {
+        when (itemRepository.hasItemWithId(id = item.id)) {
             true -> Result(
                 status = HttpStatusCode.Conflict,
-                data = "Item with that name already exists"
+                data = "Item with that id already exists"
             )
             false -> {
                 itemRepository.insert(item)
@@ -37,7 +37,7 @@ class DefaultItemService(private val itemRepository: ItemRepository) : ItemServi
         }
 
     override suspend fun updateItem(item: Item): Result<String> =
-        when (itemRepository.hasItemWithName(name = item.name)) {
+        when (itemRepository.hasItemWithId(id = item.id)) {
             true -> {
                 itemRepository.insert(item)
                 Result(
@@ -47,22 +47,22 @@ class DefaultItemService(private val itemRepository: ItemRepository) : ItemServi
             }
             false -> Result(
                 status = HttpStatusCode.Conflict,
-                data = "Item with that name does not exist"
+                data = "Item with that id does not exist"
             )
         }
 
-    override suspend fun deleteItemByName(name: String): Result<String> =
-        when (itemRepository.hasItemWithName(name = name)) {
+    override suspend fun deleteItemById(id: String): Result<String> =
+        when (itemRepository.hasItemWithId(id = id)) {
             true -> {
-                itemRepository.removeByName(name)
+                itemRepository.removeById(id)
                 Result(
                     status = HttpStatusCode.OK,
-                    data = "Deleted $name"
+                    data = "Deleted $id"
                 )
             }
             false -> Result(
                 status = HttpStatusCode.NotFound,
-                data = "Item with that name does not exist"
+                data = "Item with that id does not exist"
             )
         }
 }

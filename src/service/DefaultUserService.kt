@@ -13,8 +13,8 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
             data = userRepository.getAll()
         )
 
-    override suspend fun getUserByName(name: String): Result<User?> =
-        userRepository.getByName(name = name).let { user ->
+    override suspend fun getUserById(id: String): Result<User?> =
+        userRepository.getById(id = id).let { user ->
             Result(
                 status = if (user == null) HttpStatusCode.NotFound else HttpStatusCode.OK,
                 data = user
@@ -22,10 +22,10 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
         }
 
     override suspend fun createUser(user: User): Result<String> =
-        when (userRepository.hasUserWithName(name = user.name)) {
+        when (userRepository.hasUserWithId(id = user.id)) {
             true -> Result(
                 status = HttpStatusCode.Conflict,
-                data = "User with that name already exists"
+                data = "User with that id already exists"
             )
             false -> {
                 userRepository.insert(user)
@@ -37,7 +37,7 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
         }
 
     override suspend fun updateUser(user: User): Result<String> =
-        when (userRepository.hasUserWithName(name = user.name)) {
+        when (userRepository.hasUserWithId(id = user.id)) {
             true -> {
                 userRepository.insert(user)
                 Result(
@@ -47,22 +47,22 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
             }
             false -> Result(
                 status = HttpStatusCode.Conflict,
-                data = "User with that name does not exist"
+                data = "User with that id does not exist"
             )
         }
 
-    override suspend fun deleteUserByName(name: String): Result<String> =
-        when (userRepository.hasUserWithName(name = name)) {
+    override suspend fun deleteUserById(id: String): Result<String> =
+        when (userRepository.hasUserWithId(id = id)) {
             true -> {
-                userRepository.removeByName(name)
+                userRepository.removeById(id)
                 Result(
                     status = HttpStatusCode.OK,
-                    data = "Deleted $name"
+                    data = "Deleted $id"
                 )
             }
             false -> Result(
                 status = HttpStatusCode.NotFound,
-                data = "User with that name does not exist"
+                data = "User with that id does not exist"
             )
         }
 }

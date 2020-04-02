@@ -29,16 +29,16 @@ fun Route.itemRoutes() {
             call.respondWithResult(result)
         }
 
-        route("{name}") {
+        route("{id}") {
             get {
-                val name = call.parameters["name"]!!
-                val result = itemService.getItemByName(name)
+                val id = call.parameters["id"]!!
+                val result = itemService.getItemById(id)
                 call.respondWithResult(result)
             }
 
             delete {
-                val name = call.parameters["name"]!!
-                val result = itemService.deleteItemByName(name)
+                val id = call.parameters["id"]!!
+                val result = itemService.deleteItemById(id)
                 call.respondWithResult(result)
             }
         }
