@@ -3,6 +3,7 @@ package eu.yeger.service
 import eu.yeger.model.Result
 import eu.yeger.model.User
 import eu.yeger.repository.UserRepository
+import eu.yeger.utility.hasTwoDecimalPlaces
 import io.ktor.http.HttpStatusCode
 
 class DefaultUserService(private val userRepository: UserRepository) : UserService {
@@ -50,5 +51,7 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
         }
 
     private fun User.isValid(): Boolean =
-        id.isNotBlank() && name.isNotBlank()
+        id.isNotBlank() &&
+            name.isNotBlank() &&
+            balance.hasTwoDecimalPlaces()
 }

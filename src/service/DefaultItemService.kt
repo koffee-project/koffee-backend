@@ -3,6 +3,7 @@ package eu.yeger.service
 import eu.yeger.model.Item
 import eu.yeger.model.Result
 import eu.yeger.repository.ItemRepository
+import eu.yeger.utility.hasTwoDecimalPlaces
 import io.ktor.http.HttpStatusCode
 
 class DefaultItemService(private val itemRepository: ItemRepository) : ItemService {
@@ -49,5 +50,9 @@ class DefaultItemService(private val itemRepository: ItemRepository) : ItemServi
         }
 
     private fun Item.isValid(): Boolean =
-        id.isNotBlank() && name.isNotBlank()
+        id.isNotBlank() &&
+            name.isNotBlank() &&
+            amount >= 0 &&
+            price > 0 &&
+            price.hasTwoDecimalPlaces()
 }

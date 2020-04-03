@@ -49,7 +49,7 @@ class UserServiceTests {
     @Test
     fun `test creating user with invalid id`() {
         runBlocking {
-            // when user is created without id
+            // when user is created with invalid id
             val user = User(id = "    ", name = "UserName", balance = 100.0)
             assertEquals(HttpStatusCode.UnprocessableEntity, userService.createUser(user).status)
 
@@ -63,8 +63,22 @@ class UserServiceTests {
     @Test
     fun `test creating user with invalid name`() {
         runBlocking {
-            // when user is created without name
+            // when user is created with invalid name
             val user = User(id = "userName", name = "    ", balance = 100.0)
+            assertEquals(HttpStatusCode.UnprocessableEntity, userService.createUser(user).status)
+
+            // then user can not be retrieved
+            val result = userService.getUserById(user.id)
+            assertEquals(HttpStatusCode.NotFound, result.status)
+            assertEquals(null, result.data)
+        }
+    }
+
+    @Test
+    fun `test creating user with invalid balance`() {
+        runBlocking {
+            // when user is created with invalid balance
+            val user = User(id = "userName", name = "UserName", balance = 100.12345)
             assertEquals(HttpStatusCode.UnprocessableEntity, userService.createUser(user).status)
 
             // then user can not be retrieved
@@ -105,12 +119,28 @@ class UserServiceTests {
     }
 
     @Test
-    fun `test updating user with invalid data`() {
+    fun `test updating user with invalid name`() {
         runBlocking {
-            // when item is created and updated with invalid data
+            // when item is created and updated with invalid name
             val user = User(id = "userName", name = "UserName", balance = 100.0)
             assertEquals(HttpStatusCode.Created, userService.createUser(user).status)
             val updatedUser = user.copy(name = "   ")
+            assertEquals(HttpStatusCode.UnprocessableEntity, userService.updateUser(updatedUser).status)
+
+            // then retrieved item was not updated
+            val result = userService.getUserById(user.id)
+            assertEquals(HttpStatusCode.OK, result.status)
+            assertEquals(user, result.data)
+        }
+    }
+
+    @Test
+    fun `test updating user with invalid balance`() {
+        runBlocking {
+            // when item is created and updated with invalid balance
+            val user = User(id = "userName", name = "UserName", balance = 100.0)
+            assertEquals(HttpStatusCode.Created, userService.createUser(user).status)
+            val updatedUser = user.copy(balance = 1.23456)
             assertEquals(HttpStatusCode.UnprocessableEntity, userService.updateUser(updatedUser).status)
 
             // then retrieved item was not updated
