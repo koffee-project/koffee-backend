@@ -121,13 +121,13 @@ class UserServiceTests {
     @Test
     fun `test updating user with invalid name`() {
         runBlocking {
-            // when item is created and updated with invalid name
+            // when user is created and updated with invalid name
             val user = User(id = "userName", name = "UserName", balance = 100.0)
             assertEquals(HttpStatusCode.Created, userService.createUser(user).status)
             val updatedUser = user.copy(name = "   ")
             assertEquals(HttpStatusCode.UnprocessableEntity, userService.updateUser(updatedUser).status)
 
-            // then retrieved item was not updated
+            // then retrieved user was not updated
             val result = userService.getUserById(user.id)
             assertEquals(HttpStatusCode.OK, result.status)
             assertEquals(user, result.data)
@@ -137,13 +137,13 @@ class UserServiceTests {
     @Test
     fun `test updating user with invalid balance`() {
         runBlocking {
-            // when item is created and updated with invalid balance
+            // when user is created and updated with invalid balance
             val user = User(id = "userName", name = "UserName", balance = 100.0)
             assertEquals(HttpStatusCode.Created, userService.createUser(user).status)
             val updatedUser = user.copy(balance = 1.23456)
             assertEquals(HttpStatusCode.UnprocessableEntity, userService.updateUser(updatedUser).status)
 
-            // then retrieved item was not updated
+            // then retrieved user was not updated
             val result = userService.getUserById(user.id)
             assertEquals(HttpStatusCode.OK, result.status)
             assertEquals(user, result.data)
