@@ -18,7 +18,7 @@ class ItemServiceTests {
     }
 
     @Test
-    fun `test creating item`() {
+    fun `verify that items can be created`() {
         runBlocking {
             // when item is created
             val item = Item(id = "water", name = "Water", amount = 42, price = 0.5)
@@ -32,7 +32,7 @@ class ItemServiceTests {
     }
 
     @Test
-    fun `test creating item twice`() {
+    fun `verify that items cannot be created twice`() {
         runBlocking {
             // when item is created
             val item = Item(id = "water", name = "Water", amount = 42, price = 0.5)
@@ -47,7 +47,7 @@ class ItemServiceTests {
     }
 
     @Test
-    fun `test creating item with invalid id`() {
+    fun `verify that items cannot be created with invalid ids`() {
         runBlocking {
             // when item is created with invalid id
             val item = Item(id = "    ", name = "Water", amount = 42, price = 0.5)
@@ -61,7 +61,7 @@ class ItemServiceTests {
     }
 
     @Test
-    fun `test creating item with invalid name`() {
+    fun `verify that items cannot be created with invalid names`() {
         runBlocking {
             // when item is created with invalid name
             val item = Item(id = "water", name = "    ", amount = 42, price = 0.5)
@@ -75,7 +75,7 @@ class ItemServiceTests {
     }
 
     @Test
-    fun `test creating item with invalid amount`() {
+    fun `verify that items cannot be created with invalid amounts`() {
         runBlocking {
             // when item is created with invalid amount
             val item = Item(id = "water", name = "Water", amount = -42, price = 0.5)
@@ -89,7 +89,7 @@ class ItemServiceTests {
     }
 
     @Test
-    fun `test creating item with invalid price`() {
+    fun `verify that items cannot be created with invalid prices`() {
         runBlocking {
             // when item is created with invalid price
             val item = Item(id = "water", name = "Water", amount = 42, price = 0.12345)
@@ -103,7 +103,7 @@ class ItemServiceTests {
     }
 
     @Test
-    fun `test creating item with negative price`() {
+    fun `verify that items cannot be created with negative ids`() {
         runBlocking {
             // when item is created with negative price
             val item = Item(id = "water", name = "Water", amount = 42, price = -1.00)
@@ -117,7 +117,7 @@ class ItemServiceTests {
     }
 
     @Test
-    fun `test updating item`() {
+    fun `verify that items can be updated`() {
         runBlocking {
             // when item is created and updated
             val item = Item(id = "water", name = "Water", amount = 42, price = 0.5)
@@ -133,7 +133,7 @@ class ItemServiceTests {
     }
 
     @Test
-    fun `test updating item that does not exist`() {
+    fun `verify that items cannot be updated if they do not exist`() {
         runBlocking {
             // when non-existent item is updated
             val item = Item(id = "water", name = "Water", amount = 42, price = 0.5)
@@ -147,7 +147,7 @@ class ItemServiceTests {
     }
 
     @Test
-    fun `test updating item with invalid name`() {
+    fun `verify that items cannot be updated with invalid names`() {
         runBlocking {
             // when item is created and updated with invalid name
             val item = Item(id = "water", name = "Water", amount = 42, price = 0.5)
@@ -163,7 +163,7 @@ class ItemServiceTests {
     }
 
     @Test
-    fun `test updating item with invalid amount`() {
+    fun `verify that items cannot be updated with invalid amounts`() {
         runBlocking {
             // when item is created and updated with invalid amount
             val item = Item(id = "water", name = "Water", amount = 42, price = 0.5)
@@ -179,7 +179,7 @@ class ItemServiceTests {
     }
 
     @Test
-    fun `test updating item with invalid price`() {
+    fun `verify that items cannot be updated with invalid prices`() {
         runBlocking {
             // when item is created and updated with invalid price
             val item = Item(id = "water", name = "Water", amount = 42, price = 0.5)
@@ -195,7 +195,7 @@ class ItemServiceTests {
     }
 
     @Test
-    fun `test updating item with negative price`() {
+    fun `verify that items cannot be updated with negative prices`() {
         runBlocking {
             // when item is created and updated with negative price
             val item = Item(id = "water", name = "Water", amount = 42, price = 0.5)
@@ -211,7 +211,7 @@ class ItemServiceTests {
     }
 
     @Test
-    fun `test deleting item`() {
+    fun `verify that items can be deleted`() {
         runBlocking {
             // when item is created and deleted
             val item = Item(id = "water", name = "Water", amount = 42, price = 0.5)
@@ -226,7 +226,7 @@ class ItemServiceTests {
     }
 
     @Test
-    fun `test deleting item that does not exist`() {
+    fun `verify that items cannot be deleted if they do not exist`() {
         runBlocking {
             val id = "water"
             // when non-existent item is deleted
@@ -240,7 +240,7 @@ class ItemServiceTests {
     }
 
     @Test
-    fun `test getting all items`() {
+    fun `verify that all items can be retrieved`() {
         runBlocking {
             // when multiple items are created
             val firstItem = Item(id = "water", name = "Water", amount = 42, price = 0.5)

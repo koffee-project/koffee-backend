@@ -6,7 +6,7 @@ import org.junit.Test
 class UtilityTests {
 
     @Test
-    fun `test hasTwoDecimalPlaces`() {
+    fun `verify that hasTwoDecimalPlaces returns expected results`() {
         val testCases = mapOf(
             0.00 to true,
             0.01 to true,

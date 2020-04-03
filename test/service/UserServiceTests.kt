@@ -18,7 +18,7 @@ class UserServiceTests {
     }
 
     @Test
-    fun `test creating user`() {
+    fun `verify that users can be created`() {
         runBlocking {
             // when user is created
             val user = User(id = "userName", name = "UserName", balance = 100.0)
@@ -32,7 +32,7 @@ class UserServiceTests {
     }
 
     @Test
-    fun `test creating user twice`() {
+    fun `verify that users cannot be created twice`() {
         runBlocking {
             // when user is created
             val user = User(id = "userName", name = "UserName", balance = 100.0)
@@ -47,7 +47,7 @@ class UserServiceTests {
     }
 
     @Test
-    fun `test creating user with invalid id`() {
+    fun `verify that users cannot be created with invalid ids`() {
         runBlocking {
             // when user is created with invalid id
             val user = User(id = "    ", name = "UserName", balance = 100.0)
@@ -61,7 +61,7 @@ class UserServiceTests {
     }
 
     @Test
-    fun `test creating user with invalid name`() {
+    fun `verify that users cannot be created with invalid names`() {
         runBlocking {
             // when user is created with invalid name
             val user = User(id = "userName", name = "    ", balance = 100.0)
@@ -75,7 +75,7 @@ class UserServiceTests {
     }
 
     @Test
-    fun `test creating user with invalid balance`() {
+    fun `verify that users cannot be created with invalid balances`() {
         runBlocking {
             // when user is created with invalid balance
             val user = User(id = "userName", name = "UserName", balance = 100.12345)
@@ -89,7 +89,7 @@ class UserServiceTests {
     }
 
     @Test
-    fun `test updating user`() {
+    fun `verify that users can be updated`() {
         runBlocking {
             // when user is created and updated
             val user = User(id = "userName", name = "UserName", balance = 100.0)
@@ -105,7 +105,7 @@ class UserServiceTests {
     }
 
     @Test
-    fun `test updating user that does not exist`() {
+    fun `verify that users cannot be updated if they do not exist`() {
         runBlocking {
             // when non-existent user is updated
             val user = User(id = "userName", name = "UserName", balance = 100.0)
@@ -119,7 +119,7 @@ class UserServiceTests {
     }
 
     @Test
-    fun `test updating user with invalid name`() {
+    fun `verify that users cannot be updated with invalid names`() {
         runBlocking {
             // when user is created and updated with invalid name
             val user = User(id = "userName", name = "UserName", balance = 100.0)
@@ -135,7 +135,7 @@ class UserServiceTests {
     }
 
     @Test
-    fun `test updating user with invalid balance`() {
+    fun `verify that users cannot be updated with invalid balances`() {
         runBlocking {
             // when user is created and updated with invalid balance
             val user = User(id = "userName", name = "UserName", balance = 100.0)
@@ -151,7 +151,7 @@ class UserServiceTests {
     }
 
     @Test
-    fun `test deleting user`() {
+    fun `verify that users can be deleted`() {
         runBlocking {
             // when user is created and deleted
             val user = User(id = "userName", name = "UserName", balance = 100.0)
@@ -166,7 +166,7 @@ class UserServiceTests {
     }
 
     @Test
-    fun `test deleting user that does not exist`() {
+    fun `verify that users cannot be deleted if they do not exist`() {
         runBlocking {
             val id = "userName"
             // when non-existent user is deleted
@@ -180,7 +180,7 @@ class UserServiceTests {
     }
 
     @Test
-    fun `test getting all users`() {
+    fun `verify that all users can be retrieved`() {
         runBlocking {
             // when multiple users are created
             val firstUser = User(id = "firstUser", name = "FirstUser", balance = 100.0)
