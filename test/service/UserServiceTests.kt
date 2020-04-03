@@ -47,6 +47,34 @@ class UserServiceTests {
     }
 
     @Test
+    fun `test creating user with invalid id`() {
+        runBlocking {
+            // when user is created without id
+            val user = User(id = "    ", name = "UserName", balance = 100.0)
+            assertEquals(HttpStatusCode.UnprocessableEntity, userService.createUser(user).status)
+
+            // then user can not be retrieved
+            val result = userService.getUserById(user.id)
+            assertEquals(HttpStatusCode.NotFound, result.status)
+            assertEquals(null, result.data)
+        }
+    }
+
+    @Test
+    fun `test creating user with invalid name`() {
+        runBlocking {
+            // when user is created without name
+            val user = User(id = "userName", name = "    ", balance = 100.0)
+            assertEquals(HttpStatusCode.UnprocessableEntity, userService.createUser(user).status)
+
+            // then user can not be retrieved
+            val result = userService.getUserById(user.id)
+            assertEquals(HttpStatusCode.NotFound, result.status)
+            assertEquals(null, result.data)
+        }
+    }
+
+    @Test
     fun `test updating user`() {
         runBlocking {
             // when user is created and updated
@@ -73,6 +101,22 @@ class UserServiceTests {
             val result = userService.getUserById(user.id)
             assertEquals(HttpStatusCode.NotFound, result.status)
             assertEquals(null, result.data)
+        }
+    }
+
+    @Test
+    fun `test updating user with invalid data`() {
+        runBlocking {
+            // when item is created and updated with invalid data
+            val user = User(id = "userName", name = "UserName", balance = 100.0)
+            assertEquals(HttpStatusCode.Created, userService.createUser(user).status)
+            val updatedUser = user.copy(name = "   ")
+            assertEquals(HttpStatusCode.UnprocessableEntity, userService.updateUser(updatedUser).status)
+
+            // then retrieved item was not updated
+            val result = userService.getUserById(user.id)
+            assertEquals(HttpStatusCode.OK, result.status)
+            assertEquals(user, result.data)
         }
     }
 

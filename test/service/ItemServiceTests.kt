@@ -47,6 +47,34 @@ class ItemServiceTests {
     }
 
     @Test
+    fun `test creating item with invalid id`() {
+        runBlocking {
+            // when item is created without id
+            val item = Item(id = "    ", name = "Water", amount = 42, price = 0.5)
+            assertEquals(HttpStatusCode.UnprocessableEntity, itemService.createItem(item).status)
+
+            // then item can not be retrieved
+            val result = itemService.getItemById(item.id)
+            assertEquals(HttpStatusCode.NotFound, result.status)
+            assertEquals(null, result.data)
+        }
+    }
+
+    @Test
+    fun `test creating item with invalid name`() {
+        runBlocking {
+            // when item is created without name
+            val item = Item(id = "water", name = "    ", amount = 42, price = 0.5)
+            assertEquals(HttpStatusCode.UnprocessableEntity, itemService.createItem(item).status)
+
+            // then item can not be retrieved
+            val result = itemService.getItemById(item.id)
+            assertEquals(HttpStatusCode.NotFound, result.status)
+            assertEquals(null, result.data)
+        }
+    }
+
+    @Test
     fun `test updating item`() {
         runBlocking {
             // when item is created and updated
@@ -73,6 +101,22 @@ class ItemServiceTests {
             val result = itemService.getItemById(item.id)
             assertEquals(HttpStatusCode.NotFound, result.status)
             assertEquals(null, result.data)
+        }
+    }
+
+    @Test
+    fun `test updating item with invalid data`() {
+        runBlocking {
+            // when item is created and updated with invalid data
+            val item = Item(id = "water", name = "Water", amount = 42, price = 0.5)
+            assertEquals(HttpStatusCode.Created, itemService.createItem(item).status)
+            val updatedItem = item.copy(name = "   ")
+            assertEquals(HttpStatusCode.UnprocessableEntity, itemService.updateItem(updatedItem).status)
+
+            // then retrieved item was not updated
+            val result = itemService.getItemById(item.id)
+            assertEquals(HttpStatusCode.OK, result.status)
+            assertEquals(item, result.data)
         }
     }
 
