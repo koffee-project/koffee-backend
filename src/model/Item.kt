@@ -5,4 +5,4 @@ data class Item(
     val name: String,
     val amount: Int,
     val price: Double
-) : Entity()
+) : Entity

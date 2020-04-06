@@ -4,6 +4,7 @@ import eu.yeger.model.User
 import eu.yeger.service.UserService
 import eu.yeger.utility.respondWithResult
 import io.ktor.application.call
+import io.ktor.auth.authenticate
 import io.ktor.request.receive
 import io.ktor.routing.*
 import org.koin.ktor.ext.inject
@@ -11,22 +12,37 @@ import org.koin.ktor.ext.inject
 fun Route.userRoutes() {
     val userService: UserService by inject()
 
+    // TODO replace this route by actual default admin implementation
+    post("admin") {
+        val admin = User(
+            id = "admin",
+            name = "Admin",
+            balance = 0.0,
+            isAdmin = true,
+            password = "admin"
+        )
+        val result = userService.createUser(admin)
+        call.respondWithResult(result)
+    }
+
     route("users") {
         get {
             val users = userService.getAllUsers()
             call.respondWithResult(users)
         }
 
-        post {
-            val user = call.receive<User>()
-            val result = userService.createUser(user)
-            call.respondWithResult(result)
-        }
+        authenticate {
+            post {
+                val user = call.receive<User>()
+                val result = userService.createUser(user)
+                call.respondWithResult(result)
+            }
 
-        put {
-            val user = call.receive<User>()
-            val result = userService.updateUser(user)
-            call.respondWithResult(result)
+            put {
+                val user = call.receive<User>()
+                val result = userService.updateUser(user)
+                call.respondWithResult(result)
+            }
         }
 
         route("{id}") {
@@ -36,10 +52,12 @@ fun Route.userRoutes() {
                 call.respondWithResult(result)
             }
 
-            delete {
-                val id = call.parameters["id"]!!
-                val result = userService.deleteUserById(id)
-                call.respondWithResult(result)
+            authenticate {
+                delete {
+                    val id = call.parameters["id"]!!
+                    val result = userService.deleteUserById(id)
+                    call.respondWithResult(result)
+                }
             }
         }
     }

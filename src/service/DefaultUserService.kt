@@ -1,5 +1,7 @@
 package eu.yeger.service
 
+import eu.yeger.auth.JWTConfiguration
+import eu.yeger.model.Credentials
 import eu.yeger.model.Result
 import eu.yeger.model.User
 import eu.yeger.repository.UserRepository
@@ -17,10 +19,11 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
             Result(status = status, data = user)
         }
 
+    // TODO hash passwords
     override suspend fun createUser(user: User): Result<String> =
         when (userRepository.hasUserWithId(id = user.id)) {
             true -> Result(status = HttpStatusCode.Conflict, data = "User with that id already exists")
-            false -> validated(user) {
+            false -> user.validated {
                 userRepository.insert(user)
                 Result(status = HttpStatusCode.Created, data = "Created $user")
             }
@@ -28,7 +31,7 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
 
     override suspend fun updateUser(user: User): Result<String> =
         when (userRepository.hasUserWithId(id = user.id)) {
-            true -> validated(user) {
+            true -> user.validated {
                 userRepository.insert(user)
                 Result(status = HttpStatusCode.OK, data = "Updated $user")
             }
@@ -44,12 +47,35 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
             false -> Result(status = HttpStatusCode.NotFound, data = "User with that id does not exist")
         }
 
-    private inline fun validated(user: User, block: () -> Result<String>): Result<String> =
-        when (user.isValid()) {
-            true -> block()
-            false -> Result(status = HttpStatusCode.UnprocessableEntity, data = "$user is invalid")
+    override suspend fun login(credentials: Credentials): Result<String> =
+        when (val user = userRepository.getById(id = credentials.id)) {
+            null -> Result(status = HttpStatusCode.Unauthorized, data = "ID or password incorrect")
+            else -> credentials.validatedForUser(user) {
+                val token = JWTConfiguration.makeToken(credentials)
+                Result(status = HttpStatusCode.OK, data = token)
+            }
         }
 
+    private inline fun Credentials.validatedForUser(user: User, block: () -> Result<String>): Result<String> =
+        when (this.isValidForUser(user)) {
+            true -> block()
+            false -> Result(status = HttpStatusCode.Unauthorized, data = "ID or password incorrect")
+        }
+
+    // TODO hash passwords
+    private fun Credentials.isValidForUser(user: User): Boolean {
+        return user.isAdmin &&
+            this.id == user.id &&
+            this.password == user.password
+    }
+
+    private inline fun User.validated(block: () -> Result<String>): Result<String> =
+        when (this.isValid()) {
+            true -> block()
+            false -> Result(status = HttpStatusCode.UnprocessableEntity, data = "$this is invalid")
+        }
+
+    // TODO validate passwords
     private fun User.isValid(): Boolean =
         id.isNotBlank() &&
             name.isNotBlank() &&

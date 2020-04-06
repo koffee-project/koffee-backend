@@ -1,15 +1,19 @@
 package eu.yeger
 
 import com.fasterxml.jackson.databind.SerializationFeature
+import eu.yeger.auth.JWTConfiguration
 import eu.yeger.di.databaseModule
 import eu.yeger.di.repositoryModule
 import eu.yeger.di.serviceModule
+import eu.yeger.routing.authenticationRoutes
 import eu.yeger.routing.itemRoutes
 import eu.yeger.routing.userRoutes
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.auth.Authentication
+import io.ktor.auth.jwt.JWTPrincipal
+import io.ktor.auth.jwt.jwt
 import io.ktor.features.CallLogging
 import io.ktor.features.ContentNegotiation
 import io.ktor.features.DefaultHeaders
@@ -45,6 +49,13 @@ fun Application.module(testing: Boolean = false) {
     }
 
     install(Authentication) {
+        jwt {
+            realm = JWTConfiguration.realm
+            verifier(JWTConfiguration.verifier)
+            validate { credential ->
+                if (credential.payload.audience.contains(JWTConfiguration.audience)) JWTPrincipal(credential.payload) else null
+            }
+        }
     }
 
     install(ContentNegotiation) {
@@ -59,6 +70,7 @@ fun Application.module(testing: Boolean = false) {
                 call.respondText("HELLO WORLD!", contentType = ContentType.Text.Plain)
             }
 
+            authenticationRoutes()
             userRoutes()
             itemRoutes()
         }

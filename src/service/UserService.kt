@@ -1,5 +1,6 @@
 package eu.yeger.service
 
+import eu.yeger.model.Credentials
 import eu.yeger.model.Result
 import eu.yeger.model.User
 
@@ -14,4 +15,6 @@ interface UserService {
     suspend fun updateUser(user: User): Result<String>
 
     suspend fun deleteUserById(id: String): Result<String>
+
+    suspend fun login(credentials: Credentials): Result<String>
 }
