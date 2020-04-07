@@ -3,7 +3,7 @@ package eu.yeger.authentication
 import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
-import eu.yeger.model.Credentials
+import eu.yeger.model.User
 import java.util.Date
 
 object JWTConfiguration {
@@ -24,13 +24,17 @@ object JWTConfiguration {
         .withIssuer(issuer)
         .build()
 
-    fun makeToken(credentials: Credentials): String = JWT.create()
-        .withSubject("Authentication")
-        .withAudience(audience)
-        .withIssuer(issuer)
-        .withClaim("id", credentials.id)
-        .withExpiresAt(getExpiration())
-        .sign(algorithm)
+    fun makeToken(user: User): String? =
+        when (user.isAdmin) {
+            true -> JWT.create()
+                .withSubject("Authentication")
+                .withAudience(audience)
+                .withIssuer(issuer)
+                .withClaim("id", user.id)
+                .withExpiresAt(getExpiration())
+                .sign(algorithm)
+            else -> null
+        }
 
     private fun getExpiration() = Date(System.currentTimeMillis() + duration)
 }

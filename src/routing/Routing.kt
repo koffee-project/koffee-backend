@@ -1,7 +1,5 @@
 package eu.yeger.routing
 
-import eu.yeger.AuthenticationException
-import eu.yeger.AuthorizationException
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -29,12 +27,6 @@ fun Application.installRouting() = routing {
         exception<Throwable> { cause ->
             call.respond(HttpStatusCode.InternalServerError)
             throw cause
-        }
-        exception<AuthenticationException> {
-            call.respond(HttpStatusCode.Unauthorized)
-        }
-        exception<AuthorizationException> {
-            call.respond(HttpStatusCode.Forbidden)
         }
     }
 }

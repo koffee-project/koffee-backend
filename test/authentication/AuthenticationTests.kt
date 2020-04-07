@@ -3,8 +3,8 @@ package eu.yeger.authentication
 import com.fasterxml.jackson.databind.SerializationFeature
 import eu.yeger.di.fakeRepositoryModule
 import eu.yeger.di.serviceModule
-import eu.yeger.model.Credentials
 import eu.yeger.routing.installRouting
+import eu.yeger.utility.addTestUserJWTHeader
 import io.ktor.application.Application
 import io.ktor.application.install
 import io.ktor.features.ContentNegotiation
@@ -94,6 +94,47 @@ class AuthenticationTests {
     }
 
     @Test
+    fun `verify that login does not work for non-admins`() = withTestApplication(testModule) {
+        // When login is requested for user without admin privileges
+        handleRequest {
+            method = HttpMethod.Post
+            uri = "/users"
+            addHeader("Content-Type", "application/json")
+            setBody(
+                """
+                    {
+                        "id": "userId",
+                        "name": "UserName",
+                        "balance": 0.0,
+                        "isAdmin": false,
+                        "password": "userPassword"
+                    }
+                """.trimIndent()
+            )
+            addTestUserJWTHeader()
+        }
+
+        val call = handleRequest {
+            method = HttpMethod.Post
+            uri = "/login"
+            addHeader("Content-Type", "application/json")
+            setBody(
+                """
+                    {
+                        "id": "userId",
+                        "password": "userPassword"
+                    }
+                """.trimIndent()
+            )
+        }
+
+        // Then no token is returned
+        assert(call.requestHandled)
+        assertEquals(HttpStatusCode.Unauthorized, call.response.status())
+        assert(call.response.content?.isNotBlank() ?: false)
+    }
+
+    @Test
     fun `verify that secured route cannot be accessed without token`() = withTestApplication(testModule) {
         // When user without token accesses secured route
         val call = handleRequest {
@@ -108,20 +149,11 @@ class AuthenticationTests {
 
     @Test
     fun `verify that secured route can be accessed with token`() = withTestApplication(testModule) {
-        // TODO replace this by actual default admin implementation
-        handleRequest {
-            method = HttpMethod.Post
-            uri = "/admin"
-        }
-
         // When user with token accesses secured route
-        val credentials = Credentials(id = "admin", password = "admin")
-        val token = JWTConfiguration.makeToken(credentials)
-
         val call = handleRequest {
             method = HttpMethod.Delete
             uri = "/users/test"
-            addHeader("Authorization", "Bearer $token")
+            addTestUserJWTHeader()
         }
 
         // Then the request is accepted

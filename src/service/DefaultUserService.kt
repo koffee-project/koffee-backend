@@ -53,8 +53,10 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
         when (val user = userRepository.getById(id = credentials.id)) {
             null -> Result(status = HttpStatusCode.Unauthorized, data = "ID or password incorrect")
             else -> credentials.validatedForUser(user) {
-                val token = JWTConfiguration.makeToken(credentials)
-                Result(status = HttpStatusCode.OK, data = token)
+                when (val token = JWTConfiguration.makeToken(user)) {
+                    null -> Result(status = HttpStatusCode.Forbidden, data = "${user.id} does not have administrator privileges")
+                    else -> Result(status = HttpStatusCode.OK, data = token)
+                }
             }
         }
 

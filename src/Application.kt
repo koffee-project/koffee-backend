@@ -34,6 +34,3 @@ fun Application.module(testing: Boolean = false) {
 
     installRouting()
 }
-
-class AuthenticationException : RuntimeException()
-class AuthorizationException : RuntimeException()

@@ -2,6 +2,7 @@ package eu.yeger.service
 
 import eu.yeger.model.User
 import eu.yeger.repository.FakeUserRepository
+import eu.yeger.utility.testUser
 import io.ktor.http.HttpStatusCode
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -21,7 +22,7 @@ class UserServiceTests {
     fun `verify that users can be created`() {
         runBlocking {
             // when user is created
-            val user = User(id = "userName", name = "UserName", balance = 100.0, isAdmin = false, password = null)
+            val user = testUser
             assertEquals(HttpStatusCode.Created, userService.createUser(user).status)
 
             // then user can be retrieved
@@ -35,7 +36,7 @@ class UserServiceTests {
     fun `verify that users cannot be created twice`() {
         runBlocking {
             // when user is created
-            val user = User(id = "userName", name = "UserName", balance = 100.0, isAdmin = false, password = null)
+            val user = testUser
             assertEquals(HttpStatusCode.Created, userService.createUser(user).status)
 
             // then user can not be created again
@@ -50,7 +51,7 @@ class UserServiceTests {
     fun `verify that users cannot be created with invalid ids`() {
         runBlocking {
             // when user is created with invalid id
-            val user = User(id = "    ", name = "UserName", balance = 100.0, isAdmin = false, password = null)
+            val user = testUser.copy(id = "    ")
             assertEquals(HttpStatusCode.UnprocessableEntity, userService.createUser(user).status)
 
             // then user can not be retrieved
@@ -64,7 +65,7 @@ class UserServiceTests {
     fun `verify that users cannot be created with invalid names`() {
         runBlocking {
             // when user is created with invalid name
-            val user = User(id = "userName", name = "    ", balance = 100.0, isAdmin = false, password = null)
+            val user = testUser.copy(name = "    ")
             assertEquals(HttpStatusCode.UnprocessableEntity, userService.createUser(user).status)
 
             // then user can not be retrieved
@@ -78,7 +79,7 @@ class UserServiceTests {
     fun `verify that users cannot be created with invalid balances`() {
         runBlocking {
             // when user is created with invalid balance
-            val user = User(id = "userName", name = "UserName", balance = 100.12345, isAdmin = false, password = null)
+            val user = testUser.copy(balance = 100.12345)
             assertEquals(HttpStatusCode.UnprocessableEntity, userService.createUser(user).status)
 
             // then user can not be retrieved
@@ -92,7 +93,7 @@ class UserServiceTests {
     fun `verify that users can be updated`() {
         runBlocking {
             // when user is created and updated
-            val user = User(id = "userName", name = "UserName", balance = 100.0, isAdmin = false, password = null)
+            val user = testUser
             assertEquals(HttpStatusCode.Created, userService.createUser(user).status)
             val updatedItem = user.copy(balance = 50.0)
             assertEquals(HttpStatusCode.OK, userService.updateUser(updatedItem).status)
@@ -108,7 +109,7 @@ class UserServiceTests {
     fun `verify that users cannot be updated if they do not exist`() {
         runBlocking {
             // when non-existent user is updated
-            val user = User(id = "userName", name = "UserName", balance = 100.0, isAdmin = false, password = null)
+            val user = testUser
             assertEquals(HttpStatusCode.Conflict, userService.updateUser(user).status)
 
             // then user was not created either
@@ -122,7 +123,7 @@ class UserServiceTests {
     fun `verify that users cannot be updated with invalid names`() {
         runBlocking {
             // when user is created and updated with invalid name
-            val user = User(id = "userName", name = "UserName", balance = 100.0, isAdmin = false, password = null)
+            val user = testUser
             assertEquals(HttpStatusCode.Created, userService.createUser(user).status)
             val updatedUser = user.copy(name = "   ")
             assertEquals(HttpStatusCode.UnprocessableEntity, userService.updateUser(updatedUser).status)
@@ -138,7 +139,7 @@ class UserServiceTests {
     fun `verify that users cannot be updated with invalid balances`() {
         runBlocking {
             // when user is created and updated with invalid balance
-            val user = User(id = "userName", name = "UserName", balance = 100.0, isAdmin = false, password = null)
+            val user = testUser
             assertEquals(HttpStatusCode.Created, userService.createUser(user).status)
             val updatedUser = user.copy(balance = 1.23456)
             assertEquals(HttpStatusCode.UnprocessableEntity, userService.updateUser(updatedUser).status)
@@ -154,7 +155,7 @@ class UserServiceTests {
     fun `verify that users can be deleted`() {
         runBlocking {
             // when user is created and deleted
-            val user = User(id = "userName", name = "UserName", balance = 100.0, isAdmin = false, password = null)
+            val user = testUser
             assertEquals(HttpStatusCode.Created, userService.createUser(user).status)
             assertEquals(HttpStatusCode.OK, userService.deleteUserById(user.id).status)
 
@@ -183,8 +184,8 @@ class UserServiceTests {
     fun `verify that all users can be retrieved`() {
         runBlocking {
             // when multiple users are created
-            val firstUser = User(id = "firstUser", name = "FirstUser", balance = 100.0, isAdmin = false, password = null)
-            val secondUser = User(id = "secondUser", name = "SecondUser", balance = 200.0, isAdmin = false, password = null)
+            val firstUser = testUser.copy(id = "firstUser")
+            val secondUser = testUser.copy(id = "secondUser")
             assertEquals(HttpStatusCode.Created, userService.createUser(firstUser).status)
             assertEquals(HttpStatusCode.Created, userService.createUser(secondUser).status)
 
