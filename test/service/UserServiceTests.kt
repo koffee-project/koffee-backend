@@ -1,7 +1,7 @@
 package eu.yeger.service
 
 import eu.yeger.model.User
-import eu.yeger.repository.TestUserRepository
+import eu.yeger.repository.FakeUserRepository
 import io.ktor.http.HttpStatusCode
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -14,7 +14,7 @@ class UserServiceTests {
 
     @BeforeTest
     fun setup() {
-        userService = DefaultUserService(userRepository = TestUserRepository())
+        userService = DefaultUserService(userRepository = FakeUserRepository())
     }
 
     @Test

@@ -1,4 +1,4 @@
-package eu.yeger.auth
+package eu.yeger.authentication
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier

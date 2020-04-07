@@ -1,7 +1,7 @@
 package eu.yeger.service
 
 import eu.yeger.model.Item
-import eu.yeger.repository.TestItemRepository
+import eu.yeger.repository.FakeItemRepository
 import io.ktor.http.HttpStatusCode
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -14,7 +14,7 @@ class ItemServiceTests {
 
     @BeforeTest
     fun setup() {
-        itemService = DefaultItemService(itemRepository = TestItemRepository())
+        itemService = DefaultItemService(itemRepository = FakeItemRepository())
     }
 
     @Test

@@ -2,7 +2,7 @@ package eu.yeger.repository
 
 import eu.yeger.model.Item
 
-class TestItemRepository : ItemRepository {
+class FakeItemRepository : ItemRepository {
 
     private val items = HashMap<String, Item>()
 

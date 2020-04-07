@@ -1,6 +1,6 @@
 package eu.yeger.service
 
-import eu.yeger.auth.JWTConfiguration
+import eu.yeger.authentication.JWTConfiguration
 import eu.yeger.model.Credentials
 import eu.yeger.model.Result
 import eu.yeger.model.User
@@ -25,7 +25,8 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
             true -> Result(status = HttpStatusCode.Conflict, data = "User with that id already exists")
             false -> user.validated {
                 userRepository.insert(user)
-                Result(status = HttpStatusCode.Created, data = "Created $user")
+                val response = user.copy(password = "hidden")
+                Result(status = HttpStatusCode.Created, data = "Created $response")
             }
         }
 
@@ -33,7 +34,8 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
         when (userRepository.hasUserWithId(id = user.id)) {
             true -> user.validated {
                 userRepository.insert(user)
-                Result(status = HttpStatusCode.OK, data = "Updated $user")
+                val response = user.copy(password = "hidden")
+                Result(status = HttpStatusCode.OK, data = "Updated $response")
             }
             false -> Result(status = HttpStatusCode.Conflict, data = "User with that id does not exist")
         }
@@ -79,5 +81,7 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
     private fun User.isValid(): Boolean =
         id.isNotBlank() &&
             name.isNotBlank() &&
-            balance.hasTwoDecimalPlaces()
+            balance.hasTwoDecimalPlaces() &&
+            (!isAdmin || password?.isNotBlank() ?: false) &&
+            password?.isNotBlank() ?: true
 }

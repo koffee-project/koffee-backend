@@ -2,7 +2,7 @@ package eu.yeger.repository
 
 import eu.yeger.model.User
 
-class TestUserRepository : UserRepository {
+class FakeUserRepository : UserRepository {
 
     private val users = HashMap<String, User>()
 
