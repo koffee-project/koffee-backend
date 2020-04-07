@@ -5,6 +5,7 @@ import eu.yeger.di.fakeRepositoryModule
 import eu.yeger.di.serviceModule
 import eu.yeger.routing.installRouting
 import eu.yeger.utility.addTestUserJWTHeader
+import eu.yeger.utility.shouldBe
 import io.ktor.application.Application
 import io.ktor.application.install
 import io.ktor.features.ContentNegotiation
@@ -14,7 +15,6 @@ import io.ktor.jackson.jackson
 import io.ktor.server.testing.setBody
 import io.ktor.server.testing.withTestApplication
 import kotlin.test.Test
-import kotlin.test.assertEquals
 import org.koin.ktor.ext.Koin
 
 class AuthenticationTests {
@@ -59,9 +59,9 @@ class AuthenticationTests {
         }
 
         // Then a token is returned
-        assert(call.requestHandled)
-        assertEquals(HttpStatusCode.OK, call.response.status())
-        assert(call.response.content?.isNotBlank() ?: false)
+        call.requestHandled shouldBe true
+        call.response.status() shouldBe HttpStatusCode.OK
+        call.response.content?.isNotBlank() shouldBe true
     }
 
     @Test
@@ -88,9 +88,9 @@ class AuthenticationTests {
         }
 
         // Then no token is returned
-        assert(call.requestHandled)
-        assertEquals(HttpStatusCode.Unauthorized, call.response.status())
-        assert(call.response.content?.isNotBlank() ?: false)
+        call.requestHandled shouldBe true
+        call.response.status() shouldBe HttpStatusCode.Unauthorized
+        call.response.content?.isNotBlank() shouldBe true
     }
 
     @Test
@@ -129,9 +129,9 @@ class AuthenticationTests {
         }
 
         // Then no token is returned
-        assert(call.requestHandled)
-        assertEquals(HttpStatusCode.Unauthorized, call.response.status())
-        assert(call.response.content?.isNotBlank() ?: false)
+        call.requestHandled shouldBe true
+        call.response.status() shouldBe HttpStatusCode.Unauthorized
+        call.response.content?.isNotBlank() shouldBe true
     }
 
     @Test
@@ -143,8 +143,8 @@ class AuthenticationTests {
         }
 
         // Then the request is denied
-        assert(call.requestHandled)
-        assertEquals(HttpStatusCode.Unauthorized, call.response.status())
+        call.requestHandled shouldBe true
+        call.response.status() shouldBe HttpStatusCode.Unauthorized
     }
 
     @Test
@@ -157,8 +157,7 @@ class AuthenticationTests {
         }
 
         // Then the request is accepted
-        assert(call.requestHandled)
-        assertEquals(HttpStatusCode.NotFound, call.response.status())
-        assert(call.response.content?.isNotBlank() ?: false)
+        call.requestHandled shouldBe true
+        call.response.status() shouldBe HttpStatusCode.NotFound
     }
 }

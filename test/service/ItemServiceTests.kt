@@ -2,11 +2,11 @@ package eu.yeger.service
 
 import eu.yeger.model.Item
 import eu.yeger.repository.FakeItemRepository
+import eu.yeger.utility.shouldBe
 import eu.yeger.utility.testItem
 import io.ktor.http.HttpStatusCode
 import kotlin.test.BeforeTest
 import kotlin.test.Test
-import kotlin.test.assertEquals
 import kotlinx.coroutines.runBlocking
 
 class ItemServiceTests {
@@ -23,12 +23,12 @@ class ItemServiceTests {
         runBlocking {
             // when item is created
             val item = testItem
-            assertEquals(HttpStatusCode.Created, itemService.createItem(item).status)
+            itemService.createItem(item).status shouldBe HttpStatusCode.Created
 
             // then item can be retrieved
             val result = itemService.getItemById(item.id)
-            assertEquals(HttpStatusCode.OK, result.status)
-            assertEquals(item, result.data)
+            result.status shouldBe HttpStatusCode.OK
+            result.data shouldBe item
         }
     }
 
@@ -37,13 +37,13 @@ class ItemServiceTests {
         runBlocking {
             // when item is created
             val item = testItem
-            assertEquals(HttpStatusCode.Created, itemService.createItem(item).status)
+            itemService.createItem(item).status shouldBe HttpStatusCode.Created
 
             // then item can not be created again
             val result = itemService.getItemById(item.id)
-            assertEquals(HttpStatusCode.OK, result.status)
-            assertEquals(item, result.data)
-            assertEquals(HttpStatusCode.Conflict, itemService.createItem(item).status)
+            result.status shouldBe HttpStatusCode.OK
+            result.data shouldBe item
+            itemService.createItem(item).status shouldBe HttpStatusCode.Conflict
         }
     }
 
@@ -52,12 +52,12 @@ class ItemServiceTests {
         runBlocking {
             // when item is created with invalid id
             val item = testItem.copy(id = "    ")
-            assertEquals(HttpStatusCode.UnprocessableEntity, itemService.createItem(item).status)
+            itemService.createItem(item).status shouldBe HttpStatusCode.UnprocessableEntity
 
             // then item can not be retrieved
             val result = itemService.getItemById(item.id)
-            assertEquals(HttpStatusCode.NotFound, result.status)
-            assertEquals(null, result.data)
+            result.status shouldBe HttpStatusCode.NotFound
+            result.data shouldBe null
         }
     }
 
@@ -66,12 +66,12 @@ class ItemServiceTests {
         runBlocking {
             // when item is created with invalid name
             val item = testItem.copy(name = "    ")
-            assertEquals(HttpStatusCode.UnprocessableEntity, itemService.createItem(item).status)
+            itemService.createItem(item).status shouldBe HttpStatusCode.UnprocessableEntity
 
             // then item can not be retrieved
             val result = itemService.getItemById(item.id)
-            assertEquals(HttpStatusCode.NotFound, result.status)
-            assertEquals(null, result.data)
+            result.status shouldBe HttpStatusCode.NotFound
+            result.data shouldBe null
         }
     }
 
@@ -80,12 +80,12 @@ class ItemServiceTests {
         runBlocking {
             // when item is created with invalid amount
             val item = testItem.copy(amount = -42)
-            assertEquals(HttpStatusCode.UnprocessableEntity, itemService.createItem(item).status)
+            itemService.createItem(item).status shouldBe HttpStatusCode.UnprocessableEntity
 
             // then item can not be retrieved
             val result = itemService.getItemById(item.id)
-            assertEquals(HttpStatusCode.NotFound, result.status)
-            assertEquals(null, result.data)
+            result.status shouldBe HttpStatusCode.NotFound
+            result.data shouldBe null
         }
     }
 
@@ -94,12 +94,12 @@ class ItemServiceTests {
         runBlocking {
             // when item is created with invalid price
             val item = testItem.copy(price = 0.12345)
-            assertEquals(HttpStatusCode.UnprocessableEntity, itemService.createItem(item).status)
+            itemService.createItem(item).status shouldBe HttpStatusCode.UnprocessableEntity
 
             // then item can not be retrieved
             val result = itemService.getItemById(item.id)
-            assertEquals(HttpStatusCode.NotFound, result.status)
-            assertEquals(null, result.data)
+            result.status shouldBe HttpStatusCode.NotFound
+            result.data shouldBe null
         }
     }
 
@@ -108,12 +108,12 @@ class ItemServiceTests {
         runBlocking {
             // when item is created with negative price
             val item = testItem.copy(price = -1.00)
-            assertEquals(HttpStatusCode.UnprocessableEntity, itemService.createItem(item).status)
+            itemService.createItem(item).status shouldBe HttpStatusCode.UnprocessableEntity
 
             // then item can not be retrieved
             val result = itemService.getItemById(item.id)
-            assertEquals(HttpStatusCode.NotFound, result.status)
-            assertEquals(null, result.data)
+            result.status shouldBe HttpStatusCode.NotFound
+            result.data shouldBe null
         }
     }
 
@@ -122,14 +122,14 @@ class ItemServiceTests {
         runBlocking {
             // when item is created and updated
             val item = testItem
-            assertEquals(HttpStatusCode.Created, itemService.createItem(item).status)
+            itemService.createItem(item).status shouldBe HttpStatusCode.Created
             val updatedItem = item.copy(amount = 10, price = 1.5)
-            assertEquals(HttpStatusCode.OK, itemService.updateItem(updatedItem).status)
+            itemService.updateItem(updatedItem).status shouldBe HttpStatusCode.OK
 
             // then retrieved item has new values
             val result = itemService.getItemById(item.id)
-            assertEquals(HttpStatusCode.OK, result.status)
-            assertEquals(updatedItem, result.data)
+            result.status shouldBe HttpStatusCode.OK
+            result.data shouldBe updatedItem
         }
     }
 
@@ -138,12 +138,12 @@ class ItemServiceTests {
         runBlocking {
             // when non-existent item is updated
             val item = testItem
-            assertEquals(HttpStatusCode.Conflict, itemService.updateItem(item).status)
+            itemService.updateItem(item).status shouldBe HttpStatusCode.Conflict
 
             // then item was not created either
             val result = itemService.getItemById(item.id)
-            assertEquals(HttpStatusCode.NotFound, result.status)
-            assertEquals(null, result.data)
+            result.status shouldBe HttpStatusCode.NotFound
+            result.data shouldBe null
         }
     }
 
@@ -152,14 +152,14 @@ class ItemServiceTests {
         runBlocking {
             // when item is created and updated with invalid name
             val item = testItem
-            assertEquals(HttpStatusCode.Created, itemService.createItem(item).status)
+            itemService.createItem(item).status shouldBe HttpStatusCode.Created
             val updatedItem = item.copy(name = "   ")
-            assertEquals(HttpStatusCode.UnprocessableEntity, itemService.updateItem(updatedItem).status)
+            itemService.updateItem(updatedItem).status shouldBe HttpStatusCode.UnprocessableEntity
 
             // then retrieved item was not updated
             val result = itemService.getItemById(item.id)
-            assertEquals(HttpStatusCode.OK, result.status)
-            assertEquals(item, result.data)
+            result.status shouldBe HttpStatusCode.OK
+            result.data shouldBe item
         }
     }
 
@@ -168,14 +168,14 @@ class ItemServiceTests {
         runBlocking {
             // when item is created and updated with invalid amount
             val item = testItem
-            assertEquals(HttpStatusCode.Created, itemService.createItem(item).status)
+            itemService.createItem(item).status shouldBe HttpStatusCode.Created
             val updatedItem = item.copy(amount = -42)
-            assertEquals(HttpStatusCode.UnprocessableEntity, itemService.updateItem(updatedItem).status)
+            itemService.updateItem(updatedItem).status shouldBe HttpStatusCode.UnprocessableEntity
 
             // then retrieved item was not updated
             val result = itemService.getItemById(item.id)
-            assertEquals(HttpStatusCode.OK, result.status)
-            assertEquals(item, result.data)
+            result.status shouldBe HttpStatusCode.OK
+            result.data shouldBe item
         }
     }
 
@@ -184,14 +184,14 @@ class ItemServiceTests {
         runBlocking {
             // when item is created and updated with invalid price
             val item = testItem
-            assertEquals(HttpStatusCode.Created, itemService.createItem(item).status)
+            itemService.createItem(item).status shouldBe HttpStatusCode.Created
             val updatedItem = item.copy(price = 0.12345)
-            assertEquals(HttpStatusCode.UnprocessableEntity, itemService.updateItem(updatedItem).status)
+            itemService.updateItem(updatedItem).status shouldBe HttpStatusCode.UnprocessableEntity
 
             // then retrieved item was not updated
             val result = itemService.getItemById(item.id)
-            assertEquals(HttpStatusCode.OK, result.status)
-            assertEquals(item, result.data)
+            result.status shouldBe HttpStatusCode.OK
+            result.data shouldBe item
         }
     }
 
@@ -200,14 +200,14 @@ class ItemServiceTests {
         runBlocking {
             // when item is created and updated with negative price
             val item = testItem
-            assertEquals(HttpStatusCode.Created, itemService.createItem(item).status)
+            itemService.createItem(item).status shouldBe HttpStatusCode.Created
             val updatedItem = item.copy(price = -1.00)
-            assertEquals(HttpStatusCode.UnprocessableEntity, itemService.updateItem(updatedItem).status)
+            itemService.updateItem(updatedItem).status shouldBe HttpStatusCode.UnprocessableEntity
 
             // then retrieved item was not updated
             val result = itemService.getItemById(item.id)
-            assertEquals(HttpStatusCode.OK, result.status)
-            assertEquals(item, result.data)
+            result.status shouldBe HttpStatusCode.OK
+            result.data shouldBe item
         }
     }
 
@@ -216,13 +216,13 @@ class ItemServiceTests {
         runBlocking {
             // when item is created and deleted
             val item = testItem
-            assertEquals(HttpStatusCode.Created, itemService.createItem(item).status)
-            assertEquals(HttpStatusCode.OK, itemService.deleteItemById(item.id).status)
+            itemService.createItem(item).status shouldBe HttpStatusCode.Created
+            itemService.deleteItemById(item.id).status shouldBe HttpStatusCode.OK
 
             // then item can not be retrieved
             val result = itemService.getItemById(item.id)
-            assertEquals(HttpStatusCode.NotFound, result.status)
-            assertEquals(null, result.data)
+            result.status shouldBe HttpStatusCode.NotFound
+            result.data shouldBe null
         }
     }
 
@@ -231,12 +231,12 @@ class ItemServiceTests {
         runBlocking {
             val id = "water"
             // when non-existent item is deleted
-            assertEquals(HttpStatusCode.NotFound, itemService.deleteItemById(id).status)
+            itemService.deleteItemById(id).status shouldBe HttpStatusCode.NotFound
 
             // then item was not created either
             val result = itemService.getItemById(id)
-            assertEquals(HttpStatusCode.NotFound, result.status)
-            assertEquals(null, result.data)
+            result.status shouldBe HttpStatusCode.NotFound
+            result.data shouldBe null
         }
     }
 
@@ -246,15 +246,13 @@ class ItemServiceTests {
             // when multiple items are created
             val firstItem = testItem
             val secondItem = Item(id = "coffee", name = "Coffee", amount = 100, price = 1.0)
-            assertEquals(HttpStatusCode.Created, itemService.createItem(firstItem).status)
-            assertEquals(HttpStatusCode.Created, itemService.createItem(secondItem).status)
+            itemService.createItem(firstItem).status shouldBe HttpStatusCode.Created
+            itemService.createItem(secondItem).status shouldBe HttpStatusCode.Created
 
             // then all items are retrieved
             val result = itemService.getAllItems()
-            assertEquals(HttpStatusCode.OK, result.status)
-            val expected = listOf(firstItem, secondItem).sortedBy(Item::id)
-            val actual = result.data.sortedBy(Item::id)
-            assertEquals(expected, actual)
+            result.status shouldBe HttpStatusCode.OK
+            result.data.sortedBy(Item::id) shouldBe listOf(firstItem, secondItem).sortedBy(Item::id)
         }
     }
 }

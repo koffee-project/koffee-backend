@@ -1,6 +1,5 @@
 package eu.yeger.utility
 
-import kotlin.test.assertEquals
 import org.junit.Test
 
 class UtilityTests {
@@ -18,8 +17,8 @@ class UtilityTests {
             1.234567890 to false
         )
 
-        testCases.forEach { (value, expected) ->
-            assertEquals(expected, value.hasTwoDecimalPlaces())
+        testCases.forEach { (value, expectedResult) ->
+            value.hasTwoDecimalPlaces() shouldBe expectedResult
         }
     }
 }

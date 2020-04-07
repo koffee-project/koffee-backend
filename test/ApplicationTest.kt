@@ -1,5 +1,6 @@
 package eu.yeger
 
+import eu.yeger.utility.shouldBe
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
@@ -14,7 +15,6 @@ import io.ktor.server.testing.handleRequest
 import io.ktor.server.testing.withTestApplication
 import io.ktor.utils.io.ByteReadChannel
 import kotlin.test.Test
-import kotlin.test.assertEquals
 import kotlinx.coroutines.runBlocking
 
 class ApplicationTest {
@@ -23,8 +23,8 @@ class ApplicationTest {
     fun testRoot() {
         withTestApplication({ module(testing = true) }) {
             handleRequest(HttpMethod.Get, "/").apply {
-                assertEquals(HttpStatusCode.OK, response.status())
-                assertEquals("Hello World!", response.content)
+                response.status() shouldBe HttpStatusCode.OK
+                response.content shouldBe "Hello World!"
             }
         }
     }
@@ -46,9 +46,9 @@ class ApplicationTest {
                 }
                 expectSuccess = false
             }
-            assertEquals(byteArrayOf(1, 2, 3).toList(), client.get<ByteArray>("/").toList())
-            assertEquals("MyValue", client.request<HttpResponse>("/") {}.headers["X-MyHeader"])
-            assertEquals("Not Found other/path", client.get("/other/path"))
+            client.get<ByteArray>("/").toList() shouldBe byteArrayOf(1, 2, 3).toList()
+            client.request<HttpResponse>("/") {}.headers["X-MyHeader"] shouldBe "MyValue"
+            client.get<String>("/other/path") shouldBe "Not Found other/path"
         }
     }
 }

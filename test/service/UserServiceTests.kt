@@ -1,12 +1,11 @@
 package eu.yeger.service
 
-import eu.yeger.model.User
 import eu.yeger.repository.FakeUserRepository
+import eu.yeger.utility.shouldBe
 import eu.yeger.utility.testUser
 import io.ktor.http.HttpStatusCode
 import kotlin.test.BeforeTest
 import kotlin.test.Test
-import kotlin.test.assertEquals
 import kotlinx.coroutines.runBlocking
 
 class UserServiceTests {
@@ -23,12 +22,12 @@ class UserServiceTests {
         runBlocking {
             // when user is created
             val user = testUser
-            assertEquals(HttpStatusCode.Created, userService.createUser(user).status)
+            userService.createUser(user).status shouldBe HttpStatusCode.Created
 
             // then user can be retrieved
             val result = userService.getUserById(user.id)
-            assertEquals(HttpStatusCode.OK, result.status)
-            assertEquals(user, result.data)
+            result.status shouldBe HttpStatusCode.OK
+            result.data shouldBe user
         }
     }
 
@@ -37,13 +36,13 @@ class UserServiceTests {
         runBlocking {
             // when user is created
             val user = testUser
-            assertEquals(HttpStatusCode.Created, userService.createUser(user).status)
+            userService.createUser(user).status shouldBe HttpStatusCode.Created
 
             // then user can not be created again
             val result = userService.getUserById(user.id)
-            assertEquals(HttpStatusCode.OK, result.status)
-            assertEquals(user, result.data)
-            assertEquals(HttpStatusCode.Conflict, userService.createUser(user).status)
+            result.status shouldBe HttpStatusCode.OK
+            result.data shouldBe user
+            userService.createUser(user).status shouldBe HttpStatusCode.Conflict
         }
     }
 
@@ -52,12 +51,12 @@ class UserServiceTests {
         runBlocking {
             // when user is created with invalid id
             val user = testUser.copy(id = "    ")
-            assertEquals(HttpStatusCode.UnprocessableEntity, userService.createUser(user).status)
+            userService.createUser(user).status shouldBe HttpStatusCode.UnprocessableEntity
 
             // then user can not be retrieved
             val result = userService.getUserById(user.id)
-            assertEquals(HttpStatusCode.NotFound, result.status)
-            assertEquals(null, result.data)
+            result.status shouldBe HttpStatusCode.NotFound
+            result.data shouldBe null
         }
     }
 
@@ -66,12 +65,12 @@ class UserServiceTests {
         runBlocking {
             // when user is created with invalid name
             val user = testUser.copy(name = "    ")
-            assertEquals(HttpStatusCode.UnprocessableEntity, userService.createUser(user).status)
+            userService.createUser(user).status shouldBe HttpStatusCode.UnprocessableEntity
 
             // then user can not be retrieved
             val result = userService.getUserById(user.id)
-            assertEquals(HttpStatusCode.NotFound, result.status)
-            assertEquals(null, result.data)
+            result.status shouldBe HttpStatusCode.NotFound
+            result.data shouldBe null
         }
     }
 
@@ -80,12 +79,12 @@ class UserServiceTests {
         runBlocking {
             // when user is created with invalid balance
             val user = testUser.copy(balance = 100.12345)
-            assertEquals(HttpStatusCode.UnprocessableEntity, userService.createUser(user).status)
+            userService.createUser(user).status shouldBe HttpStatusCode.UnprocessableEntity
 
             // then user can not be retrieved
             val result = userService.getUserById(user.id)
-            assertEquals(HttpStatusCode.NotFound, result.status)
-            assertEquals(null, result.data)
+            result.status shouldBe HttpStatusCode.NotFound
+            result.data shouldBe null
         }
     }
 
@@ -94,14 +93,14 @@ class UserServiceTests {
         runBlocking {
             // when user is created and updated
             val user = testUser
-            assertEquals(HttpStatusCode.Created, userService.createUser(user).status)
-            val updatedItem = user.copy(balance = 50.0)
-            assertEquals(HttpStatusCode.OK, userService.updateUser(updatedItem).status)
+            userService.createUser(user).status shouldBe HttpStatusCode.Created
+            val updatedUser = user.copy(balance = 50.0)
+            userService.updateUser(updatedUser).status shouldBe HttpStatusCode.OK
 
             // then retrieved user has new values
             val result = userService.getUserById(user.id)
-            assertEquals(HttpStatusCode.OK, result.status)
-            assertEquals(updatedItem, result.data)
+            result.status shouldBe HttpStatusCode.OK
+            result.data shouldBe updatedUser
         }
     }
 
@@ -110,12 +109,12 @@ class UserServiceTests {
         runBlocking {
             // when non-existent user is updated
             val user = testUser
-            assertEquals(HttpStatusCode.Conflict, userService.updateUser(user).status)
+            userService.updateUser(user).status shouldBe HttpStatusCode.Conflict
 
             // then user was not created either
             val result = userService.getUserById(user.id)
-            assertEquals(HttpStatusCode.NotFound, result.status)
-            assertEquals(null, result.data)
+            result.status shouldBe HttpStatusCode.NotFound
+            result.data shouldBe null
         }
     }
 
@@ -124,14 +123,14 @@ class UserServiceTests {
         runBlocking {
             // when user is created and updated with invalid name
             val user = testUser
-            assertEquals(HttpStatusCode.Created, userService.createUser(user).status)
+            userService.createUser(user).status shouldBe HttpStatusCode.Created
             val updatedUser = user.copy(name = "   ")
-            assertEquals(HttpStatusCode.UnprocessableEntity, userService.updateUser(updatedUser).status)
+            userService.updateUser(updatedUser).status shouldBe HttpStatusCode.UnprocessableEntity
 
             // then retrieved user was not updated
             val result = userService.getUserById(user.id)
-            assertEquals(HttpStatusCode.OK, result.status)
-            assertEquals(user, result.data)
+            result.status shouldBe HttpStatusCode.OK
+            result.data shouldBe user
         }
     }
 
@@ -140,14 +139,14 @@ class UserServiceTests {
         runBlocking {
             // when user is created and updated with invalid balance
             val user = testUser
-            assertEquals(HttpStatusCode.Created, userService.createUser(user).status)
+            userService.createUser(user).status shouldBe HttpStatusCode.Created
             val updatedUser = user.copy(balance = 1.23456)
-            assertEquals(HttpStatusCode.UnprocessableEntity, userService.updateUser(updatedUser).status)
+            userService.updateUser(updatedUser).status shouldBe HttpStatusCode.UnprocessableEntity
 
             // then retrieved user was not updated
             val result = userService.getUserById(user.id)
-            assertEquals(HttpStatusCode.OK, result.status)
-            assertEquals(user, result.data)
+            result.status shouldBe HttpStatusCode.OK
+            result.data shouldBe user
         }
     }
 
@@ -156,13 +155,13 @@ class UserServiceTests {
         runBlocking {
             // when user is created and deleted
             val user = testUser
-            assertEquals(HttpStatusCode.Created, userService.createUser(user).status)
-            assertEquals(HttpStatusCode.OK, userService.deleteUserById(user.id).status)
+            userService.createUser(user).status shouldBe HttpStatusCode.Created
+            userService.deleteUserById(user.id).status shouldBe HttpStatusCode.OK
 
             // then user can not be retrieved
             val result = userService.getUserById(user.id)
-            assertEquals(HttpStatusCode.NotFound, result.status)
-            assertEquals(null, result.data)
+            result.status shouldBe HttpStatusCode.NotFound
+            result.data shouldBe null
         }
     }
 
@@ -171,12 +170,12 @@ class UserServiceTests {
         runBlocking {
             val id = "userName"
             // when non-existent user is deleted
-            assertEquals(HttpStatusCode.NotFound, userService.deleteUserById(id).status)
+            userService.deleteUserById(id).status shouldBe HttpStatusCode.NotFound
 
             // then user was not created either
             val result = userService.getUserById(id)
-            assertEquals(HttpStatusCode.NotFound, result.status)
-            assertEquals(null, result.data)
+            result.status shouldBe HttpStatusCode.NotFound
+            result.data shouldBe null
         }
     }
 
@@ -186,15 +185,13 @@ class UserServiceTests {
             // when multiple users are created
             val firstUser = testUser.copy(id = "firstUser")
             val secondUser = testUser.copy(id = "secondUser")
-            assertEquals(HttpStatusCode.Created, userService.createUser(firstUser).status)
-            assertEquals(HttpStatusCode.Created, userService.createUser(secondUser).status)
+            userService.createUser(firstUser).status shouldBe HttpStatusCode.Created
+            userService.createUser(secondUser).status shouldBe HttpStatusCode.Created
 
             // then all users are retrieved
             val result = userService.getAllUsers()
-            assertEquals(HttpStatusCode.OK, result.status)
-            val expected = listOf(firstUser, secondUser).sortedBy(User::id)
-            val actual = result.data.sortedBy(User::id)
-            assertEquals(expected, actual)
+            result.status shouldBe HttpStatusCode.OK
+            result.data shouldBe listOf(firstUser, secondUser)
         }
     }
 }
