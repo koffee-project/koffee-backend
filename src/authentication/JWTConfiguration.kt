@@ -33,7 +33,7 @@ object JWTConfiguration {
                 .withClaim("id", user.id)
                 .withExpiresAt(getExpiration())
                 .sign(algorithm)
-            else -> null
+            false -> null
         }
 
     private fun getExpiration() = Date(System.currentTimeMillis() + duration)

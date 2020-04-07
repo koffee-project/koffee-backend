@@ -10,8 +10,7 @@ class FakeUserRepository : UserRepository {
 
     override suspend fun getById(id: String): User? = users[id]
 
-    override suspend fun hasUserWithId(id: String): Boolean =
-        getById(id) != null
+    override suspend fun hasUserWithId(id: String): Boolean = getById(id) != null
 
     override suspend fun insert(user: User) {
         users[user.id] = user

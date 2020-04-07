@@ -96,7 +96,7 @@ class AuthenticationTests {
     @Test
     fun `verify that login does not work for non-admins`() = withTestApplication(testModule) {
         // When login is requested for user without admin privileges
-        handleRequest {
+        val userCreationCall = handleRequest {
             method = HttpMethod.Post
             uri = "/users"
             addHeader("Content-Type", "application/json")
@@ -114,6 +114,9 @@ class AuthenticationTests {
             addTestUserJWTHeader()
         }
 
+        userCreationCall.requestHandled shouldBe true
+        userCreationCall.response.status() shouldBe HttpStatusCode.Created
+
         val call = handleRequest {
             method = HttpMethod.Post
             uri = "/login"
@@ -128,9 +131,11 @@ class AuthenticationTests {
             )
         }
 
+        println(call.response.content)
+
         // Then no token is returned
         call.requestHandled shouldBe true
-        call.response.status() shouldBe HttpStatusCode.Unauthorized
+        call.response.status() shouldBe HttpStatusCode.Forbidden
         call.response.content?.isNotBlank() shouldBe true
     }
 

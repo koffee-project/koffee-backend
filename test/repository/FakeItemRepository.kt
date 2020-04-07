@@ -8,11 +8,9 @@ class FakeItemRepository : ItemRepository {
 
     override suspend fun getAll(): List<Item> = items.values.toList()
 
-    override suspend fun getById(id: String): Item? =
-        items[id]
+    override suspend fun getById(id: String): Item? = items[id]
 
-    override suspend fun hasItemWithId(id: String): Boolean =
-        getById(id) != null
+    override suspend fun hasItemWithId(id: String): Boolean = getById(id) != null
 
     override suspend fun insert(item: Item) {
         items[item.id] = item

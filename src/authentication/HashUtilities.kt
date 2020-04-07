@@ -11,8 +11,7 @@ fun User.withHashedPassword() =
     }
 
 infix fun Credentials.matches(user: User): Boolean {
-    return user.isAdmin &&
-        user.password != null &&
+    return user.password != null &&
         this.id == user.id &&
         BCrypt.checkpw(this.password, user.password)
 }
