@@ -6,7 +6,7 @@ import io.ktor.auth.Authentication
 import io.ktor.auth.jwt.JWTPrincipal
 import io.ktor.auth.jwt.jwt
 
-fun Application.installAuthentication() {
+fun Application.authenticationModule() {
     install(Authentication) {
         jwt {
             realm = JWTConfiguration.realm

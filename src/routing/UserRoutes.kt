@@ -12,19 +12,6 @@ import org.koin.ktor.ext.inject
 fun Route.userRoutes() {
     val userService: UserService by inject()
 
-    // TODO replace this route by actual default admin implementation
-    post("admin") {
-        val admin = User(
-            id = "admin",
-            name = "Admin",
-            balance = 0.0,
-            isAdmin = true,
-            password = "admin"
-        )
-        val result = userService.createUser(admin)
-        call.respondWithResult(result)
-    }
-
     route("users") {
         get {
             val users = userService.getAllUsers()

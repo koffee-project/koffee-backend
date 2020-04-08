@@ -1,9 +1,11 @@
 package eu.yeger.authentication
 
 import com.fasterxml.jackson.databind.SerializationFeature
+import eu.yeger.Arguments
 import eu.yeger.di.fakeRepositoryModule
 import eu.yeger.di.serviceModule
-import eu.yeger.routing.installRouting
+import eu.yeger.initializeDefaultAdmin
+import eu.yeger.routing.routingModule
 import eu.yeger.utility.addTestUserJWTHeader
 import eu.yeger.utility.shouldBe
 import io.ktor.application.Application
@@ -20,9 +22,9 @@ import org.koin.ktor.ext.Koin
 class AuthenticationTests {
 
     private val testModule: Application.() -> Unit = {
-        installAuthentication()
+        authenticationModule()
 
-        installRouting()
+        routingModule()
 
         install(Koin) {
             modules(serviceModule + fakeRepositoryModule)
@@ -33,16 +35,12 @@ class AuthenticationTests {
                 enable(SerializationFeature.INDENT_OUTPUT)
             }
         }
+
+        initializeDefaultAdmin()
     }
 
     @Test
     fun `verify that login works`() = withTestApplication(testModule) {
-        // TODO replace this by actual default admin implementation
-        handleRequest {
-            method = HttpMethod.Post
-            uri = "/admin"
-        }
-
         // When login is requested with correct credentials
         val call = handleRequest {
             method = HttpMethod.Post
@@ -51,8 +49,8 @@ class AuthenticationTests {
             setBody(
                 """
                     {
-                        "id": "admin",
-                        "password": "admin"
+                        "id": "${Arguments.defaultAdminId}",
+                        "password": "${Arguments.defaultAdminPassword}"
                     }
                 """.trimIndent()
             )
@@ -66,12 +64,6 @@ class AuthenticationTests {
 
     @Test
     fun `verify that login does not work with incorrect credentials`() = withTestApplication(testModule) {
-        // TODO replace this by actual default admin implementation
-        handleRequest {
-            method = HttpMethod.Post
-            uri = "/admin"
-        }
-
         // When login is requested with correct credentials
         val call = handleRequest {
             method = HttpMethod.Post
@@ -130,8 +122,6 @@ class AuthenticationTests {
                 """.trimIndent()
             )
         }
-
-        println(call.response.content)
 
         // Then no token is returned
         call.requestHandled shouldBe true

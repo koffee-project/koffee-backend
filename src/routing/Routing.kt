@@ -12,7 +12,7 @@ import io.ktor.routing.get
 import io.ktor.routing.route
 import io.ktor.routing.routing
 
-fun Application.installRouting() = routing {
+fun Application.routingModule() = routing {
     route("/") {
         get {
             call.respondText("Hello World!", contentType = ContentType.Text.Plain)
