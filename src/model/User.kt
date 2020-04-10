@@ -9,3 +9,10 @@ data class User(
     val isAdmin: Boolean,
     val password: String?
 ) : Principal, Entity
+
+val User.profile: Profile
+    get() = Profile(
+        id = this.id,
+        name = this.name,
+        balance = this.balance
+    )

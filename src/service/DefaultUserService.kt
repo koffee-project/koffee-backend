@@ -4,21 +4,25 @@ import eu.yeger.authentication.JWTConfiguration
 import eu.yeger.authentication.matches
 import eu.yeger.authentication.withHashedPassword
 import eu.yeger.model.Credentials
+import eu.yeger.model.Profile
 import eu.yeger.model.Result
 import eu.yeger.model.User
+import eu.yeger.model.profile
 import eu.yeger.repository.UserRepository
 import eu.yeger.utility.hasTwoDecimalPlaces
 import io.ktor.http.HttpStatusCode
 
 class DefaultUserService(private val userRepository: UserRepository) : UserService {
 
-    override suspend fun getAllUsers(): Result<List<User>> =
-        Result(status = HttpStatusCode.OK, data = userRepository.getAll())
+    override suspend fun getAllUsers(): Result<List<Profile>> {
+        val profiles = userRepository.getAll().map(User::profile)
+        return Result(status = HttpStatusCode.OK, data = profiles)
+    }
 
-    override suspend fun getUserById(id: String): Result<User?> =
+    override suspend fun getUserById(id: String): Result<Profile?> =
         userRepository.getById(id = id).let { user ->
             val status = if (user == null) HttpStatusCode.NotFound else HttpStatusCode.OK
-            Result(status = status, data = user)
+            Result(status = status, data = user?.profile)
         }
 
     override suspend fun createUser(user: User): Result<String> =
@@ -26,8 +30,7 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
             true -> Result(status = HttpStatusCode.Conflict, data = "User with that id already exists")
             false -> user.validated { hashedUser ->
                 userRepository.insert(hashedUser)
-                val response = hashedUser.copy(password = "hidden")
-                Result(status = HttpStatusCode.Created, data = "Created $response")
+                Result(status = HttpStatusCode.Created, data = "Created ${hashedUser.profile}")
             }
         }
 
@@ -35,8 +38,7 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
         when (userRepository.hasUserWithId(id = user.id)) {
             true -> user.validated { hashedUser ->
                 userRepository.insert(hashedUser)
-                val response = hashedUser.copy(password = "hidden")
-                Result(status = HttpStatusCode.OK, data = "Updated $response")
+                Result(status = HttpStatusCode.OK, data = "Updated ${hashedUser.profile}")
             }
             false -> Result(status = HttpStatusCode.Conflict, data = "User with that id does not exist")
         }
