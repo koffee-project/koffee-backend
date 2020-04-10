@@ -1,6 +1,8 @@
 version: '3'
+
 services:
-  app:
+  koffee-backend:
+    container_name: "Koffee-Backend"
     build:
       context: .
       dockerfile: Dockerfile
@@ -9,8 +11,14 @@ services:
     depends_on:
       - mongodb
     restart: unless-stopped
+    networks:
+      - koffee-network
   mongodb:
+    container_name: "MongoDB"
     image: mongo
-    expose:
-      - 27017
     restart: unless-stopped
+    networks:
+      - koffee-network
+
+networks:
+  koffee-network:
