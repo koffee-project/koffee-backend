@@ -1,4 +1,4 @@
-version: '3'
+version: "3.7"
 
 services:
   koffee-backend:
@@ -6,10 +6,16 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    ports:
-      - 8080:8080
+    expose:
+      - 8080
+    environment:
+      - VIRTUAL_HOST=yeger.eu
+      - VIRTUAL_PORT=8080
+      - LETSENCRYPT_HOST=yeger.eu
+      - LETSENCRYPT_EMAIL=janmueller3698@gmail.com
     depends_on:
       - mongodb
+      - nginx-proxy-companion
     restart: unless-stopped
     networks:
       - koffee-network
@@ -19,6 +25,51 @@ services:
     restart: unless-stopped
     networks:
       - koffee-network
+  nginx-proxy:
+    container_name: "nginx-proxy"
+    image: jwilder/nginx-proxy:alpine
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - type: volume
+        source: nginx-data
+        target: /etc/nginx/certs
+      - type: volume
+        source: nginx-data
+        target: /etc/nginx/vhost.d
+      - type: volume
+        source: nginx-data
+        target: /usr/share/nginx/html
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    restart: unless-stopped
+    networks:
+      - koffee-network
+  nginx-proxy-companion:
+    container_name: "nginx-proxy-companion"
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    volumes:
+      - type: volume
+        source: nginx-data
+        target: /etc/nginx/certs
+      - type: volume
+        source: nginx-data
+        target: /etc/nginx/vhost.d
+      - type: volume
+        source: nginx-data
+        target: /usr/share/nginx/html
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - DEFAULT_EMAIL=janmueller3698@gmail.com
+      - NGINX_PROXY_CONTAINER=nginx-proxy
+    depends_on:
+      - nginx-proxy
+    restart: unless-stopped
+    networks:
+      - koffee-network
+
+volumes:
+  nginx-data:
 
 networks:
   koffee-network:
