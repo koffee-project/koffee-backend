@@ -15,6 +15,7 @@ services:
       - LETSENCRYPT_EMAIL=janmueller3698@gmail.com
     depends_on:
       - mongodb
+      - nginx-proxy
       - nginx-proxy-companion
     restart: unless-stopped
     networks:
