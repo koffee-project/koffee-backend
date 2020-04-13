@@ -1,76 +1,47 @@
 version: "3.7"
 
 services:
-  koffee-backend:
-    container_name: "Koffee-Backend"
+  koffee:
+    container_name: koffee
     build:
       context: .
       dockerfile: Dockerfile
     expose:
       - 8080
-    environment:
-      - VIRTUAL_HOST=yeger.eu
-      - VIRTUAL_PORT=8080
-      - LETSENCRYPT_HOST=yeger.eu
-      - LETSENCRYPT_EMAIL=janmueller3698@gmail.com
     depends_on:
       - mongodb
-      - nginx-proxy
-      - nginx-proxy-companion
     restart: unless-stopped
     networks:
       - koffee-network
   mongodb:
-    container_name: "MongoDB"
+    container_name: mongodb
     image: mongo
     restart: unless-stopped
     networks:
       - koffee-network
-  nginx-proxy:
-    container_name: "nginx-proxy"
-    image: jwilder/nginx-proxy:alpine
-    ports:
-      - 80:80
-      - 443:443
-    volumes:
-      - type: volume
-        source: nginx-data
-        target: /etc/nginx/certs
-      - type: volume
-        source: nginx-data
-        target: /etc/nginx/vhost.d
-      - type: volume
-        source: nginx-data
-        target: /usr/share/nginx/html
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-    restart: unless-stopped
-    networks:
-      - koffee-network
-  nginx-proxy-companion:
-    container_name: "nginx-proxy-companion"
-    image: jrcs/letsencrypt-nginx-proxy-companion
-    volumes:
-      - type: volume
-        source: nginx-data
-        target: /etc/nginx/certs
-      - type: volume
-        source: nginx-data
-        target: /etc/nginx/vhost.d
-      - type: volume
-        source: nginx-data
-        target: /usr/share/nginx/html
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+  letsencrypt:
+    image: linuxserver/letsencrypt
+    container_name: letsencrypt
+    cap_add:
+      - NET_ADMIN
     environment:
-      - DEFAULT_EMAIL=janmueller3698@gmail.com
-      - NGINX_PROXY_CONTAINER=nginx-proxy
-    depends_on:
-      - nginx-proxy
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Berlin
+      - URL=yeger.eu
+      - VALIDATION=http
+      - STAGING=true
+    volumes:
+      - type: bind
+        source: ./koffee.subfolder.conf
+        target: /config/nginx/proxy-confs/koffee.subfolder.conf
+        read_only: true
+    ports:
+      - 443:443
+      - 80:80
     restart: unless-stopped
     networks:
       - koffee-network
-
-volumes:
-  nginx-data:
 
 networks:
   koffee-network:

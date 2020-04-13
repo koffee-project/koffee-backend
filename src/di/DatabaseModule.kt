@@ -9,6 +9,6 @@ val databaseModule = module {
         KMongo
             .createClient("mongodb://mongodb:27017")
             .coroutine
-            .getDatabase("koffee-backend")
+            .getDatabase("koffee-database")
     }
 }
