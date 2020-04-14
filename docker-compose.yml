@@ -6,8 +6,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    expose:
-      - 8080
     depends_on:
       - mongodb
     restart: unless-stopped
