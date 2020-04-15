@@ -1,7 +1,5 @@
 package eu.yeger
 
-import com.apurebase.arkenv.Arkenv
-import com.apurebase.arkenv.argument
 import com.fasterxml.jackson.databind.SerializationFeature
 import eu.yeger.di.databaseModule
 import eu.yeger.di.repositoryModule
@@ -10,6 +8,7 @@ import eu.yeger.model.User
 import eu.yeger.service.UserService
 import io.ktor.application.Application
 import io.ktor.application.install
+import io.ktor.application.log
 import io.ktor.features.CallLogging
 import io.ktor.features.ContentNegotiation
 import io.ktor.jackson.jackson
@@ -39,10 +38,13 @@ fun Application.mainModule() {
     }
 
     initializeDefaultAdmin()
+
+    log.debug(Arguments.hmacSecret)
 }
 
 fun Application.initializeDefaultAdmin() {
     val userService: UserService by inject()
+
     val defaultAdmin = User(
         id = Arguments.defaultAdminId,
         name = Arguments.defaultAdminName,
@@ -50,22 +52,8 @@ fun Application.initializeDefaultAdmin() {
         isAdmin = true,
         password = Arguments.defaultAdminPassword
     )
+
     runBlocking {
         userService.createUser(defaultAdmin)
-    }
-}
-
-object Arguments : Arkenv() {
-
-    val defaultAdminId: String by argument {
-        defaultValue = { "admin" }
-    }
-
-    val defaultAdminName: String by argument {
-        defaultValue = { "Admin" }
-    }
-
-    val defaultAdminPassword: String by argument {
-        defaultValue = { "admin" }
     }
 }

@@ -78,4 +78,11 @@ tasks {
             delete("/src/main", "/src/test")
         }
     }
+
+    test {
+        environment(
+            "URL" to "yeger.eu",
+            "HMAC_SECRET" to "secret"
+        )
+    }
 }

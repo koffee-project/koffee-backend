@@ -6,13 +6,18 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    env_file:
+      - ./environments/domain.env
+      - ./environments/koffee.env
     depends_on:
-      - mongodb
+      - mongo
     restart: unless-stopped
     networks:
       - koffee-network
-  mongodb:
-    container_name: mongodb
+    secrets:
+      - hmac_secret
+  mongo:
+    container_name: mongo
     image: mongo
     restart: unless-stopped
     networks:
@@ -22,24 +27,24 @@ services:
     container_name: letsencrypt
     cap_add:
       - NET_ADMIN
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/Berlin
-      - URL=yeger.eu
-      - VALIDATION=http
-      - STAGING=true
+    env_file:
+      - ./environments/domain.env
+      - ./environments/letsencrypt.env
+    ports:
+      - 443:443
+      - 80:80
     volumes:
       - type: bind
         source: ./koffee.subfolder.conf
         target: /config/nginx/proxy-confs/koffee.subfolder.conf
         read_only: true
-    ports:
-      - 443:443
-      - 80:80
     restart: unless-stopped
     networks:
       - koffee-network
 
 networks:
   koffee-network:
+
+secrets:
+  hmac_secret:
+    file: ./secrets/hmac_secret.secret

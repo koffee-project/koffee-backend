@@ -3,18 +3,17 @@ package eu.yeger.authentication
 import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
+import eu.yeger.Arguments
 import eu.yeger.model.User
 import java.util.Date
 
 object JWTConfiguration {
-    // TODO change this to actual secret
-    private const val secret = "secret"
 
-    private const val issuer = "yeger.eu"
+    private val issuer = Arguments.url
     const val audience = "jwt-audience"
     const val realm = "koffee-backend"
 
-    private val algorithm = Algorithm.HMAC256(secret)
+    private val algorithm = Algorithm.HMAC256(Arguments.hmacSecret)
 
     private const val duration = 3_600_000 * 24 // 24 hours
 
