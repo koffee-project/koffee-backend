@@ -9,8 +9,6 @@ services:
     env_file:
       - ./environments/domain.env
       - ./environments/koffee.env
-    ports:
-      - 8080:8080
     depends_on:
       - mongo
     restart: unless-stopped
@@ -21,6 +19,25 @@ services:
   mongo:
     container_name: mongo
     image: mongo
+    restart: unless-stopped
+    networks:
+      - koffee-network
+  letsencrypt:
+    image: linuxserver/letsencrypt
+    container_name: letsencrypt
+    cap_add:
+      - NET_ADMIN
+    env_file:
+      - ./environments/domain.env
+      - ./environments/letsencrypt.env
+    ports:
+      - 443:443
+      - 80:80
+    volumes:
+      - type: bind
+        source: ./koffee.subfolder.conf
+        target: /config/nginx/proxy-confs/koffee.subfolder.conf
+        read_only: true
     restart: unless-stopped
     networks:
       - koffee-network

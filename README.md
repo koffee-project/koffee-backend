@@ -4,12 +4,26 @@
 
 ## Deployment
 
+### Development
+
 1. Build the project using the Gradle `build` task.
 2. Create a `./secrets/hmac_secret.secret` file that includes the secret string.
 3. Change the `URL` environment variable in `./environments/domain.env` as required.
 4. Run `docker-compose build` and `docker-compose up -d`.
+5. The server is now accessible at `http://localhost:8080`.
+6. Run `docker-compose down` to stop the server.
 
-### Timetable
+### Production
+
+1. Build the project using the Gradle `build` task.
+2. Create a `./secrets/hmac_secret.secret` file that includes the secret string.
+3. Change the `URL` environment variable in `./environments/domain.env` to a valid domain pointing to the host machine.
+4. Ensure that the ports 80 and 443 are forwarded to the host machine.
+5. Run `docker-compose -f docker-compose-production.yml build` and `docker-compose -f docker-compose-production.yml up -d`.
+6. The server is now accessible at `https://your.domain/koffee`
+7. Run `docker-compose -f docker-compose-production.yml down` to stop the server.
+
+## Timetable
 
 * 06.04.2020 – VCS-Setup, Grundlage Backend (Datenbankanbindung, Docker)
 * 13.04.2020 – Aufbau und Struktur des Backends
