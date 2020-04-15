@@ -2,6 +2,13 @@
 
 [![Build Status](https://travis-ci.com/DerYeger/koffee-backend.svg?token=juB9bV6tFyoA5v7Hx1o4&branch=develop)](https://travis-ci.com/DerYeger/koffee-backend)
 
+## Deployment
+
+1. Build the project using the Gradle `build` task.
+2. Create a `./secrets/hmac_secret.secret` file that includes the secret string.
+3. Change the `URL` environment variable in `./environments/domain.env` as required.
+4. Run `docker-compose build` and `docker-compose up -d`.
+
 ### Timetable
 
 * 06.04.2020 – VCS-Setup, Grundlage Backend (Datenbankanbindung, Docker)
