@@ -6,6 +6,7 @@ import eu.yeger.di.repositoryModule
 import eu.yeger.di.serviceModule
 import eu.yeger.model.User
 import eu.yeger.service.UserService
+import eu.yeger.utility.loadDockerSecrets
 import io.ktor.application.Application
 import io.ktor.application.install
 import io.ktor.features.CallLogging
@@ -42,12 +43,14 @@ fun Application.mainModule() {
 fun Application.initializeDefaultAdmin() {
     val userService: UserService by inject()
 
+    val defaultAdminSecrets = loadDockerSecrets(fileName = Arguments.defaultAdminSecret)
+
     val defaultAdmin = User(
-        id = Arguments.defaultAdminId,
-        name = Arguments.defaultAdminName,
+        id = defaultAdminSecrets["ID"] ?: "admin",
+        name = defaultAdminSecrets["NAME"] ?: "admin",
         balance = 0.0,
         isAdmin = true,
-        password = Arguments.defaultAdminPassword
+        password = defaultAdminSecrets["PASSWORD"] ?: "admin"
     )
 
     runBlocking {

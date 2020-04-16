@@ -15,17 +15,9 @@ object Arguments : Arkenv() {
         defaultValue = { "27017" }
     }
 
-    val defaultAdminId: String by argument {
-        defaultValue = { "admin" }
-    }
+    val defaultAdminSecret: String by argument()
 
-    val defaultAdminName: String by argument {
-        defaultValue = { "Admin" }
-    }
-
-    val defaultAdminPassword: String by argument {
-        defaultValue = { "admin" }
-    }
+    val hmacSecret: String by argument()
 
     val url: String by argument()
 }

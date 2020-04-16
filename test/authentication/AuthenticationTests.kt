@@ -1,7 +1,6 @@
 package eu.yeger.authentication
 
 import com.fasterxml.jackson.databind.SerializationFeature
-import eu.yeger.Arguments
 import eu.yeger.di.fakeRepositoryModule
 import eu.yeger.di.serviceModule
 import eu.yeger.initializeDefaultAdmin
@@ -49,8 +48,8 @@ class AuthenticationTests {
             setBody(
                 """
                     {
-                        "id": "${Arguments.defaultAdminId}",
-                        "password": "${Arguments.defaultAdminPassword}"
+                        "id": "admin",
+                        "password": "admin"
                     }
                 """.trimIndent()
             )

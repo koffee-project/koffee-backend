@@ -2,9 +2,14 @@ package eu.yeger.utility
 
 import com.cars.framework.secrets.DockerSecrets
 
-fun readDockerSecret(name: String): String? =
+fun loadDockerSecrets(fileName: String? = null): Map<String, String> =
     try {
-        DockerSecrets.load()[name]
+        when (fileName) {
+            null -> DockerSecrets.load()
+            else -> DockerSecrets.loadFromFile(fileName)
+        }
     } catch (e: Exception) {
-        null
+        mapOf()
     }
+
+fun readDockerSecret(name: String): String? = loadDockerSecrets()[name]

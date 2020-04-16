@@ -83,8 +83,9 @@ tasks {
 
     test {
         environment(
-            "URL" to "yeger.eu",
-            "HMAC_SECRET" to "secret"
+            "DEFAULT_ADMIN_SECRET" to "",
+            "HMAC_SECRET" to "",
+            "URL" to "yeger.eu"
         )
     }
 }

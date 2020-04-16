@@ -2,13 +2,29 @@
 
 [![Build Status](https://travis-ci.com/DerYeger/koffee-backend.svg?token=juB9bV6tFyoA5v7Hx1o4&branch=develop)](https://travis-ci.com/DerYeger/koffee-backend)
 
+## Secrets
+
+### default_admin.secret
+
+Configuration of the default admin as seen below.
+
+```
+ID=koffee-admin-id
+NAME=koffee-admin-name
+PASSWORD=koffee-admin-password
+```
+
+### hmac_secret.secret
+
+The secret string used by the HMAC algorithm for JWT verification and signing.
+
 ## Deployment
 
 ### Development
 
 1. Build the project using the Gradle `build` task.
-2. Create a `./secrets/hmac_secret.secret` file that includes the secret string.
-3. Change the `URL` environment variable in `./environments/domain.env` as required.
+2. Create the required secrets.
+3. Change the `URL` environment variable in `./environments/domain.env` as necessary.
 4. Run `docker-compose build` and `docker-compose up -d`.
 5. The server is now accessible at `http://localhost:8080`.
 6. Run `docker-compose down` to stop the server.
@@ -16,9 +32,9 @@
 ### Production
 
 1. Build the project using the Gradle `build` task.
-2. Create a `./secrets/hmac_secret.secret` file that includes the secret string.
+2. Create the required secrets.
 3. Change the `URL` environment variable in `./environments/domain.env` to a valid domain pointing to the host machine.
-4. Ensure that the ports 80 and 443 are forwarded to the host machine.
+4. Ensure that ports 80 and 443 are forwarded to the host machine.
 5. Run `docker-compose -f docker-compose-production.yml build` and `docker-compose -f docker-compose-production.yml up -d`.
 6. The server is now accessible at `https://your.domain/koffee`.
 7. Run `docker-compose -f docker-compose-production.yml down` to stop the server.

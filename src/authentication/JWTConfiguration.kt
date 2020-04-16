@@ -14,7 +14,7 @@ object JWTConfiguration {
     const val audience = "jwt-audience"
     const val realm = "koffee-backend"
 
-    private val algorithm = Algorithm.HMAC256(readDockerSecret("hmac_secret") ?: "secret")
+    private val algorithm = Algorithm.HMAC256(readDockerSecret(Arguments.hmacSecret) ?: "secret")
 
     private const val duration = 3_600_000 * 24 // 24 hours
 

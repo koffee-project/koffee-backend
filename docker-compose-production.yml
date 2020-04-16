@@ -15,6 +15,7 @@ services:
     networks:
       - koffee-network
     secrets:
+      - default_admin
       - hmac_secret
   mongo:
     container_name: mongo
@@ -46,5 +47,7 @@ networks:
   koffee-network:
 
 secrets:
+  default_admin:
+    file: ./secrets/default_admin.secret
   hmac_secret:
     file: ./secrets/hmac_secret.secret
