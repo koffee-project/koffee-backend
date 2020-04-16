@@ -4,6 +4,8 @@
 
 ## Secrets
 
+Secrets are stored in `.secret` files in the `secrets` directory and excluded from git.
+
 ### default_admin.secret
 
 Configuration of the default admin as seen below.
