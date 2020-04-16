@@ -1,6 +1,7 @@
 package eu.yeger.repository
 
 import eu.yeger.model.User
+import eu.yeger.utility.incrementBy
 import eu.yeger.utility.upsert
 import org.litote.kmongo.coroutine.CoroutineDatabase
 import org.litote.kmongo.eq
@@ -30,7 +31,7 @@ class MongoUserRepository(database: CoroutineDatabase) : UserRepository {
     override suspend fun updateBalance(id: String, change: Double) {
         userCollection.findOneAndUpdate(
             filter = User::id eq id,
-            update = inc(User::balance, change)
+            update = User::balance incrementBy change
         )
     }
 }
