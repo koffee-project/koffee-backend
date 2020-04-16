@@ -1,5 +1,6 @@
 package eu.yeger.routing
 
+import eu.yeger.model.BalanceChange
 import eu.yeger.model.User
 import eu.yeger.service.UserService
 import eu.yeger.utility.respondWithResult
@@ -35,7 +36,7 @@ fun Route.userRoutes() {
         route("{id}") {
             get {
                 val id = call.parameters["id"]!!
-                val result = userService.getUserById(id = id)
+                val result = userService.getUserById(id)
                 call.respondWithResult(result)
             }
 
@@ -43,6 +44,13 @@ fun Route.userRoutes() {
                 delete {
                     val id = call.parameters["id"]!!
                     val result = userService.deleteUserById(id)
+                    call.respondWithResult(result)
+                }
+
+                post("/balance") {
+                    val id = call.parameters["id"]!!
+                    val balanceChange = call.receive<BalanceChange>()
+                    val result = userService.updateBalance(id, balanceChange)
                     call.respondWithResult(result)
                 }
             }

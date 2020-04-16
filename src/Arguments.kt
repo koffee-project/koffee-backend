@@ -5,19 +5,19 @@ import com.apurebase.arkenv.argument
 
 object Arguments : Arkenv() {
 
-    val databaseHost: String by argument()
+    val databaseHost by argument<String>()
 
-    val databaseName: String by argument {
+    val databaseName by argument<String> {
         defaultValue = { "koffee-database" }
     }
 
-    val databasePort: String by argument {
+    val databasePort by argument<String> {
         defaultValue = { "27017" }
     }
 
-    val defaultAdminSecret: String by argument()
+    val defaultAdminSecret by argument<String>()
 
-    val hmacSecret: String by argument()
+    val hmacSecret by argument<String>()
 
-    val url: String by argument()
+    val url by argument<String>()
 }

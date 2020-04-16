@@ -3,6 +3,8 @@ package eu.yeger.repository
 import eu.yeger.model.User
 import eu.yeger.utility.upsert
 import org.litote.kmongo.coroutine.CoroutineDatabase
+import org.litote.kmongo.eq
+import org.litote.kmongo.inc
 
 class MongoUserRepository(database: CoroutineDatabase) : UserRepository {
 
@@ -23,5 +25,12 @@ class MongoUserRepository(database: CoroutineDatabase) : UserRepository {
 
     override suspend fun removeById(id: String) {
         userCollection.deleteOneById(id = id)
+    }
+
+    override suspend fun updateBalance(id: String, change: Double) {
+        userCollection.findOneAndUpdate(
+            filter = User::id eq id,
+            update = inc(User::balance, change)
+        )
     }
 }

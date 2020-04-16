@@ -1,5 +1,6 @@
 package eu.yeger.routing
 
+import com.fasterxml.jackson.core.JsonProcessingException
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -27,6 +28,9 @@ fun Application.routingModule() = routing {
         exception<Throwable> { cause ->
             call.respond(HttpStatusCode.InternalServerError)
             throw cause
+        }
+        exception<JsonProcessingException> {
+            call.respond(HttpStatusCode.BadRequest)
         }
     }
 }

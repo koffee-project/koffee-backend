@@ -13,4 +13,6 @@ interface UserRepository {
     suspend fun insert(user: User)
 
     suspend fun removeById(id: String)
+
+    suspend fun updateBalance(id: String, change: Double)
 }

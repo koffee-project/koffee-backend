@@ -19,4 +19,10 @@ class FakeUserRepository : UserRepository {
     override suspend fun removeById(id: String) {
         users.remove(id)
     }
+
+    override suspend fun updateBalance(id: String, change: Double) {
+        users[id]?.let { oldUser ->
+            users[id] = oldUser.copy(balance = oldUser.balance + change)
+        }
+    }
 }
