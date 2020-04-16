@@ -1,4 +1,5 @@
 val arkenv_version: String by project
+val docker_secrets_java_version: String by project
 val jbcrypt_version: String by project
 val kmongo_version: String by project
 val koin_version: String by project
@@ -53,6 +54,7 @@ dependencies {
     implementation("org.koin:koin-ktor:$koin_version")
     implementation("org.mindrot:jbcrypt:$jbcrypt_version")
     implementation("com.apurebase:arkenv:$arkenv_version")
+    implementation("com.cars:docker-secrets:$docker_secrets_java_version")
     testImplementation("io.ktor:ktor-server-tests:$ktor_version")
     testImplementation("io.ktor:ktor-client-mock:$ktor_version")
     testImplementation("io.ktor:ktor-client-mock-jvm:$ktor_version")

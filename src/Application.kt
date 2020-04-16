@@ -8,7 +8,6 @@ import eu.yeger.model.User
 import eu.yeger.service.UserService
 import io.ktor.application.Application
 import io.ktor.application.install
-import io.ktor.application.log
 import io.ktor.features.CallLogging
 import io.ktor.features.ContentNegotiation
 import io.ktor.jackson.jackson
@@ -38,8 +37,6 @@ fun Application.mainModule() {
     }
 
     initializeDefaultAdmin()
-
-    log.debug(Arguments.hmacSecret)
 }
 
 fun Application.initializeDefaultAdmin() {

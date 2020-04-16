@@ -20,7 +20,7 @@
 3. Change the `URL` environment variable in `./environments/domain.env` to a valid domain pointing to the host machine.
 4. Ensure that the ports 80 and 443 are forwarded to the host machine.
 5. Run `docker-compose -f docker-compose-production.yml build` and `docker-compose -f docker-compose-production.yml up -d`.
-6. The server is now accessible at `https://your.domain/koffee`
+6. The server is now accessible at `https://your.domain/koffee`.
 7. Run `docker-compose -f docker-compose-production.yml down` to stop the server.
 
 ## Timetable

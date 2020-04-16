@@ -28,6 +28,4 @@ object Arguments : Arkenv() {
     }
 
     val url: String by argument()
-
-    val hmacSecret: String by argument()
 }
