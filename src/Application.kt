@@ -1,11 +1,12 @@
 package eu.yeger
 
 import com.fasterxml.jackson.databind.SerializationFeature
+import eu.yeger.authentication.withHashedPassword
 import eu.yeger.di.databaseModule
 import eu.yeger.di.repositoryModule
 import eu.yeger.di.serviceModule
 import eu.yeger.model.User
-import eu.yeger.service.UserService
+import eu.yeger.repository.UserRepository
 import eu.yeger.utility.loadDockerSecrets
 import io.ktor.application.Application
 import io.ktor.application.install
@@ -41,7 +42,7 @@ fun Application.mainModule() {
 }
 
 fun Application.initializeDefaultAdmin() {
-    val userService: UserService by inject()
+    val userRepository: UserRepository by inject()
 
     val defaultAdminSecrets = loadDockerSecrets(fileName = Arguments.defaultAdminSecret)
 
@@ -51,9 +52,9 @@ fun Application.initializeDefaultAdmin() {
         balance = 0.0,
         isAdmin = true,
         password = defaultAdminSecrets["PASSWORD"] ?: "admin"
-    )
+    ).withHashedPassword()
 
     runBlocking {
-        userService.createUser(defaultAdmin)
+        userRepository.insert(defaultAdmin)
     }
 }

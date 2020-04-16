@@ -16,11 +16,9 @@ val testUser = User(
     id = "userName",
     name = "UserName",
     balance = 0.0,
-    isAdmin = true,
+    isAdmin = false,
     password = "testPassword"
 )
-
-fun TestApplicationRequest.addTestUserJWTHeader() = addJWTHeader(testUser)
 
 fun TestApplicationRequest.addJWTHeader(user: User) {
     val token = JWTConfiguration.makeToken(user)

@@ -5,8 +5,9 @@ import eu.yeger.di.fakeRepositoryModule
 import eu.yeger.di.serviceModule
 import eu.yeger.initializeDefaultAdmin
 import eu.yeger.routing.routingModule
-import eu.yeger.utility.addTestUserJWTHeader
+import eu.yeger.utility.addJWTHeader
 import eu.yeger.utility.shouldBe
+import eu.yeger.utility.testUser
 import io.ktor.application.Application
 import io.ktor.application.install
 import io.ktor.features.ContentNegotiation
@@ -102,7 +103,7 @@ class AuthenticationTests {
                     }
                 """.trimIndent()
             )
-            addTestUserJWTHeader()
+            addJWTHeader(testUser.copy(isAdmin = true))
         }
 
         userCreationCall.requestHandled shouldBe true
@@ -147,7 +148,7 @@ class AuthenticationTests {
         val call = handleRequest {
             method = HttpMethod.Delete
             uri = "/users/test"
-            addTestUserJWTHeader()
+            addJWTHeader(testUser.copy(isAdmin = true))
         }
 
         // Then the request is accepted

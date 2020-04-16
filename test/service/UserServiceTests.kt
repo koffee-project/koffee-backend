@@ -36,6 +36,20 @@ class UserServiceTests {
     }
 
     @Test
+    fun `verify that users can be created without passwords`() {
+        runBlocking {
+            // When user is created
+            val user = testUser.copy(password = null)
+            userService.createUser(user).status shouldBe HttpStatusCode.Created
+
+            // Then user can be retrieved
+            val result = userService.getUserById(user.id)
+            result.status shouldBe HttpStatusCode.OK
+            result.data shouldBe user.profile
+        }
+    }
+
+    @Test
     fun `verify that users cannot be created twice`() {
         runBlocking {
             // When user is created
@@ -87,6 +101,36 @@ class UserServiceTests {
 
             // Then user can not be retrieved
             val result = userService.getUserById(user.id)
+            result.status shouldBe HttpStatusCode.NotFound
+            result.data shouldBe null
+        }
+    }
+
+    @Test
+    fun `verify that users cannot be created with invalid passwords`() {
+        runBlocking {
+            // When users are created with invalid passwords
+            val firstUser = testUser.copy(password = "1234567")
+            val secondUser = testUser.copy(password = "          ")
+            userService.createUser(firstUser).status shouldBe HttpStatusCode.UnprocessableEntity
+            userService.createUser(secondUser).status shouldBe HttpStatusCode.UnprocessableEntity
+
+            // Then users can not be retrieved
+            val result = userService.getAllUsers()
+            result.status shouldBe HttpStatusCode.OK
+            result.data.size shouldBe 0
+        }
+    }
+
+    @Test
+    fun `verify that admins cannot be created without passwords`() {
+        runBlocking {
+            // When user is created with invalid balance
+            val admin = testUser.copy(isAdmin = true, password = null)
+            userService.createUser(admin).status shouldBe HttpStatusCode.UnprocessableEntity
+
+            // Then user can not be retrieved
+            val result = userService.getUserById(admin.id)
             result.status shouldBe HttpStatusCode.NotFound
             result.data shouldBe null
         }

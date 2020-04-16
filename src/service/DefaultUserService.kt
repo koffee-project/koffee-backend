@@ -86,11 +86,11 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
             false -> Result.UnprocessableEntity("Invalid user data")
         }
 
-    // TODO validate passwords
     private fun User.isValid(): Boolean =
         id.isNotBlank() &&
             name.isNotBlank() &&
             balance.hasTwoDecimalPlaces() &&
             (!isAdmin || password?.isNotBlank() ?: false) &&
-            password?.isNotBlank() ?: true
+            password?.isNotBlank() ?: true &&
+            password?.length ?: 8 >= 8
 }
