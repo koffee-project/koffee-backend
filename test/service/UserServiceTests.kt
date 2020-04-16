@@ -1,5 +1,6 @@
 package eu.yeger.service
 
+import eu.yeger.model.BalanceChange
 import eu.yeger.model.Profile
 import eu.yeger.model.User
 import eu.yeger.model.profile
@@ -171,12 +172,12 @@ class UserServiceTests {
     @Test
     fun `verify that users cannot be deleted if they do not exist`() {
         runBlocking {
-            val id = "userName"
+            val userId = "userName"
             // When non-existent user is deleted
-            userService.deleteUserById(id).status shouldBe HttpStatusCode.NotFound
+            userService.deleteUserById(userId).status shouldBe HttpStatusCode.NotFound
 
             // Then user was not created either
-            val result = userService.getUserById(id)
+            val result = userService.getUserById(userId)
             result.status shouldBe HttpStatusCode.NotFound
             result.data shouldBe null
         }
@@ -195,6 +196,37 @@ class UserServiceTests {
             val result = userService.getAllUsers()
             result.status shouldBe HttpStatusCode.OK
             result.data.sortedBy(Profile::id) shouldBe listOf(firstUser, secondUser).map(User::profile).sortedBy(Profile::id)
+        }
+    }
+
+    @Test
+    fun `verify that user balances can be updated`() {
+        runBlocking {
+            // When balance of user is updated
+            val user = testUser
+            userService.createUser(user).status shouldBe HttpStatusCode.Created
+            val balanceChange = BalanceChange(42.0)
+            userService.updateBalance(user.id, balanceChange).status shouldBe HttpStatusCode.OK
+
+            // Then the updated balance is retrieved
+            val result = userService.getUserById(user.id)
+            result.status shouldBe HttpStatusCode.OK
+            result.data?.balance shouldBe user.balance + balanceChange.change
+        }
+    }
+
+    @Test
+    fun `verify that user balances cannot be updated if the user does not exist`() {
+        runBlocking {
+            // When balance of non-existent user is updated
+            val userId = "doesNotExist"
+            val balanceChange = BalanceChange(42.0)
+            userService.updateBalance(userId, balanceChange).status shouldBe HttpStatusCode.Conflict
+
+            // Then user was not created either
+            val result = userService.getUserById(userId)
+            result.status shouldBe HttpStatusCode.NotFound
+            result.data shouldBe null
         }
     }
 }

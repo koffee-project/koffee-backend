@@ -109,4 +109,17 @@ class UserRoutesTests {
         call.requestHandled shouldBe true
         call.response.status() shouldBe HttpStatusCode.Unauthorized
     }
+
+    @Test
+    fun `verify that POST-users-$id-balance does require authentication`() = withTestApplication(testModule) {
+        // When route is accessed
+        val call = handleRequest {
+            method = HttpMethod.Post
+            uri = "/users/admin/balance"
+        }
+
+        // Then the request is denied
+        call.requestHandled shouldBe true
+        call.response.status() shouldBe HttpStatusCode.Unauthorized
+    }
 }
