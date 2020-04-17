@@ -4,7 +4,7 @@ import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
 import eu.yeger.Arguments
-import eu.yeger.model.User
+import eu.yeger.model.domain.User
 import eu.yeger.utility.readDockerSecret
 import java.util.Date
 

@@ -1,6 +1,6 @@
 package eu.yeger.routing
 
-import eu.yeger.model.Credentials
+import eu.yeger.model.dto.Credentials
 import eu.yeger.service.UserService
 import eu.yeger.utility.respondWithResult
 import io.ktor.application.call

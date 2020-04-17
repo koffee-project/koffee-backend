@@ -97,7 +97,6 @@ class AuthenticationTests {
                     {
                         "id": "userId",
                         "name": "UserName",
-                        "balance": 0.0,
                         "isAdmin": false,
                         "password": "userPassword"
                     }

@@ -1,6 +1,6 @@
 package eu.yeger.service
 
-import eu.yeger.model.Item
+import eu.yeger.model.domain.Item
 import eu.yeger.repository.FakeItemRepository
 import eu.yeger.utility.shouldBe
 import eu.yeger.utility.testItem
@@ -22,13 +22,12 @@ class ItemServiceTests {
     fun `verify that items can be created`() {
         runBlocking {
             // When item is created
-            val item = testItem
-            itemService.createItem(item).status shouldBe HttpStatusCode.Created
+            itemService.createItem(testItem).status shouldBe HttpStatusCode.Created
 
             // Then item can be retrieved
-            val result = itemService.getItemById(item.id)
+            val result = itemService.getItemById(testItem.id)
             result.status shouldBe HttpStatusCode.OK
-            result.data shouldBe item
+            result.data shouldBe testItem
         }
     }
 
@@ -36,14 +35,13 @@ class ItemServiceTests {
     fun `verify that items cannot be created twice`() {
         runBlocking {
             // When item is created
-            val item = testItem
-            itemService.createItem(item).status shouldBe HttpStatusCode.Created
+            itemService.createItem(testItem).status shouldBe HttpStatusCode.Created
 
             // Then item can not be created again
-            val result = itemService.getItemById(item.id)
+            val result = itemService.getItemById(testItem.id)
             result.status shouldBe HttpStatusCode.OK
-            result.data shouldBe item
-            itemService.createItem(item).status shouldBe HttpStatusCode.Conflict
+            result.data shouldBe testItem
+            itemService.createItem(testItem).status shouldBe HttpStatusCode.Conflict
         }
     }
 
@@ -121,13 +119,12 @@ class ItemServiceTests {
     fun `verify that items can be updated`() {
         runBlocking {
             // When item is created and updated
-            val item = testItem
-            itemService.createItem(item).status shouldBe HttpStatusCode.Created
-            val updatedItem = item.copy(amount = 10, price = 1.5)
+            itemService.createItem(testItem).status shouldBe HttpStatusCode.Created
+            val updatedItem = testItem.copy(amount = 10, price = 1.5)
             itemService.updateItem(updatedItem).status shouldBe HttpStatusCode.OK
 
             // Then retrieved item has new values
-            val result = itemService.getItemById(item.id)
+            val result = itemService.getItemById(testItem.id)
             result.status shouldBe HttpStatusCode.OK
             result.data shouldBe updatedItem
         }
@@ -137,11 +134,10 @@ class ItemServiceTests {
     fun `verify that items cannot be updated if they do not exist`() {
         runBlocking {
             // When non-existent item is updated
-            val item = testItem
-            itemService.updateItem(item).status shouldBe HttpStatusCode.Conflict
+            itemService.updateItem(testItem).status shouldBe HttpStatusCode.Conflict
 
             // Then item was not created either
-            val result = itemService.getItemById(item.id)
+            val result = itemService.getItemById(testItem.id)
             result.status shouldBe HttpStatusCode.NotFound
             result.data shouldBe null
         }
@@ -151,15 +147,14 @@ class ItemServiceTests {
     fun `verify that items cannot be updated with invalid names`() {
         runBlocking {
             // When item is created and updated with invalid name
-            val item = testItem
-            itemService.createItem(item).status shouldBe HttpStatusCode.Created
-            val updatedItem = item.copy(name = "   ")
+            itemService.createItem(testItem).status shouldBe HttpStatusCode.Created
+            val updatedItem = testItem.copy(name = "   ")
             itemService.updateItem(updatedItem).status shouldBe HttpStatusCode.UnprocessableEntity
 
             // Then retrieved item was not updated
-            val result = itemService.getItemById(item.id)
+            val result = itemService.getItemById(testItem.id)
             result.status shouldBe HttpStatusCode.OK
-            result.data shouldBe item
+            result.data shouldBe testItem
         }
     }
 
@@ -167,15 +162,14 @@ class ItemServiceTests {
     fun `verify that items cannot be updated with invalid amounts`() {
         runBlocking {
             // When item is created and updated with invalid amount
-            val item = testItem
-            itemService.createItem(item).status shouldBe HttpStatusCode.Created
-            val updatedItem = item.copy(amount = -42)
+            itemService.createItem(testItem).status shouldBe HttpStatusCode.Created
+            val updatedItem = testItem.copy(amount = -42)
             itemService.updateItem(updatedItem).status shouldBe HttpStatusCode.UnprocessableEntity
 
             // Then retrieved item was not updated
-            val result = itemService.getItemById(item.id)
+            val result = itemService.getItemById(testItem.id)
             result.status shouldBe HttpStatusCode.OK
-            result.data shouldBe item
+            result.data shouldBe testItem
         }
     }
 
@@ -183,15 +177,14 @@ class ItemServiceTests {
     fun `verify that items cannot be updated with invalid prices`() {
         runBlocking {
             // When item is created and updated with invalid price
-            val item = testItem
-            itemService.createItem(item).status shouldBe HttpStatusCode.Created
-            val updatedItem = item.copy(price = 0.12345)
+            itemService.createItem(testItem).status shouldBe HttpStatusCode.Created
+            val updatedItem = testItem.copy(price = 0.12345)
             itemService.updateItem(updatedItem).status shouldBe HttpStatusCode.UnprocessableEntity
 
             // Then retrieved item was not updated
-            val result = itemService.getItemById(item.id)
+            val result = itemService.getItemById(testItem.id)
             result.status shouldBe HttpStatusCode.OK
-            result.data shouldBe item
+            result.data shouldBe testItem
         }
     }
 
@@ -199,15 +192,14 @@ class ItemServiceTests {
     fun `verify that items cannot be updated with negative prices`() {
         runBlocking {
             // When item is created and updated with negative price
-            val item = testItem
-            itemService.createItem(item).status shouldBe HttpStatusCode.Created
-            val updatedItem = item.copy(price = -1.00)
+            itemService.createItem(testItem).status shouldBe HttpStatusCode.Created
+            val updatedItem = testItem.copy(price = -1.00)
             itemService.updateItem(updatedItem).status shouldBe HttpStatusCode.UnprocessableEntity
 
             // Then retrieved item was not updated
-            val result = itemService.getItemById(item.id)
+            val result = itemService.getItemById(testItem.id)
             result.status shouldBe HttpStatusCode.OK
-            result.data shouldBe item
+            result.data shouldBe testItem
         }
     }
 
@@ -215,12 +207,11 @@ class ItemServiceTests {
     fun `verify that items can be deleted`() {
         runBlocking {
             // When item is created and deleted
-            val item = testItem
-            itemService.createItem(item).status shouldBe HttpStatusCode.Created
-            itemService.deleteItemById(item.id).status shouldBe HttpStatusCode.OK
+            itemService.createItem(testItem).status shouldBe HttpStatusCode.Created
+            itemService.deleteItemById(testItem.id).status shouldBe HttpStatusCode.OK
 
             // Then item can not be retrieved
-            val result = itemService.getItemById(item.id)
+            val result = itemService.getItemById(testItem.id)
             result.status shouldBe HttpStatusCode.NotFound
             result.data shouldBe null
         }

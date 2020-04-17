@@ -29,8 +29,9 @@ fun Application.routingModule() = routing {
             call.respond(HttpStatusCode.InternalServerError)
             throw cause
         }
-        exception<JsonProcessingException> {
+        exception<JsonProcessingException> { cause ->
             call.respond(HttpStatusCode.BadRequest)
+            throw cause
         }
     }
 }

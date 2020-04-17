@@ -1,6 +1,7 @@
 package eu.yeger.repository
 
-import eu.yeger.model.User
+import eu.yeger.model.domain.Transaction
+import eu.yeger.model.domain.User
 
 class FakeUserRepository : UserRepository {
 
@@ -20,9 +21,9 @@ class FakeUserRepository : UserRepository {
         users.remove(id)
     }
 
-    override suspend fun updateBalance(id: String, change: Double) {
+    override suspend fun addTransaction(id: String, transaction: Transaction) {
         users[id]?.let { oldUser ->
-            users[id] = oldUser.copy(balance = oldUser.balance + change)
+            users[id] = oldUser.copy(transactions = oldUser.transactions + transaction)
         }
     }
 }

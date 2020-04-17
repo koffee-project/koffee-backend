@@ -1,6 +1,6 @@
 package eu.yeger.routing
 
-import eu.yeger.model.Item
+import eu.yeger.model.domain.Item
 import eu.yeger.service.ItemService
 import eu.yeger.utility.respondWithResult
 import io.ktor.application.call

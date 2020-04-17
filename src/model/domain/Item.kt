@@ -1,4 +1,4 @@
-package eu.yeger.model
+package eu.yeger.model.domain
 
 data class Item(
     override val id: String,

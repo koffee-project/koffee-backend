@@ -1,6 +1,6 @@
 package eu.yeger.repository
 
-import eu.yeger.model.Item
+import eu.yeger.model.domain.Item
 
 interface ItemRepository {
 

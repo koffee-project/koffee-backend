@@ -1,7 +1,8 @@
 package eu.yeger.routing
 
-import eu.yeger.model.BalanceChange
-import eu.yeger.model.User
+import eu.yeger.model.domain.User
+import eu.yeger.model.dto.Funding
+import eu.yeger.model.dto.UserCreationRequest
 import eu.yeger.service.UserService
 import eu.yeger.utility.respondWithResult
 import io.ktor.application.call
@@ -21,8 +22,8 @@ fun Route.userRoutes() {
 
         authenticate {
             post {
-                val user = call.receive<User>()
-                val result = userService.createUser(user)
+                val userCreationRequest = call.receive<UserCreationRequest>()
+                val result = userService.createUser(userCreationRequest)
                 call.respondWithResult(result)
             }
 
@@ -49,8 +50,8 @@ fun Route.userRoutes() {
 
                 post("/balance") {
                     val id = call.parameters["id"]!!
-                    val balanceChange = call.receive<BalanceChange>()
-                    val result = userService.updateBalance(id, balanceChange)
+                    val funding = call.receive<Funding>()
+                    val result = userService.updateBalance(id, funding)
                     call.respondWithResult(result)
                 }
             }

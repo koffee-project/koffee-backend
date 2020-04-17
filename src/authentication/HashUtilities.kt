@@ -1,7 +1,7 @@
 package eu.yeger.authentication
 
-import eu.yeger.model.Credentials
-import eu.yeger.model.User
+import eu.yeger.model.domain.User
+import eu.yeger.model.dto.Credentials
 import org.mindrot.jbcrypt.BCrypt
 
 fun User.withHashedPassword() =

@@ -1,6 +1,6 @@
 package eu.yeger.repository
 
-import eu.yeger.model.Item
+import eu.yeger.model.domain.Item
 import eu.yeger.utility.upsert
 import org.litote.kmongo.coroutine.CoroutineDatabase
 

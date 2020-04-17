@@ -1,6 +1,7 @@
 package eu.yeger.repository
 
-import eu.yeger.model.User
+import eu.yeger.model.domain.Transaction
+import eu.yeger.model.domain.User
 
 interface UserRepository {
 
@@ -14,5 +15,5 @@ interface UserRepository {
 
     suspend fun removeById(id: String)
 
-    suspend fun updateBalance(id: String, change: Double)
+    suspend fun addTransaction(id: String, transaction: Transaction)
 }

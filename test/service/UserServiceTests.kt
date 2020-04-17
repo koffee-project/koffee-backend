@@ -1,12 +1,16 @@
 package eu.yeger.service
 
-import eu.yeger.model.BalanceChange
-import eu.yeger.model.Profile
-import eu.yeger.model.User
-import eu.yeger.model.profile
+import eu.yeger.model.domain.User
+import eu.yeger.model.dto.Funding
+import eu.yeger.model.dto.UserCreationRequest
+import eu.yeger.model.dto.UserListEntry
+import eu.yeger.model.dto.asProfile
+import eu.yeger.model.dto.asUser
+import eu.yeger.model.dto.asUserListEntry
 import eu.yeger.repository.FakeUserRepository
 import eu.yeger.utility.shouldBe
 import eu.yeger.utility.testUser
+import eu.yeger.utility.testUserCreationRequest
 import io.ktor.http.HttpStatusCode
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -25,13 +29,12 @@ class UserServiceTests {
     fun `verify that users can be created`() {
         runBlocking {
             // When user is created
-            val user = testUser
-            userService.createUser(user).status shouldBe HttpStatusCode.Created
+            userService.createUser(testUserCreationRequest).status shouldBe HttpStatusCode.Created
 
             // Then user can be retrieved
-            val result = userService.getUserById(user.id)
+            val result = userService.getUserById(testUser.id)
             result.status shouldBe HttpStatusCode.OK
-            result.data shouldBe user.profile
+            result.data shouldBe testUser.asProfile()
         }
     }
 
@@ -39,13 +42,13 @@ class UserServiceTests {
     fun `verify that users can be created without passwords`() {
         runBlocking {
             // When user is created
-            val user = testUser.copy(password = null)
-            userService.createUser(user).status shouldBe HttpStatusCode.Created
+            val userCreationRequest = testUserCreationRequest.copy(password = null)
+            userService.createUser(userCreationRequest).status shouldBe HttpStatusCode.Created
 
             // Then user can be retrieved
-            val result = userService.getUserById(user.id)
+            val result = userService.getUserById(testUser.id)
             result.status shouldBe HttpStatusCode.OK
-            result.data shouldBe user.profile
+            result.data shouldBe userCreationRequest.asUser().asProfile()
         }
     }
 
@@ -53,14 +56,13 @@ class UserServiceTests {
     fun `verify that users cannot be created twice`() {
         runBlocking {
             // When user is created
-            val user = testUser
-            userService.createUser(user).status shouldBe HttpStatusCode.Created
+            userService.createUser(testUserCreationRequest).status shouldBe HttpStatusCode.Created
 
             // Then user can not be created again
-            val result = userService.getUserById(user.id)
+            val result = userService.getUserById(testUser.id)
             result.status shouldBe HttpStatusCode.OK
-            result.data shouldBe user.profile
-            userService.createUser(user).status shouldBe HttpStatusCode.Conflict
+            result.data shouldBe testUser.asProfile()
+            userService.createUser(testUserCreationRequest).status shouldBe HttpStatusCode.Conflict
         }
     }
 
@@ -68,11 +70,11 @@ class UserServiceTests {
     fun `verify that users cannot be created with invalid ids`() {
         runBlocking {
             // When user is created with invalid id
-            val user = testUser.copy(id = "    ")
-            userService.createUser(user).status shouldBe HttpStatusCode.UnprocessableEntity
+            val userCreationRequest = testUserCreationRequest.copy(id = "    ")
+            userService.createUser(userCreationRequest).status shouldBe HttpStatusCode.UnprocessableEntity
 
             // Then user can not be retrieved
-            val result = userService.getUserById(user.id)
+            val result = userService.getUserById(userCreationRequest.id)
             result.status shouldBe HttpStatusCode.NotFound
             result.data shouldBe null
         }
@@ -82,25 +84,11 @@ class UserServiceTests {
     fun `verify that users cannot be created with invalid names`() {
         runBlocking {
             // When user is created with invalid name
-            val user = testUser.copy(name = "    ")
-            userService.createUser(user).status shouldBe HttpStatusCode.UnprocessableEntity
+            val userCreationRequest = testUserCreationRequest.copy(name = "    ")
+            userService.createUser(userCreationRequest).status shouldBe HttpStatusCode.UnprocessableEntity
 
             // Then user can not be retrieved
-            val result = userService.getUserById(user.id)
-            result.status shouldBe HttpStatusCode.NotFound
-            result.data shouldBe null
-        }
-    }
-
-    @Test
-    fun `verify that users cannot be created with invalid balances`() {
-        runBlocking {
-            // When user is created with invalid balance
-            val user = testUser.copy(balance = 100.12345)
-            userService.createUser(user).status shouldBe HttpStatusCode.UnprocessableEntity
-
-            // Then user can not be retrieved
-            val result = userService.getUserById(user.id)
+            val result = userService.getUserById(userCreationRequest.id)
             result.status shouldBe HttpStatusCode.NotFound
             result.data shouldBe null
         }
@@ -110,10 +98,10 @@ class UserServiceTests {
     fun `verify that users cannot be created with invalid passwords`() {
         runBlocking {
             // When users are created with invalid passwords
-            val firstUser = testUser.copy(password = "1234567")
-            val secondUser = testUser.copy(password = "          ")
-            userService.createUser(firstUser).status shouldBe HttpStatusCode.UnprocessableEntity
-            userService.createUser(secondUser).status shouldBe HttpStatusCode.UnprocessableEntity
+            val firstUserCreationRequest = testUserCreationRequest.copy(password = "1234567")
+            val secondUserCreationRequest = testUserCreationRequest.copy(password = "          ")
+            userService.createUser(firstUserCreationRequest).status shouldBe HttpStatusCode.UnprocessableEntity
+            userService.createUser(secondUserCreationRequest).status shouldBe HttpStatusCode.UnprocessableEntity
 
             // Then users can not be retrieved
             val result = userService.getAllUsers()
@@ -125,12 +113,12 @@ class UserServiceTests {
     @Test
     fun `verify that admins cannot be created without passwords`() {
         runBlocking {
-            // When user is created with invalid balance
-            val admin = testUser.copy(isAdmin = true, password = null)
-            userService.createUser(admin).status shouldBe HttpStatusCode.UnprocessableEntity
+            // When admin is created without password
+            val adminCreationRequest = testUserCreationRequest.copy(isAdmin = true, password = null)
+            userService.createUser(adminCreationRequest).status shouldBe HttpStatusCode.UnprocessableEntity
 
             // Then user can not be retrieved
-            val result = userService.getUserById(admin.id)
+            val result = userService.getUserById(adminCreationRequest.id)
             result.status shouldBe HttpStatusCode.NotFound
             result.data shouldBe null
         }
@@ -140,15 +128,14 @@ class UserServiceTests {
     fun `verify that users can be updated`() {
         runBlocking {
             // When user is created and updated
-            val user = testUser
-            userService.createUser(user).status shouldBe HttpStatusCode.Created
-            val updatedUser = user.copy(balance = 50.0)
+            userService.createUser(testUserCreationRequest).status shouldBe HttpStatusCode.Created
+            val updatedUser = testUser.copy(name = "NewName")
             userService.updateUser(updatedUser).status shouldBe HttpStatusCode.OK
 
             // Then retrieved user has new values
-            val result = userService.getUserById(user.id)
+            val result = userService.getUserById(testUser.id)
             result.status shouldBe HttpStatusCode.OK
-            result.data shouldBe updatedUser.profile
+            result.data shouldBe updatedUser.asProfile()
         }
     }
 
@@ -156,11 +143,10 @@ class UserServiceTests {
     fun `verify that users cannot be updated if they do not exist`() {
         runBlocking {
             // When non-existent user is updated
-            val user = testUser
-            userService.updateUser(user).status shouldBe HttpStatusCode.Conflict
+            userService.updateUser(testUser).status shouldBe HttpStatusCode.Conflict
 
             // Then user was not created either
-            val result = userService.getUserById(user.id)
+            val result = userService.getUserById(testUser.id)
             result.status shouldBe HttpStatusCode.NotFound
             result.data shouldBe null
         }
@@ -170,31 +156,14 @@ class UserServiceTests {
     fun `verify that users cannot be updated with invalid names`() {
         runBlocking {
             // When user is created and updated with invalid name
-            val user = testUser
-            userService.createUser(user).status shouldBe HttpStatusCode.Created
-            val updatedUser = user.copy(name = "   ")
+            userService.createUser(testUserCreationRequest).status shouldBe HttpStatusCode.Created
+            val updatedUser = testUser.copy(name = "   ")
             userService.updateUser(updatedUser).status shouldBe HttpStatusCode.UnprocessableEntity
 
             // Then retrieved user was not updated
-            val result = userService.getUserById(user.id)
+            val result = userService.getUserById(testUser.id)
             result.status shouldBe HttpStatusCode.OK
-            result.data shouldBe user.profile
-        }
-    }
-
-    @Test
-    fun `verify that users cannot be updated with invalid balances`() {
-        runBlocking {
-            // When user is created and updated with invalid balance
-            val user = testUser
-            userService.createUser(user).status shouldBe HttpStatusCode.Created
-            val updatedUser = user.copy(balance = 1.23456)
-            userService.updateUser(updatedUser).status shouldBe HttpStatusCode.UnprocessableEntity
-
-            // Then retrieved user was not updated
-            val result = userService.getUserById(user.id)
-            result.status shouldBe HttpStatusCode.OK
-            result.data shouldBe user.profile
+            result.data shouldBe testUser.asProfile()
         }
     }
 
@@ -202,12 +171,11 @@ class UserServiceTests {
     fun `verify that users can be deleted`() {
         runBlocking {
             // When user is created and deleted
-            val user = testUser
-            userService.createUser(user).status shouldBe HttpStatusCode.Created
-            userService.deleteUserById(user.id).status shouldBe HttpStatusCode.OK
+            userService.createUser(testUserCreationRequest).status shouldBe HttpStatusCode.Created
+            userService.deleteUserById(testUser.id).status shouldBe HttpStatusCode.OK
 
             // Then user can not be retrieved
-            val result = userService.getUserById(user.id)
+            val result = userService.getUserById(testUser.id)
             result.status shouldBe HttpStatusCode.NotFound
             result.data shouldBe null
         }
@@ -231,41 +199,43 @@ class UserServiceTests {
     fun `verify that all users can be retrieved`() {
         runBlocking {
             // When multiple users are created
-            val firstUser = testUser.copy(id = "firstUser")
-            val secondUser = testUser.copy(id = "secondUser")
-            userService.createUser(firstUser).status shouldBe HttpStatusCode.Created
-            userService.createUser(secondUser).status shouldBe HttpStatusCode.Created
+            val firstRequest = testUserCreationRequest.copy(id = "firstUser")
+            val secondRequest = testUserCreationRequest.copy(id = "secondUser")
+            userService.createUser(firstRequest).status shouldBe HttpStatusCode.Created
+            userService.createUser(secondRequest).status shouldBe HttpStatusCode.Created
 
             // Then all users are retrieved
             val result = userService.getAllUsers()
             result.status shouldBe HttpStatusCode.OK
-            result.data.sortedBy(Profile::id) shouldBe listOf(firstUser, secondUser).map(User::profile).sortedBy(Profile::id)
+            val expected = listOf(firstRequest, secondRequest)
+                .map(UserCreationRequest::asUser)
+                .map(User::asUserListEntry)
+            result.data.sortedBy(UserListEntry::id) shouldBe expected.sortedBy(UserListEntry::id)
         }
     }
 
     @Test
-    fun `verify that user balances can be updated`() {
+    fun `verify that user balances can be topped up`() {
         runBlocking {
-            // When balance of user is updated
-            val user = testUser
-            userService.createUser(user).status shouldBe HttpStatusCode.Created
-            val balanceChange = BalanceChange(42.0)
-            userService.updateBalance(user.id, balanceChange).status shouldBe HttpStatusCode.OK
+            // When balance of user is topped up
+            userService.createUser(testUserCreationRequest).status shouldBe HttpStatusCode.Created
+            val funding = Funding(42.0)
+            userService.updateBalance(testUser.id, funding).status shouldBe HttpStatusCode.OK
 
-            // Then the updated balance is retrieved
-            val result = userService.getUserById(user.id)
+            // Then a transaction can be retrieved
+            val result = userService.getUserById(testUser.id)
             result.status shouldBe HttpStatusCode.OK
-            result.data?.balance shouldBe user.balance + balanceChange.change
+            result.data?.transactions?.firstOrNull()?.value shouldBe funding.amount
         }
     }
 
     @Test
-    fun `verify that user balances cannot be updated if the user does not exist`() {
+    fun `verify that user balances cannot be topped up if the user does not exist`() {
         runBlocking {
-            // When balance of non-existent user is updated
+            // When non-existent user tops up their balance
             val userId = "doesNotExist"
-            val balanceChange = BalanceChange(42.0)
-            userService.updateBalance(userId, balanceChange).status shouldBe HttpStatusCode.Conflict
+            val funding = Funding(42.0)
+            userService.updateBalance(userId, funding).status shouldBe HttpStatusCode.Conflict
 
             // Then user was not created either
             val result = userService.getUserById(userId)

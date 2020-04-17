@@ -1,4 +1,4 @@
-package eu.yeger.model
+package eu.yeger.model.dto
 
 import io.ktor.http.HttpStatusCode
 

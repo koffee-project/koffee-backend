@@ -1,4 +1,4 @@
-package eu.yeger.model
+package eu.yeger.model.domain
 
 interface Entity {
     val id: String

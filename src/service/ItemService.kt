@@ -1,7 +1,7 @@
 package eu.yeger.service
 
-import eu.yeger.model.Item
-import eu.yeger.model.Result
+import eu.yeger.model.domain.Item
+import eu.yeger.model.dto.Result
 
 interface ItemService {
 
