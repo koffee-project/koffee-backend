@@ -1,10 +1,12 @@
 package eu.yeger.repository
 
 import eu.yeger.model.domain.Item
+import eu.yeger.utility.combineAsFilter
 import eu.yeger.utility.incrementBy
 import eu.yeger.utility.upsert
 import org.litote.kmongo.coroutine.CoroutineDatabase
 import org.litote.kmongo.eq
+import org.litote.kmongo.ne
 
 class MongoItemRepository(database: CoroutineDatabase) : ItemRepository {
 
@@ -25,8 +27,13 @@ class MongoItemRepository(database: CoroutineDatabase) : ItemRepository {
     }
 
     override suspend fun updateAmount(id: String, change: Int) {
+        val filter = listOf(
+            Item::id eq id,
+            Item::amount ne null
+        ).combineAsFilter()
+
         itemCollection.findOneAndUpdate(
-            filter = Item::id eq id,
+            filter = filter,
             update = Item::amount incrementBy change
         )
     }

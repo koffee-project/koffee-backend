@@ -2,8 +2,9 @@ package eu.yeger.repository
 
 import eu.yeger.model.domain.Transaction
 import eu.yeger.model.domain.User
-import eu.yeger.utility.mergeUpdates
+import eu.yeger.utility.combineAsUpdate
 import eu.yeger.utility.push
+import eu.yeger.utility.to
 import eu.yeger.utility.upsert
 import org.litote.kmongo.coroutine.CoroutineDatabase
 import org.litote.kmongo.eq
@@ -23,14 +24,15 @@ class MongoUserRepository(database: CoroutineDatabase) : UserRepository {
     }
 
     override suspend fun update(id: String, name: String, isAdmin: Boolean, password: String?) {
-        val updates = listOf(
+        val update = listOf(
             User::name to name,
             User::isAdmin to isAdmin,
             User::password to password
-        )
+        ).combineAsUpdate()
+
         userCollection.findOneAndUpdate(
             filter = User::id eq id,
-            update = mergeUpdates(*updates.toTypedArray())
+            update = update
         )
     }
 

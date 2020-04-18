@@ -22,7 +22,9 @@ class FakeItemRepository : ItemRepository {
 
     override suspend fun updateAmount(id: String, change: Int) {
         items[id]?.let { oldItem ->
-            items[id] = oldItem.copy(amount = oldItem.amount + change)
+            oldItem.amount?.let { oldAmount ->
+                items[id] = oldItem.copy(amount = oldAmount + change)
+            }
         }
     }
 }

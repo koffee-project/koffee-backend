@@ -60,7 +60,7 @@ class DefaultItemService(private val itemRepository: ItemRepository) : ItemServi
     private fun Item.isValid(): Boolean =
         id.isNotBlank() &&
             name.isNotBlank() &&
-            amount >= 0 &&
+            (amount == null || amount >= 0) &&
             price > 0 &&
             price.hasTwoDecimalPlaces()
 }

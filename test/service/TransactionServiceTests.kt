@@ -94,7 +94,30 @@ class TransactionServiceTests {
             }
             val itemResult = itemService.getItemById(testItem.id)
             itemResult.status shouldBe HttpStatusCode.OK
-            itemResult.data?.amount shouldBe testItem.amount - testPurchase.amount
+            itemResult.data?.amount shouldBe testItem.amount!! - testPurchase.amount
+        }
+    }
+    @Test
+    fun `verify that purchases of unlimited items are possible`() {
+        runBlocking {
+            // When user requests a valid purchase
+            userService.createUser(testPartialUser).status shouldBe HttpStatusCode.Created
+            val item = testItem.copy(amount = null)
+            itemService.createItem(item).status shouldBe HttpStatusCode.Created
+            transactionService.processPurchase(testUser.id, testPurchase).status shouldBe HttpStatusCode.OK
+
+            // Then the transaction was processed
+            val userResult = userService.getUserById(testUser.id)
+            userResult.status shouldBe HttpStatusCode.OK
+            val transaction = userResult.data?.transactions?.first() as Transaction.Purchase
+            transaction.run {
+                value shouldBe testPurchase.amount * item.price
+                itemId shouldBe item.id
+                amount shouldBe testPurchase.amount
+            }
+            val itemResult = itemService.getItemById(item.id)
+            itemResult.status shouldBe HttpStatusCode.OK
+            itemResult.data?.amount shouldBe item.amount
         }
     }
 
