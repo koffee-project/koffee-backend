@@ -1,8 +1,10 @@
 package eu.yeger.repository
 
 import eu.yeger.model.domain.Item
+import eu.yeger.utility.incrementBy
 import eu.yeger.utility.upsert
 import org.litote.kmongo.coroutine.CoroutineDatabase
+import org.litote.kmongo.eq
 
 class MongoItemRepository(database: CoroutineDatabase) : ItemRepository {
 
@@ -20,5 +22,12 @@ class MongoItemRepository(database: CoroutineDatabase) : ItemRepository {
 
     override suspend fun removeById(id: String) {
         itemCollection.deleteOneById(id = id)
+    }
+
+    override suspend fun updateAmount(id: String, change: Int) {
+        itemCollection.findOneAndUpdate(
+            filter = Item::id eq id,
+            update = Item::amount incrementBy change
+        )
     }
 }

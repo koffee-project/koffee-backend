@@ -72,6 +72,19 @@ class UserRoutesTests {
     }
 
     @Test
+    fun `verify that POST-users-$id-purchases does not require authentication`() = withTestApplication(testModule) {
+        // When route is accessed
+        val call = handleRequest {
+            method = HttpMethod.Post
+            uri = "/users/admin/purchases"
+        }
+
+        // Then the request is accepted
+        call.requestHandled shouldBe true
+        call.response.status() shouldBe HttpStatusCode.UnsupportedMediaType
+    }
+
+    @Test
     fun `verify that POST-users does require authentication`() = withTestApplication(testModule) {
         // When route is accessed
         val call = handleRequest {

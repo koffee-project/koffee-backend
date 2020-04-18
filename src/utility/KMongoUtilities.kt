@@ -15,6 +15,6 @@ suspend fun <T : Entity> CoroutineCollection<T>.upsert(entity: T, options: Updat
         options = options.upsert(true)
     )
 
-infix fun KProperty<Double>.incrementBy(amount: Number): Bson = Updates.inc(this.path(), amount)
+infix fun KProperty<Number>.incrementBy(amount: Number): Bson = Updates.inc(this.path(), amount)
 
 infix fun <T> KProperty<Iterable<T>?>.push(element: T): Bson = Updates.push(this.path(), element)

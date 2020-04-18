@@ -2,7 +2,9 @@ package eu.yeger.routing
 
 import eu.yeger.model.domain.User
 import eu.yeger.model.dto.Funding
+import eu.yeger.model.dto.Purchase
 import eu.yeger.model.dto.UserCreationRequest
+import eu.yeger.service.TransactionService
 import eu.yeger.service.UserService
 import eu.yeger.utility.respondWithResult
 import io.ktor.application.call
@@ -13,6 +15,7 @@ import org.koin.ktor.ext.inject
 
 fun Route.userRoutes() {
     val userService: UserService by inject()
+    val transactionService: TransactionService by inject()
 
     route("users") {
         get {
@@ -41,6 +44,13 @@ fun Route.userRoutes() {
                 call.respondWithResult(result)
             }
 
+            post("purchases") {
+                val id = call.parameters["id"]!!
+                val purchase = call.receive<Purchase>()
+                val result = transactionService.processPurchase(id, purchase)
+                call.respondWithResult(result)
+            }
+
             authenticate {
                 delete {
                     val id = call.parameters["id"]!!
@@ -48,10 +58,10 @@ fun Route.userRoutes() {
                     call.respondWithResult(result)
                 }
 
-                post("/balance") {
+                post("balance") {
                     val id = call.parameters["id"]!!
                     val funding = call.receive<Funding>()
-                    val result = userService.updateBalance(id, funding)
+                    val result = transactionService.processFunding(id, funding)
                     call.respondWithResult(result)
                 }
             }

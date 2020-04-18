@@ -13,4 +13,6 @@ interface ItemRepository {
     suspend fun insert(item: Item)
 
     suspend fun removeById(id: String)
+
+    suspend fun updateAmount(id: String, change: Int)
 }

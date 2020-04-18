@@ -3,6 +3,8 @@ package eu.yeger.utility
 import eu.yeger.authentication.JWTConfiguration
 import eu.yeger.model.domain.Item
 import eu.yeger.model.domain.User
+import eu.yeger.model.dto.Funding
+import eu.yeger.model.dto.Purchase
 import eu.yeger.model.dto.UserCreationRequest
 import eu.yeger.model.dto.asUser
 import io.ktor.server.testing.TestApplicationRequest
@@ -22,6 +24,15 @@ val testUserCreationRequest = UserCreationRequest(
 )
 
 val testUser = testUserCreationRequest.asUser()
+
+val testFunding = Funding(
+    amount = 42.0
+)
+
+val testPurchase = Purchase(
+    itemId = testItem.id,
+    amount = 42
+)
 
 fun TestApplicationRequest.addJWTHeader(user: User) {
     val token = JWTConfiguration.makeToken(user)

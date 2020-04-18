@@ -1,7 +1,6 @@
 package eu.yeger.service
 
 import eu.yeger.model.domain.User
-import eu.yeger.model.dto.Funding
 import eu.yeger.model.dto.UserCreationRequest
 import eu.yeger.model.dto.UserListEntry
 import eu.yeger.model.dto.asProfile
@@ -211,36 +210,6 @@ class UserServiceTests {
                 .map(UserCreationRequest::asUser)
                 .map(User::asUserListEntry)
             result.data.sortedBy(UserListEntry::id) shouldBe expected.sortedBy(UserListEntry::id)
-        }
-    }
-
-    @Test
-    fun `verify that user balances can be topped up`() {
-        runBlocking {
-            // When balance of user is topped up
-            userService.createUser(testUserCreationRequest).status shouldBe HttpStatusCode.Created
-            val funding = Funding(42.0)
-            userService.updateBalance(testUser.id, funding).status shouldBe HttpStatusCode.OK
-
-            // Then a transaction can be retrieved
-            val result = userService.getUserById(testUser.id)
-            result.status shouldBe HttpStatusCode.OK
-            result.data?.transactions?.firstOrNull()?.value shouldBe funding.amount
-        }
-    }
-
-    @Test
-    fun `verify that user balances cannot be topped up if the user does not exist`() {
-        runBlocking {
-            // When non-existent user tops up their balance
-            val userId = "doesNotExist"
-            val funding = Funding(42.0)
-            userService.updateBalance(userId, funding).status shouldBe HttpStatusCode.Conflict
-
-            // Then user was not created either
-            val result = userService.getUserById(userId)
-            result.status shouldBe HttpStatusCode.NotFound
-            result.data shouldBe null
         }
     }
 }

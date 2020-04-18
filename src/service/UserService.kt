@@ -2,7 +2,6 @@ package eu.yeger.service
 
 import eu.yeger.model.domain.User
 import eu.yeger.model.dto.Credentials
-import eu.yeger.model.dto.Funding
 import eu.yeger.model.dto.Result
 import eu.yeger.model.dto.UserCreationRequest
 import eu.yeger.model.dto.UserListEntry
@@ -21,6 +20,4 @@ interface UserService {
     suspend fun deleteUserById(id: String): Result<String>
 
     suspend fun login(credentials: Credentials): Result<String>
-
-    suspend fun updateBalance(id: String, funding: Funding): Result<String>
 }

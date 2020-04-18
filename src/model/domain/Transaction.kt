@@ -19,12 +19,12 @@ sealed class Transaction(
 
     class Funding(
         value: Double,
-        timestamp: Long
+        timestamp: Long = System.currentTimeMillis()
     ) : Transaction(value, timestamp)
 
     class Purchase(
         value: Double,
-        timestamp: Long,
+        timestamp: Long = System.currentTimeMillis(),
         val itemId: String,
         val amount: Int
     ) : Transaction(value, timestamp)
