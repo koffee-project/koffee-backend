@@ -47,7 +47,8 @@ class DefaultTransactionService(
     private suspend inline fun Purchase.processed(block: (Transaction.Purchase) -> Result<String>): Result<String> {
         val item = itemRepository.getById(this.itemId)
         return when {
-            item == null || item.amount <= 0 -> Result.UnprocessableEntity("Invalid purchase")
+            item == null -> Result.Conflict("Item with that id does not exist")
+            this.amount <= 0 -> Result.UnprocessableEntity("Purchase amount must be larger than zero")
             else -> {
                 val transaction = Transaction.Purchase(
                     itemId = this.itemId,

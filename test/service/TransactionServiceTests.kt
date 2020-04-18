@@ -97,4 +97,36 @@ class TransactionServiceTests {
             itemResult.data?.amount shouldBe testItem.amount - testPurchase.amount
         }
     }
+
+    @Test
+    fun `verify that purchases of non-existent items are not possible`() {
+        runBlocking {
+            // When user requests an invalid purchase
+            userService.createUser(testPartialUser).status shouldBe HttpStatusCode.Created
+            transactionService.processPurchase(testUser.id, testPurchase).status shouldBe HttpStatusCode.Conflict
+
+            // Then the transaction was processed
+            val userResult = userService.getUserById(testUser.id)
+            userResult.status shouldBe HttpStatusCode.OK
+            userResult.data?.transactions?.size shouldBe 0
+        }
+    }
+
+    @Test
+    fun `verify that purchases with invalid amounts are not possible`() {
+        runBlocking {
+            // When user requests an invalid purchase
+            userService.createUser(testPartialUser).status shouldBe HttpStatusCode.Created
+            itemService.createItem(testItem).status shouldBe HttpStatusCode.Created
+            val zeroPurchase = testPurchase.copy(amount = 0)
+            val negativePurchase = testPurchase.copy(amount = -42)
+            transactionService.processPurchase(testUser.id, zeroPurchase).status shouldBe HttpStatusCode.UnprocessableEntity
+            transactionService.processPurchase(testUser.id, negativePurchase).status shouldBe HttpStatusCode.UnprocessableEntity
+
+            // Then the transaction was processed
+            val userResult = userService.getUserById(testUser.id)
+            userResult.status shouldBe HttpStatusCode.OK
+            userResult.data?.transactions?.size shouldBe 0
+        }
+    }
 }
