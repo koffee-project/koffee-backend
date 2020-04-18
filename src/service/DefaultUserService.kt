@@ -5,8 +5,8 @@ import eu.yeger.authentication.matches
 import eu.yeger.authentication.withHashedPassword
 import eu.yeger.model.domain.User
 import eu.yeger.model.dto.Credentials
+import eu.yeger.model.dto.PartialUser
 import eu.yeger.model.dto.Result
-import eu.yeger.model.dto.UserCreationRequest
 import eu.yeger.model.dto.UserListEntry
 import eu.yeger.model.dto.UserProfile
 import eu.yeger.model.dto.asProfile
@@ -30,22 +30,26 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
         }
     }
 
-    override suspend fun createUser(userCreationRequest: UserCreationRequest): Result<String> {
-        val user = userCreationRequest.asUser()
-        return when (userRepository.hasUserWithId(id = user.id)) {
+    override suspend fun createUser(partialUser: PartialUser): Result<String> {
+        return when (userRepository.hasUserWithId(id = partialUser.id)) {
             true -> Result.Conflict("User with that id already exists")
-            false -> user.processed { hashedUser ->
+            false -> partialUser.processed { hashedUser ->
                 userRepository.insert(hashedUser)
-                Result.Created("Created ${hashedUser.asProfile()}")
+                Result.Created("User created successfully")
             }
         }
     }
 
-    override suspend fun updateUser(user: User): Result<String> {
-        return when (userRepository.hasUserWithId(id = user.id)) {
-            true -> user.processed { hashedUser ->
-                userRepository.insert(hashedUser)
-                Result.OK("Updated ${hashedUser.asProfile()}")
+    override suspend fun updateUser(partialUser: PartialUser): Result<String> {
+        return when (userRepository.hasUserWithId(id = partialUser.id)) {
+            true -> partialUser.processed { hashedUser ->
+                userRepository.update(
+                    id = hashedUser.id,
+                    name = hashedUser.name,
+                    isAdmin = hashedUser.isAdmin,
+                    password = hashedUser.password
+                )
+                Result.OK("User updated successfully")
             }
             false -> Result.Conflict("User with that id does not exist")
         }
@@ -80,14 +84,14 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
         }
     }
 
-    private inline fun User.processed(block: (User) -> Result<String>): Result<String> {
+    private inline fun PartialUser.processed(block: (User) -> Result<String>): Result<String> {
         return when (this.isValid()) {
-            true -> block(this.withHashedPassword())
+            true -> block(this.asUser().withHashedPassword())
             false -> Result.UnprocessableEntity("Invalid user data")
         }
     }
 
-    private fun User.isValid(): Boolean {
+    private fun PartialUser.isValid(): Boolean {
         return id.isNotBlank() &&
             name.isNotBlank() &&
             (!isAdmin || password?.isNotBlank() ?: false) &&

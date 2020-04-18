@@ -26,7 +26,7 @@ class DefaultItemService(private val itemRepository: ItemRepository) : ItemServi
             true -> Result.Conflict("Item with that id already exists")
             false -> item.validated {
                 itemRepository.insert(item)
-                Result.Created("Created $item")
+                Result.Created("Item created successfully")
             }
         }
     }
@@ -35,7 +35,7 @@ class DefaultItemService(private val itemRepository: ItemRepository) : ItemServi
         return when (itemRepository.hasItemWithId(id = item.id)) {
             true -> item.validated {
                 itemRepository.insert(item)
-                Result.OK("Updated $item")
+                Result.OK("Item updated successfully")
             }
             false -> Result.Conflict("Item with that id does not exist")
         }

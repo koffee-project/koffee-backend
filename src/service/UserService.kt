@@ -1,9 +1,8 @@
 package eu.yeger.service
 
-import eu.yeger.model.domain.User
 import eu.yeger.model.dto.Credentials
+import eu.yeger.model.dto.PartialUser
 import eu.yeger.model.dto.Result
-import eu.yeger.model.dto.UserCreationRequest
 import eu.yeger.model.dto.UserListEntry
 import eu.yeger.model.dto.UserProfile
 
@@ -13,9 +12,9 @@ interface UserService {
 
     suspend fun getUserById(id: String): Result<UserProfile?>
 
-    suspend fun createUser(userCreationRequest: UserCreationRequest): Result<String>
+    suspend fun createUser(partialUser: PartialUser): Result<String>
 
-    suspend fun updateUser(user: User): Result<String>
+    suspend fun updateUser(partialUser: PartialUser): Result<String>
 
     suspend fun deleteUserById(id: String): Result<String>
 

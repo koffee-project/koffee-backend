@@ -4,8 +4,8 @@ import eu.yeger.authentication.JWTConfiguration
 import eu.yeger.model.domain.Item
 import eu.yeger.model.domain.User
 import eu.yeger.model.dto.Funding
+import eu.yeger.model.dto.PartialUser
 import eu.yeger.model.dto.Purchase
-import eu.yeger.model.dto.UserCreationRequest
 import eu.yeger.model.dto.asUser
 import io.ktor.server.testing.TestApplicationRequest
 
@@ -16,14 +16,14 @@ val testItem = Item(
     price = 0.5
 )
 
-val testUserCreationRequest = UserCreationRequest(
+val testPartialUser = PartialUser(
     id = "userName",
     name = "UserName",
     isAdmin = false,
     password = "testPassword"
 )
 
-val testUser = testUserCreationRequest.asUser()
+val testUser = testPartialUser.asUser()
 
 val testFunding = Funding(
     amount = 42.0

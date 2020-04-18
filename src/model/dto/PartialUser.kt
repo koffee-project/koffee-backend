@@ -2,14 +2,14 @@ package eu.yeger.model.dto
 
 import eu.yeger.model.domain.User
 
-data class UserCreationRequest(
+data class PartialUser(
     val id: String,
     val name: String,
     val isAdmin: Boolean,
     val password: String?
 )
 
-fun UserCreationRequest.asUser() = User(
+fun PartialUser.asUser() = User(
     id = id,
     name = name,
     transactions = emptyList(),

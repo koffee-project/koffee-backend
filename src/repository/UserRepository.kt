@@ -13,6 +13,8 @@ interface UserRepository {
 
     suspend fun insert(user: User)
 
+    suspend fun update(id: String, name: String, isAdmin: Boolean, password: String?)
+
     suspend fun removeById(id: String)
 
     suspend fun addTransaction(id: String, transaction: Transaction)

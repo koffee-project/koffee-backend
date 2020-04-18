@@ -7,9 +7,9 @@ import eu.yeger.repository.FakeUserRepository
 import eu.yeger.utility.shouldBe
 import eu.yeger.utility.testFunding
 import eu.yeger.utility.testItem
+import eu.yeger.utility.testPartialUser
 import eu.yeger.utility.testPurchase
 import eu.yeger.utility.testUser
-import eu.yeger.utility.testUserCreationRequest
 import io.ktor.http.HttpStatusCode
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -36,7 +36,7 @@ class TransactionServiceTests {
     fun `verify that user balances can be topped up`() {
         runBlocking {
             // When balance of user is topped up
-            userService.createUser(testUserCreationRequest).status shouldBe HttpStatusCode.Created
+            userService.createUser(testPartialUser).status shouldBe HttpStatusCode.Created
             transactionService.processFunding(testUser.id, testFunding).status shouldBe HttpStatusCode.OK
 
             // Then a transaction can be retrieved
@@ -64,7 +64,7 @@ class TransactionServiceTests {
     fun `verify that user balances cannot be topped up if the amount is invalid`() {
         runBlocking {
             // When user tops up their balance by an invalid amount
-            userService.createUser(testUserCreationRequest).status shouldBe HttpStatusCode.Created
+            userService.createUser(testPartialUser).status shouldBe HttpStatusCode.Created
             val invalidFunding = Funding(amount = 1.2345)
             transactionService.processFunding(testUser.id, invalidFunding).status shouldBe HttpStatusCode.UnprocessableEntity
 
@@ -79,7 +79,7 @@ class TransactionServiceTests {
     fun `verify that purchases are possible`() {
         runBlocking {
             // When user requests a valid purchase
-            userService.createUser(testUserCreationRequest).status shouldBe HttpStatusCode.Created
+            userService.createUser(testPartialUser).status shouldBe HttpStatusCode.Created
             itemService.createItem(testItem).status shouldBe HttpStatusCode.Created
             transactionService.processPurchase(testUser.id, testPurchase).status shouldBe HttpStatusCode.OK
 

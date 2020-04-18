@@ -18,7 +18,7 @@ class DefaultTransactionService(
             false -> Result.Conflict("User with that id does not exist")
             true -> funding.processed { transaction ->
                 userRepository.addTransaction(id = userId, transaction = transaction)
-                Result.OK("Funding successful")
+                Result.OK("Funding processed successfully")
             }
         }
     }
@@ -29,7 +29,7 @@ class DefaultTransactionService(
             true -> purchase.processed { transaction ->
                 userRepository.addTransaction(id = userId, transaction = transaction)
                 itemRepository.updateAmount(id = transaction.itemId, change = -transaction.amount)
-                Result.OK("Purchase successful")
+                Result.OK("Purchase processed successfully")
             }
         }
     }

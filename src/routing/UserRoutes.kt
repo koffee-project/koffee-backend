@@ -1,9 +1,8 @@
 package eu.yeger.routing
 
-import eu.yeger.model.domain.User
 import eu.yeger.model.dto.Funding
+import eu.yeger.model.dto.PartialUser
 import eu.yeger.model.dto.Purchase
-import eu.yeger.model.dto.UserCreationRequest
 import eu.yeger.service.TransactionService
 import eu.yeger.service.UserService
 import eu.yeger.utility.respondWithResult
@@ -25,14 +24,14 @@ fun Route.userRoutes() {
 
         authenticate {
             post {
-                val userCreationRequest = call.receive<UserCreationRequest>()
-                val result = userService.createUser(userCreationRequest)
+                val partialUser = call.receive<PartialUser>()
+                val result = userService.createUser(partialUser)
                 call.respondWithResult(result)
             }
 
             put {
-                val user = call.receive<User>()
-                val result = userService.updateUser(user)
+                val partialUser = call.receive<PartialUser>()
+                val result = userService.updateUser(partialUser)
                 call.respondWithResult(result)
             }
         }

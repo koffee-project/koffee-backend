@@ -17,6 +17,16 @@ class FakeUserRepository : UserRepository {
         users[user.id] = user
     }
 
+    override suspend fun update(id: String, name: String, isAdmin: Boolean, password: String?) {
+        users[id]?.let { olderUser ->
+            users[id] = olderUser.copy(
+                name = name,
+                isAdmin = isAdmin,
+                password = password
+            )
+        }
+    }
+
     override suspend fun removeById(id: String) {
         users.remove(id)
     }
