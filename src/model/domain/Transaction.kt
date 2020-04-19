@@ -10,7 +10,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo
 )
 @JsonSubTypes(
     JsonSubTypes.Type(value = Transaction.Funding::class, name = "funding"),
-    JsonSubTypes.Type(value = Transaction.Purchase::class, name = "purchase")
+    JsonSubTypes.Type(value = Transaction.Purchase::class, name = "purchase"),
+    JsonSubTypes.Type(value = Transaction.Refund::class, name = "refund")
 )
 sealed class Transaction(
     val value: Double,
@@ -28,4 +29,17 @@ sealed class Transaction(
         val itemId: String,
         val amount: Int
     ) : Transaction(value, timestamp)
+
+    class Refund(
+        value: Double,
+        timestamp: Long = System.currentTimeMillis(),
+        val itemId: String,
+        val amount: Int
+    ) : Transaction(value, timestamp)
 }
+
+fun Transaction.Purchase.asRefund() = Transaction.Refund(
+    value = -value,
+    itemId = itemId,
+    amount = amount
+)

@@ -1,6 +1,7 @@
 package eu.yeger.service
 
 import eu.yeger.model.domain.Transaction
+import eu.yeger.model.domain.asRefund
 import eu.yeger.model.dto.Funding
 import eu.yeger.model.dto.Purchase
 import eu.yeger.model.dto.Result
@@ -34,6 +35,19 @@ class DefaultTransactionService(
         }
     }
 
+    override suspend fun refundLastPurchase(userId: String): Result<String> {
+        val user = userRepository.getById(userId) ?: return Result.Conflict("User with that id does not exist")
+
+        return user.transactions
+            .filter { it is Transaction.Purchase || it is Transaction.Refund }
+            .maxWith(TransactionComparator)
+            .processRefund { refund ->
+                userRepository.addTransaction(id = userId, transaction = refund)
+                itemRepository.updateAmount(id = refund.itemId, change = +refund.amount)
+                Result.OK("Purchase refunded successfully")
+            }
+    }
+
     private inline fun Funding.processed(block: (Transaction.Funding) -> Result<String>): Result<String> {
         return when (this.amount.hasTwoDecimalPlaces()) {
             true -> {
@@ -45,17 +59,44 @@ class DefaultTransactionService(
     }
 
     private suspend inline fun Purchase.processed(block: (Transaction.Purchase) -> Result<String>): Result<String> {
-        val item = itemRepository.getById(this.itemId)
+        val item = itemRepository.getById(this.itemId) ?: return Result.Conflict("Item with that id does not exist")
         return when {
-            item == null -> Result.Conflict("Item with that id does not exist")
             this.amount <= 0 -> Result.UnprocessableEntity("Purchase amount must be larger than zero")
             else -> {
                 val transaction = Transaction.Purchase(
                     itemId = this.itemId,
                     amount = this.amount,
-                    value = this.amount * item.price
+                    value = -(this.amount * item.price)
                 )
                 block(transaction)
+            }
+        }
+    }
+
+    private inline fun Transaction?.processRefund(block: (Transaction.Refund) -> Result<String>): Result<String> {
+        return when {
+            this == null -> Result.Conflict("User has no refundable purchase")
+            this is Transaction.Refund -> Result.Conflict("Last purchase has already been refunded")
+            System.currentTimeMillis() - this.timestamp >= 60_000 -> Result.Conflict("Refund timespan has expired")
+            this is Transaction.Purchase -> {
+                block(this.asRefund())
+            }
+            else -> Result.Conflict("Refund not possible")
+        }
+    }
+
+    private object TransactionComparator : Comparator<Transaction> {
+
+        override fun compare(first: Transaction, second: Transaction): Int {
+            return when {
+                first.timestamp > second.timestamp -> 1 // First transaction is newer
+                first.timestamp == second.timestamp -> when {
+                    second is Transaction.Refund -> -1 // Second transaction is more important
+                    first is Transaction.Refund -> 1 // First transaction is more important
+                    else -> 0 // Equal
+                }
+                first.timestamp < second.timestamp -> -1 // Second transaction is newer
+                else -> 0 // Equal
             }
         }
     }

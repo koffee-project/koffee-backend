@@ -66,7 +66,10 @@ class TransactionServiceTests {
             // When user tops up their balance by an invalid amount
             userService.createUser(testPartialUser).status shouldBe HttpStatusCode.Created
             val invalidFunding = Funding(amount = 1.2345)
-            transactionService.processFunding(testUser.id, invalidFunding).status shouldBe HttpStatusCode.UnprocessableEntity
+            transactionService.processFunding(
+                testUser.id,
+                invalidFunding
+            ).status shouldBe HttpStatusCode.UnprocessableEntity
 
             // Then user was not created either
             val result = userService.getUserById(testUser.id)
@@ -88,7 +91,7 @@ class TransactionServiceTests {
             userResult.status shouldBe HttpStatusCode.OK
             val transaction = userResult.data?.transactions?.first() as Transaction.Purchase
             transaction.run {
-                value shouldBe testPurchase.amount * testItem.price
+                value shouldBe -(testPurchase.amount * testItem.price)
                 itemId shouldBe testItem.id
                 amount shouldBe testPurchase.amount
             }
@@ -97,6 +100,7 @@ class TransactionServiceTests {
             itemResult.data?.amount shouldBe testItem.amount!! - testPurchase.amount
         }
     }
+
     @Test
     fun `verify that purchases of unlimited items are possible`() {
         runBlocking {
@@ -111,7 +115,7 @@ class TransactionServiceTests {
             userResult.status shouldBe HttpStatusCode.OK
             val transaction = userResult.data?.transactions?.first() as Transaction.Purchase
             transaction.run {
-                value shouldBe testPurchase.amount * item.price
+                value shouldBe -(testPurchase.amount * item.price)
                 itemId shouldBe item.id
                 amount shouldBe testPurchase.amount
             }
@@ -143,13 +147,99 @@ class TransactionServiceTests {
             itemService.createItem(testItem).status shouldBe HttpStatusCode.Created
             val zeroPurchase = testPurchase.copy(amount = 0)
             val negativePurchase = testPurchase.copy(amount = -42)
-            transactionService.processPurchase(testUser.id, zeroPurchase).status shouldBe HttpStatusCode.UnprocessableEntity
-            transactionService.processPurchase(testUser.id, negativePurchase).status shouldBe HttpStatusCode.UnprocessableEntity
+            transactionService.processPurchase(
+                testUser.id,
+                zeroPurchase
+            ).status shouldBe HttpStatusCode.UnprocessableEntity
+            transactionService.processPurchase(
+                testUser.id,
+                negativePurchase
+            ).status shouldBe HttpStatusCode.UnprocessableEntity
 
             // Then the transaction was processed
             val userResult = userService.getUserById(testUser.id)
             userResult.status shouldBe HttpStatusCode.OK
             userResult.data?.transactions?.size shouldBe 0
+        }
+    }
+
+    @Test
+    fun `verify that refunds are possible`() {
+        runBlocking {
+            // When user requests a refund
+            userService.createUser(testPartialUser).status shouldBe HttpStatusCode.Created
+            itemService.createItem(testItem).status shouldBe HttpStatusCode.Created
+            transactionService.processPurchase(testUser.id, testPurchase).status shouldBe HttpStatusCode.OK
+            transactionService.refundLastPurchase(testUser.id).status shouldBe HttpStatusCode.OK
+
+            // Then the transaction and refund were processed
+            val userResult = userService.getUserById(testUser.id)
+            userResult.status shouldBe HttpStatusCode.OK
+            val transaction = userResult.data?.transactions?.last() as Transaction.Refund
+            transaction.run {
+                value shouldBe testPurchase.amount * testItem.price
+                itemId shouldBe testItem.id
+                amount shouldBe testPurchase.amount
+            }
+            val itemResult = itemService.getItemById(testItem.id)
+            itemResult.status shouldBe HttpStatusCode.OK
+            itemResult.data?.amount shouldBe testItem.amount
+        }
+    }
+
+    @Test
+    fun `verify that refunds of unlimited items are possible`() {
+        runBlocking {
+            // When user requests a refund
+            userService.createUser(testPartialUser).status shouldBe HttpStatusCode.Created
+            val item = testItem.copy(amount = null)
+            itemService.createItem(item).status shouldBe HttpStatusCode.Created
+            transactionService.processPurchase(testUser.id, testPurchase).status shouldBe HttpStatusCode.OK
+            transactionService.refundLastPurchase(testUser.id).status shouldBe HttpStatusCode.OK
+
+            // Then the transaction and refund were processed
+            val userResult = userService.getUserById(testUser.id)
+            userResult.status shouldBe HttpStatusCode.OK
+            val transaction = userResult.data?.transactions?.last() as Transaction.Refund
+            transaction.run {
+                value shouldBe testPurchase.amount * item.price
+                itemId shouldBe item.id
+                amount shouldBe testPurchase.amount
+            }
+            val itemResult = itemService.getItemById(item.id)
+            itemResult.status shouldBe HttpStatusCode.OK
+            itemResult.data?.amount shouldBe item.amount
+        }
+    }
+
+    @Test
+    fun `verify that refunds items are not possible if no purchase was made`() {
+        runBlocking {
+            // When user requests a refund without any purchase made
+            userService.createUser(testPartialUser).status shouldBe HttpStatusCode.Created
+            transactionService.refundLastPurchase(testUser.id).status shouldBe HttpStatusCode.Conflict
+
+            // Then no transaction was created
+            val userResult = userService.getUserById(testUser.id)
+            userResult.status shouldBe HttpStatusCode.OK
+            userResult.data?.transactions?.size shouldBe 0
+        }
+    }
+
+    @Test
+    fun `verify that refunds items are not possible if last purchase has already been refunded`() {
+        runBlocking {
+            // When user requests a refund but the latest purchase has already been refunded
+            userService.createUser(testPartialUser).status shouldBe HttpStatusCode.Created
+            itemService.createItem(testItem).status shouldBe HttpStatusCode.Created
+            transactionService.processPurchase(testUser.id, testPurchase).status shouldBe HttpStatusCode.OK
+            transactionService.refundLastPurchase(testUser.id).status shouldBe HttpStatusCode.OK
+            transactionService.refundLastPurchase(testUser.id).status shouldBe HttpStatusCode.Conflict
+
+            // Then no additional transaction was created
+            val userResult = userService.getUserById(testUser.id)
+            userResult.status shouldBe HttpStatusCode.OK
+            userResult.data?.transactions?.size shouldBe 2
         }
     }
 }

@@ -43,13 +43,6 @@ fun Route.userRoutes() {
                 call.respondWithResult(result)
             }
 
-            post("purchases") {
-                val id = call.parameters["id"]!!
-                val purchase = call.receive<Purchase>()
-                val result = transactionService.processPurchase(id, purchase)
-                call.respondWithResult(result)
-            }
-
             authenticate {
                 delete {
                     val id = call.parameters["id"]!!
@@ -61,6 +54,21 @@ fun Route.userRoutes() {
                     val id = call.parameters["id"]!!
                     val funding = call.receive<Funding>()
                     val result = transactionService.processFunding(id, funding)
+                    call.respondWithResult(result)
+                }
+            }
+
+            route("purchases") {
+                post {
+                    val id = call.parameters["id"]!!
+                    val purchase = call.receive<Purchase>()
+                    val result = transactionService.processPurchase(id, purchase)
+                    call.respondWithResult(result)
+                }
+
+                delete("latest") {
+                    val id = call.parameters["id"]!!
+                    val result = transactionService.refundLastPurchase(id)
                     call.respondWithResult(result)
                 }
             }

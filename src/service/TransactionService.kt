@@ -9,4 +9,6 @@ interface TransactionService {
     suspend fun processFunding(userId: String, funding: Funding): Result<String>
 
     suspend fun processPurchase(userId: String, purchase: Purchase): Result<String>
+    
+    suspend fun refundLastPurchase(userId: String): Result<String>
 }

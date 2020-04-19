@@ -85,6 +85,19 @@ class UserRoutesTests {
     }
 
     @Test
+    fun `verify that DELETE-users-$id-purchases-latest does not require authentication`() = withTestApplication(testModule) {
+        // When route is accessed
+        val call = handleRequest {
+            method = HttpMethod.Delete
+            uri = "/users/admin/purchases/latest"
+        }
+
+        // Then the request is accepted
+        call.requestHandled shouldBe true
+        call.response.status() shouldBe HttpStatusCode.Conflict
+    }
+
+    @Test
     fun `verify that POST-users does require authentication`() = withTestApplication(testModule) {
         // When route is accessed
         val call = handleRequest {
