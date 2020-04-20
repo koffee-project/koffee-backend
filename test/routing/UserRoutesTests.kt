@@ -85,11 +85,11 @@ class UserRoutesTests {
     }
 
     @Test
-    fun `verify that DELETE-users-$id-purchases-latest does not require authentication`() = withTestApplication(testModule) {
+    fun `verify that POST-users-$id-purchases-refund does not require authentication`() = withTestApplication(testModule) {
         // When route is accessed
         val call = handleRequest {
-            method = HttpMethod.Delete
-            uri = "/users/admin/purchases/latest"
+            method = HttpMethod.Post
+            uri = "/users/admin/purchases/refund"
         }
 
         // Then the request is accepted
@@ -137,11 +137,11 @@ class UserRoutesTests {
     }
 
     @Test
-    fun `verify that POST-users-$id-balance does require authentication`() = withTestApplication(testModule) {
+    fun `verify that POST-users-$id-funding does require authentication`() = withTestApplication(testModule) {
         // When route is accessed
         val call = handleRequest {
             method = HttpMethod.Post
-            uri = "/users/admin/balance"
+            uri = "/users/admin/funding"
         }
 
         // Then the request is denied

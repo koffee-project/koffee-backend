@@ -50,7 +50,7 @@ fun Route.userRoutes() {
                     call.respondWithResult(result)
                 }
 
-                post("balance") {
+                post("funding") {
                     val id = call.parameters["id"]!!
                     val funding = call.receive<Funding>()
                     val result = transactionService.processFunding(id, funding)
@@ -66,7 +66,7 @@ fun Route.userRoutes() {
                     call.respondWithResult(result)
                 }
 
-                delete("latest") {
+                post("refund") {
                     val id = call.parameters["id"]!!
                     val result = transactionService.refundLastPurchase(id)
                     call.respondWithResult(result)
