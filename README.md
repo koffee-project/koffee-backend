@@ -2,6 +2,70 @@
 
 [![Build Status](https://travis-ci.com/DerYeger/koffee-backend.svg?token=juB9bV6tFyoA5v7Hx1o4&branch=develop)](https://travis-ci.com/DerYeger/koffee-backend)
 
+## Routes
+
+All routes use JSON.
+
+### Without authentication
+
+##### POST /login
+
+- id: String
+- password: String
+
+##### GET /users
+
+##### GET /users/:id
+
+##### POST /users/:id/purchases
+
+- itemId: String
+- amount: Int
+
+##### POST /users/:id/purchases/refund
+
+##### GET /items
+
+##### GET /items/:id
+
+#### With authentication
+
+##### POST /users
+
+- id: String
+- name: String
+- isAdmin: Boolean
+- password: String?
+
+##### PUT /users
+
+- id: String
+- name: String
+- isAdmin: Boolean
+- password: String?
+
+##### DELETE /users/:id
+
+##### POST /users/:id/funding
+
+- amount: Double
+
+##### POST /items
+
+- id: String
+- name: String
+- amount: Int?
+- price: Double
+
+##### PUT /items
+
+- id: String
+- name: String
+- amount: Int?
+- price: Double
+
+##### DELETE /items/:id
+
 ## Secrets
 
 Secrets are stored in `.secret` files in the `secrets` directory and excluded from git.
