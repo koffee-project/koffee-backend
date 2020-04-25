@@ -48,6 +48,13 @@ class DefaultTransactionService(
             }
     }
 
+    override suspend fun getTransactionsOfUser(userId: String): Result<List<Transaction>?> {
+        return when (val user = userRepository.getById(id = userId)) {
+            null -> Result.NotFound(null)
+            else -> Result.OK(user.transactions)
+        }
+    }
+
     private inline fun Funding.processed(block: (Transaction.Funding) -> Result<String>): Result<String> {
         return when (this.amount.hasTwoDecimalPlaces()) {
             true -> {

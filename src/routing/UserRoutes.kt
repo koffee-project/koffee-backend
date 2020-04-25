@@ -72,6 +72,12 @@ fun Route.userRoutes() {
                     call.respondWithResult(result)
                 }
             }
+
+            get("transactions") {
+                val id = call.parameters["id"]!!
+                val result = transactionService.getTransactionsOfUser(id)
+                call.respondWithResult(result)
+            }
         }
     }
 }
