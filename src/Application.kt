@@ -5,6 +5,7 @@ import eu.yeger.authentication.withHashedPassword
 import eu.yeger.di.databaseModule
 import eu.yeger.di.repositoryModule
 import eu.yeger.di.serviceModule
+import eu.yeger.model.domain.TransactionList
 import eu.yeger.model.domain.User
 import eu.yeger.repository.UserRepository
 import eu.yeger.utility.loadDockerSecrets
@@ -49,7 +50,7 @@ fun Application.initializeDefaultAdmin() {
     val defaultAdmin = User(
         id = defaultAdminSecrets["ID"] ?: "admin",
         name = defaultAdminSecrets["NAME"] ?: "admin",
-        transactions = emptyList(),
+        transactions = TransactionList(emptyList()),
         isAdmin = true,
         password = defaultAdminSecrets["PASSWORD"] ?: "admin"
     ).withHashedPassword()

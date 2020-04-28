@@ -1,6 +1,7 @@
 package eu.yeger.service
 
 import eu.yeger.model.domain.Transaction
+import eu.yeger.model.domain.TransactionList
 import eu.yeger.model.domain.asRefund
 import eu.yeger.model.dto.Funding
 import eu.yeger.model.dto.Purchase
@@ -48,7 +49,7 @@ class DefaultTransactionService(
             }
     }
 
-    override suspend fun getTransactionsOfUser(userId: String): Result<List<Transaction>?> {
+    override suspend fun getTransactionsOfUser(userId: String): Result<TransactionList?> {
         return when (val user = userRepository.getById(id = userId)) {
             null -> Result.NotFound(null)
             else -> Result.OK(user.transactions)

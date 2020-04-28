@@ -1,6 +1,7 @@
 package eu.yeger.repository
 
 import eu.yeger.model.domain.Transaction
+import eu.yeger.model.domain.TransactionList
 import eu.yeger.model.domain.User
 
 class FakeUserRepository : UserRepository {
@@ -33,7 +34,7 @@ class FakeUserRepository : UserRepository {
 
     override suspend fun addTransaction(id: String, transaction: Transaction) {
         users[id]?.let { oldUser ->
-            users[id] = oldUser.copy(transactions = oldUser.transactions + transaction)
+            users[id] = oldUser.copy(transactions = TransactionList(oldUser.transactions + transaction))
         }
     }
 }

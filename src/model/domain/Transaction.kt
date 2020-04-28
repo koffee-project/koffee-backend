@@ -43,3 +43,8 @@ fun Transaction.Purchase.asRefund() = Transaction.Refund(
     itemId = itemId,
     amount = amount
 )
+
+/**
+ * Wrapper class necessary for preventing type erasure.
+ */
+class TransactionList(private val transactions: List<Transaction>) : List<Transaction> by transactions
