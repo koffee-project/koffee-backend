@@ -13,29 +13,30 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo
     JsonSubTypes.Type(value = Transaction.Purchase::class, name = "purchase"),
     JsonSubTypes.Type(value = Transaction.Refund::class, name = "refund")
 )
-sealed class Transaction(
-    val value: Double,
-    val timestamp: Long
-) {
+sealed class Transaction {
 
-    class Funding(
-        value: Double,
-        timestamp: Long = System.currentTimeMillis()
-    ) : Transaction(value, timestamp)
+    abstract val value: Double
 
-    class Purchase(
-        value: Double,
-        timestamp: Long = System.currentTimeMillis(),
+    abstract val timestamp: Long
+
+    data class Funding(
+        override val value: Double,
+        override val timestamp: Long = System.currentTimeMillis()
+    ) : Transaction()
+
+    data class Purchase(
+        override val value: Double,
+        override val timestamp: Long = System.currentTimeMillis(),
         val itemId: String,
         val amount: Int
-    ) : Transaction(value, timestamp)
+    ) : Transaction()
 
-    class Refund(
-        value: Double,
-        timestamp: Long = System.currentTimeMillis(),
+    data class Refund(
+        override val value: Double,
+        override val timestamp: Long = System.currentTimeMillis(),
         val itemId: String,
         val amount: Int
-    ) : Transaction(value, timestamp)
+    ) : Transaction()
 }
 
 fun Transaction.Purchase.asRefund() = Transaction.Refund(
