@@ -17,27 +17,27 @@ class DefaultTransactionService(
 
     override suspend fun processFunding(userId: String, funding: Funding): Result<String> {
         return when (userRepository.hasUserWithId(id = userId)) {
-            false -> Result.Conflict("User with that id does not exist")
+            false -> Result.Conflict("User with that id does not exist.")
             true -> funding.processed { transaction ->
                 userRepository.addTransaction(id = userId, transaction = transaction)
-                Result.OK("Funding processed successfully")
+                Result.OK("Funding processed successfully.")
             }
         }
     }
 
     override suspend fun processPurchase(userId: String, purchase: Purchase): Result<String> {
         return when (userRepository.hasUserWithId(id = userId)) {
-            false -> Result.Conflict("User with that id does not exist")
+            false -> Result.Conflict("User with that id does not exist.")
             true -> purchase.processed { transaction ->
                 userRepository.addTransaction(id = userId, transaction = transaction)
                 itemRepository.updateAmount(id = transaction.itemId, change = -transaction.amount)
-                Result.OK("Purchase processed successfully")
+                Result.OK("Purchase processed successfully.")
             }
         }
     }
 
     override suspend fun refundLastPurchase(userId: String): Result<String> {
-        val user = userRepository.getById(userId) ?: return Result.Conflict("User with that id does not exist")
+        val user = userRepository.getById(userId) ?: return Result.Conflict("User with that id does not exist.")
 
         return user.transactions
             .filter { it is Transaction.Purchase || it is Transaction.Refund }
@@ -45,7 +45,7 @@ class DefaultTransactionService(
             .processRefund { refund ->
                 userRepository.addTransaction(id = userId, transaction = refund)
                 itemRepository.updateAmount(id = refund.itemId, change = +refund.amount)
-                Result.OK("Purchase refunded successfully")
+                Result.OK("Purchase refunded successfully.")
             }
     }
 
@@ -62,14 +62,14 @@ class DefaultTransactionService(
                 val transaction = Transaction.Funding(value = this.amount)
                 block(transaction)
             }
-            false -> Result.UnprocessableEntity("Invalid amount")
+            false -> Result.UnprocessableEntity("Invalid amount.")
         }
     }
 
     private suspend inline fun Purchase.processed(block: (Transaction.Purchase) -> Result<String>): Result<String> {
-        val item = itemRepository.getById(this.itemId) ?: return Result.Conflict("Item with that id does not exist")
+        val item = itemRepository.getById(this.itemId) ?: return Result.Conflict("Item with that id does not exist.")
         return when {
-            this.amount <= 0 -> Result.UnprocessableEntity("Purchase amount must be larger than zero")
+            this.amount <= 0 -> Result.UnprocessableEntity("Purchase amount must be larger than zero.")
             else -> {
                 val transaction = Transaction.Purchase(
                     itemId = this.itemId,
@@ -83,13 +83,13 @@ class DefaultTransactionService(
 
     private inline fun Transaction?.processRefund(block: (Transaction.Refund) -> Result<String>): Result<String> {
         return when {
-            this == null -> Result.Conflict("User has no refundable purchase")
-            this is Transaction.Refund -> Result.Conflict("Last purchase has already been refunded")
-            System.currentTimeMillis() - this.timestamp >= 60_000 -> Result.Conflict("Refund timespan has expired")
+            this == null -> Result.Conflict("User has no refundable purchase.")
+            this is Transaction.Refund -> Result.Conflict("Last purchase has already been refunded.")
+            System.currentTimeMillis() - this.timestamp >= 60_000 -> Result.Conflict("Refund timespan has expired.")
             this is Transaction.Purchase -> {
                 block(this.asRefund())
             }
-            else -> Result.Conflict("Refund not possible")
+            else -> Result.Conflict("Refund not possible.")
         }
     }
 

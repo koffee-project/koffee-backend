@@ -32,10 +32,10 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
 
     override suspend fun createUser(partialUser: PartialUser): Result<String> {
         return when (userRepository.hasUserWithId(id = partialUser.id)) {
-            true -> Result.Conflict("User with that id already exists")
+            true -> Result.Conflict("User with that id already exists.")
             false -> partialUser.processed { hashedUser ->
                 userRepository.insert(hashedUser)
-                Result.Created("User created successfully")
+                Result.Created("User created successfully.")
             }
         }
     }
@@ -49,9 +49,9 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
                     isAdmin = hashedUser.isAdmin,
                     password = hashedUser.password
                 )
-                Result.OK("User updated successfully")
+                Result.OK("User updated successfully.")
             }
-            false -> Result.Conflict("User with that id does not exist")
+            false -> Result.Conflict("User with that id does not exist.")
         }
     }
 
@@ -61,16 +61,16 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
                 userRepository.removeById(id)
                 Result.OK("Deleted $id")
             }
-            false -> Result.NotFound("User with that id does not exist")
+            false -> Result.NotFound("User with that id does not exist.")
         }
     }
 
     override suspend fun login(credentials: Credentials): Result<String> {
         return when (val user = userRepository.getById(id = credentials.id)) {
-            null -> Result.Unauthorized("ID or password incorrect")
+            null -> Result.Unauthorized("ID or password incorrect.")
             else -> credentials.validatedForUser(user) {
                 when (val token = JWTConfiguration.makeToken(user)) {
-                    null -> Result.Forbidden("${user.id} does not have administrator privileges")
+                    null -> Result.Forbidden("${user.id} does not have administrator privileges.")
                     else -> Result.OK(token)
                 }
             }
@@ -80,14 +80,14 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
     private inline fun Credentials.validatedForUser(user: User, block: () -> Result<String>): Result<String> {
         return when (this matches user) {
             true -> block()
-            false -> Result.Unauthorized("ID or password incorrect")
+            false -> Result.Unauthorized("ID or password incorrect.")
         }
     }
 
     private inline fun PartialUser.processed(block: (User) -> Result<String>): Result<String> {
         return when (this.isValid()) {
             true -> block(this.asUser().withHashedPassword())
-            false -> Result.UnprocessableEntity("Invalid user data")
+            false -> Result.UnprocessableEntity("Invalid user data.")
         }
     }
 

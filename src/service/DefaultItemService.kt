@@ -23,10 +23,10 @@ class DefaultItemService(private val itemRepository: ItemRepository) : ItemServi
 
     override suspend fun createItem(item: Item): Result<String> {
         return when (itemRepository.hasItemWithId(id = item.id)) {
-            true -> Result.Conflict("Item with that id already exists")
+            true -> Result.Conflict("Item with that id already exists.")
             false -> item.validated {
                 itemRepository.insert(item)
-                Result.Created("Item created successfully")
+                Result.Created("Item created successfully.")
             }
         }
     }
@@ -35,9 +35,9 @@ class DefaultItemService(private val itemRepository: ItemRepository) : ItemServi
         return when (itemRepository.hasItemWithId(id = item.id)) {
             true -> item.validated {
                 itemRepository.insert(item)
-                Result.OK("Item updated successfully")
+                Result.OK("Item updated successfully.")
             }
-            false -> Result.Conflict("Item with that id does not exist")
+            false -> Result.Conflict("Item with that id does not exist.")
         }
     }
 
@@ -47,14 +47,14 @@ class DefaultItemService(private val itemRepository: ItemRepository) : ItemServi
                 itemRepository.removeById(id)
                 Result.OK("Deleted $id")
             }
-            false -> Result.NotFound("Item with that id does not exist")
+            false -> Result.NotFound("Item with that id does not exist.")
         }
     }
 
     private inline fun Item.validated(block: () -> Result<String>): Result<String> =
         when (this.isValid()) {
             true -> block()
-            false -> Result.UnprocessableEntity("$this is invalid")
+            false -> Result.UnprocessableEntity("$this is invalid.")
         }
 
     private fun Item.isValid(): Boolean =

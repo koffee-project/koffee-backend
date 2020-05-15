@@ -68,7 +68,6 @@ class ItemRoutesTests {
         // Then the request is accepted
         call.requestHandled shouldBe true
         call.response.status() shouldBe HttpStatusCode.NotFound
-        call.response.content?.isNotBlank() shouldBe true
     }
 
     @Test
