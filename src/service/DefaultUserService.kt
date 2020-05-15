@@ -13,6 +13,14 @@ import eu.yeger.model.dto.asProfile
 import eu.yeger.model.dto.asUser
 import eu.yeger.model.dto.asUserListEntry
 import eu.yeger.repository.UserRepository
+import eu.yeger.utility.ID_OR_PASSWORD_INCORRECT
+import eu.yeger.utility.INVALID_USER_DATA
+import eu.yeger.utility.NO_ADMINISTRATOR_PRIVILEGES
+import eu.yeger.utility.NO_USER_WITH_THAT_ID
+import eu.yeger.utility.USER_CREATED_SUCCESSFULLY
+import eu.yeger.utility.USER_DELETED_SUCCESSFULLY
+import eu.yeger.utility.USER_UPDATED_SUCCESSFULLY
+import eu.yeger.utility.USER_WITH_THAT_ID_ALREADY_EXISTS
 
 class DefaultUserService(private val userRepository: UserRepository) : UserService {
 
@@ -32,10 +40,10 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
 
     override suspend fun createUser(partialUser: PartialUser): Result<String> {
         return when (userRepository.hasUserWithId(id = partialUser.id)) {
-            true -> Result.Conflict("User with that id already exists.")
+            true -> Result.Conflict(USER_WITH_THAT_ID_ALREADY_EXISTS)
             false -> partialUser.processed { hashedUser ->
                 userRepository.insert(hashedUser)
-                Result.Created("User created successfully.")
+                Result.Created(USER_CREATED_SUCCESSFULLY)
             }
         }
     }
@@ -49,9 +57,9 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
                     isAdmin = hashedUser.isAdmin,
                     password = hashedUser.password
                 )
-                Result.OK("User updated successfully.")
+                Result.OK(USER_UPDATED_SUCCESSFULLY)
             }
-            false -> Result.Conflict("User with that id does not exist.")
+            false -> Result.Conflict(NO_USER_WITH_THAT_ID)
         }
     }
 
@@ -59,18 +67,18 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
         return when (userRepository.hasUserWithId(id = id)) {
             true -> {
                 userRepository.removeById(id)
-                Result.OK("Deleted $id")
+                Result.OK(USER_DELETED_SUCCESSFULLY)
             }
-            false -> Result.NotFound("User with that id does not exist.")
+            false -> Result.NotFound(NO_USER_WITH_THAT_ID)
         }
     }
 
     override suspend fun login(credentials: Credentials): Result<String> {
         return when (val user = userRepository.getById(id = credentials.id)) {
-            null -> Result.Unauthorized("ID or password incorrect.")
+            null -> Result.Unauthorized(ID_OR_PASSWORD_INCORRECT)
             else -> credentials.validatedForUser(user) {
                 when (val token = JWTConfiguration.makeToken(user)) {
-                    null -> Result.Forbidden("${user.id} does not have administrator privileges.")
+                    null -> Result.Forbidden(NO_ADMINISTRATOR_PRIVILEGES)
                     else -> Result.OK(token)
                 }
             }
@@ -80,14 +88,14 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
     private inline fun Credentials.validatedForUser(user: User, block: () -> Result<String>): Result<String> {
         return when (this matches user) {
             true -> block()
-            false -> Result.Unauthorized("ID or password incorrect.")
+            false -> Result.Unauthorized(ID_OR_PASSWORD_INCORRECT)
         }
     }
 
     private inline fun PartialUser.processed(block: (User) -> Result<String>): Result<String> {
         return when (this.isValid()) {
             true -> block(this.asUser().withHashedPassword())
-            false -> Result.UnprocessableEntity("Invalid user data.")
+            false -> Result.UnprocessableEntity(INVALID_USER_DATA)
         }
     }
 

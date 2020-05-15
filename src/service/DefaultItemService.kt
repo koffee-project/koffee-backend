@@ -3,6 +3,12 @@ package eu.yeger.service
 import eu.yeger.model.domain.Item
 import eu.yeger.model.dto.Result
 import eu.yeger.repository.ItemRepository
+import eu.yeger.utility.INVALID_ITEM_DATA
+import eu.yeger.utility.ITEM_CREATED_SUCCESSFULLY
+import eu.yeger.utility.ITEM_DELETED_SUCCESSFULLY
+import eu.yeger.utility.ITEM_UPDATED_SUCCESSFULLY
+import eu.yeger.utility.ITEM_WITH_THAT_ID_ALREADY_EXISTS
+import eu.yeger.utility.NO_ITEM_WITH_THAT_ID
 import eu.yeger.utility.hasTwoDecimalPlaces
 
 class DefaultItemService(private val itemRepository: ItemRepository) : ItemService {
@@ -23,10 +29,10 @@ class DefaultItemService(private val itemRepository: ItemRepository) : ItemServi
 
     override suspend fun createItem(item: Item): Result<String> {
         return when (itemRepository.hasItemWithId(id = item.id)) {
-            true -> Result.Conflict("Item with that id already exists.")
+            true -> Result.Conflict(ITEM_WITH_THAT_ID_ALREADY_EXISTS)
             false -> item.validated {
                 itemRepository.insert(item)
-                Result.Created("Item created successfully.")
+                Result.Created(ITEM_CREATED_SUCCESSFULLY)
             }
         }
     }
@@ -35,9 +41,9 @@ class DefaultItemService(private val itemRepository: ItemRepository) : ItemServi
         return when (itemRepository.hasItemWithId(id = item.id)) {
             true -> item.validated {
                 itemRepository.insert(item)
-                Result.OK("Item updated successfully.")
+                Result.OK(ITEM_UPDATED_SUCCESSFULLY)
             }
-            false -> Result.Conflict("Item with that id does not exist.")
+            false -> Result.Conflict(NO_ITEM_WITH_THAT_ID)
         }
     }
 
@@ -45,16 +51,16 @@ class DefaultItemService(private val itemRepository: ItemRepository) : ItemServi
         return when (itemRepository.hasItemWithId(id = id)) {
             true -> {
                 itemRepository.removeById(id)
-                Result.OK("Deleted $id")
+                Result.OK(ITEM_DELETED_SUCCESSFULLY)
             }
-            false -> Result.NotFound("Item with that id does not exist.")
+            false -> Result.NotFound(NO_ITEM_WITH_THAT_ID)
         }
     }
 
     private inline fun Item.validated(block: () -> Result<String>): Result<String> =
         when (this.isValid()) {
             true -> block()
-            false -> Result.UnprocessableEntity("$this is invalid.")
+            false -> Result.UnprocessableEntity(INVALID_ITEM_DATA)
         }
 
     private fun Item.isValid(): Boolean =
