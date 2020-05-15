@@ -142,7 +142,7 @@ class UserServiceTests {
     fun `verify that users cannot be updated if they do not exist`() {
         runBlocking {
             // When non-existent user is updated
-            userService.updateUser(testPartialUser).status shouldBe HttpStatusCode.Conflict
+            userService.updateUser(testPartialUser).status shouldBe HttpStatusCode.NotFound
 
             // Then user was not created either
             val result = userService.getUserById(testUser.id)

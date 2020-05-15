@@ -43,7 +43,7 @@ class DefaultItemService(private val itemRepository: ItemRepository) : ItemServi
                 itemRepository.insert(item)
                 Result.OK(ITEM_UPDATED_SUCCESSFULLY)
             }
-            false -> Result.Conflict(NO_ITEM_WITH_THAT_ID)
+            false -> Result.NotFound(NO_ITEM_WITH_THAT_ID)
         }
     }
 

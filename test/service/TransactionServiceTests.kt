@@ -54,7 +54,7 @@ class TransactionServiceTests {
         runBlocking {
             // When non-existent user tops up their balance
             val userId = "doesNotExist"
-            transactionService.processFunding(userId, testFunding).status shouldBe HttpStatusCode.Conflict
+            transactionService.processFunding(userId, testFunding).status shouldBe HttpStatusCode.NotFound
 
             // Then user was not created either
             val result = userService.getUserById(userId)
@@ -142,7 +142,7 @@ class TransactionServiceTests {
         runBlocking {
             // When user requests an invalid purchase
             userService.createUser(testPartialUser).status shouldBe HttpStatusCode.Created
-            transactionService.processPurchase(testUser.id, testPurchase).status shouldBe HttpStatusCode.Conflict
+            transactionService.processPurchase(testUser.id, testPurchase).status shouldBe HttpStatusCode.NotFound
 
             // Then the transaction was not processed
             val userResult = userService.getUserById(testUser.id)

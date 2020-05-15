@@ -59,7 +59,7 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
                 )
                 Result.OK(USER_UPDATED_SUCCESSFULLY)
             }
-            false -> Result.Conflict(NO_USER_WITH_THAT_ID)
+            false -> Result.NotFound(NO_USER_WITH_THAT_ID)
         }
     }
 

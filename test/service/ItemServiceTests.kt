@@ -134,7 +134,7 @@ class ItemServiceTests {
     fun `verify that items cannot be updated if they do not exist`() {
         runBlocking {
             // When non-existent item is updated
-            itemService.updateItem(testItem).status shouldBe HttpStatusCode.Conflict
+            itemService.updateItem(testItem).status shouldBe HttpStatusCode.NotFound
 
             // Then item was not created either
             val result = itemService.getItemById(testItem.id)

@@ -28,7 +28,7 @@ class DefaultTransactionService(
 
     override suspend fun processFunding(userId: String, funding: Funding): Result<String> {
         return when (userRepository.hasUserWithId(id = userId)) {
-            false -> Result.Conflict(NO_USER_WITH_THAT_ID)
+            false -> Result.NotFound(NO_USER_WITH_THAT_ID)
             true -> funding.processed { transaction ->
                 userRepository.addTransaction(id = userId, transaction = transaction)
                 Result.OK(FUNDING_SUCCESSFUL)
@@ -38,7 +38,7 @@ class DefaultTransactionService(
 
     override suspend fun processPurchase(userId: String, purchase: Purchase): Result<String> {
         return when (userRepository.hasUserWithId(id = userId)) {
-            false -> Result.Conflict(NO_USER_WITH_THAT_ID)
+            false -> Result.NotFound(NO_USER_WITH_THAT_ID)
             true -> purchase.processed { transaction ->
                 userRepository.addTransaction(id = userId, transaction = transaction)
                 itemRepository.updateAmount(id = transaction.itemId, change = -transaction.amount)
@@ -48,7 +48,7 @@ class DefaultTransactionService(
     }
 
     override suspend fun refundLastPurchase(userId: String): Result<String> {
-        val user = userRepository.getById(userId) ?: return Result.Conflict(NO_USER_WITH_THAT_ID)
+        val user = userRepository.getById(userId) ?: return Result.NotFound(NO_USER_WITH_THAT_ID)
 
         return user.transactions
             .filter { it is Transaction.Purchase || it is Transaction.Refund }
@@ -78,7 +78,7 @@ class DefaultTransactionService(
     }
 
     private suspend inline fun Purchase.processed(block: (Transaction.Purchase) -> Result<String>): Result<String> {
-        val item = itemRepository.getById(this.itemId) ?: return Result.Conflict(NO_ITEM_WITH_THAT_ID)
+        val item = itemRepository.getById(this.itemId) ?: return Result.NotFound(NO_ITEM_WITH_THAT_ID)
         return when {
             this.amount <= 0 -> Result.UnprocessableEntity(INVALID_PURCHASE_AMOUNT)
             else -> {
