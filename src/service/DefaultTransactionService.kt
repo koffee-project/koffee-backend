@@ -84,6 +84,7 @@ class DefaultTransactionService(
             else -> {
                 val transaction = Transaction.Purchase(
                     itemId = this.itemId,
+                    itemName = item.name,
                     amount = this.amount,
                     value = -(this.amount * item.price)
                 )

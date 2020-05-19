@@ -28,6 +28,7 @@ sealed class Transaction {
         override val value: Double,
         override val timestamp: Long = System.currentTimeMillis(),
         val itemId: String,
+        val itemName: String,
         val amount: Int
     ) : Transaction()
 
@@ -35,6 +36,7 @@ sealed class Transaction {
         override val value: Double,
         override val timestamp: Long = System.currentTimeMillis(),
         val itemId: String,
+        val itemName: String,
         val amount: Int
     ) : Transaction()
 }
@@ -42,6 +44,7 @@ sealed class Transaction {
 fun Transaction.Purchase.asRefund() = Transaction.Refund(
     value = -value,
     itemId = itemId,
+    itemName = itemName,
     amount = amount
 )
 
