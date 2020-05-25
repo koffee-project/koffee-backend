@@ -35,6 +35,6 @@ val testPurchase = Purchase(
 )
 
 fun TestApplicationRequest.addJWTHeader(user: User) {
-    val token = JWTConfiguration.makeToken(user)
+    val token = JWTConfiguration.makeToken(user)!!.token
     addHeader("Authorization", "Bearer $token")
 }

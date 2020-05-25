@@ -5,6 +5,7 @@ import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
 import eu.yeger.Arguments
 import eu.yeger.model.domain.User
+import eu.yeger.model.dto.Token
 import eu.yeger.utility.readDockerSecret
 import java.util.Date
 
@@ -24,17 +25,18 @@ object JWTConfiguration {
         .withIssuer(issuer)
         .build()
 
-    fun makeToken(user: User): String? =
-        when (user.isAdmin) {
+    fun makeToken(user: User): Token? {
+        val expiration = Date(System.currentTimeMillis() + duration)
+        val token = when (user.isAdmin) {
             true -> JWT.create()
                 .withSubject("Authentication")
                 .withAudience(audience)
                 .withIssuer(issuer)
                 .withClaim("id", user.id)
-                .withExpiresAt(getExpiration())
+                .withExpiresAt(expiration)
                 .sign(algorithm)
-            false -> null
+            false -> return null
         }
-
-    private fun getExpiration() = Date(System.currentTimeMillis() + duration)
+        return Token(token, expiration.time)
+    }
 }

@@ -2,21 +2,22 @@ package eu.yeger.model.dto
 
 import io.ktor.http.HttpStatusCode
 
-sealed class Result<Data>(
+sealed class Result<Data : Any>(
     val status: HttpStatusCode,
-    val data: Data
+    val data: Data? = null,
+    val error: String? = null
 ) {
-    class Conflict<Data>(data: Data) : Result<Data>(HttpStatusCode.Conflict, data)
+    class Conflict<Data : Any>(data: Data) : Result<Data>(HttpStatusCode.Conflict, data)
 
-    class Created<Data>(data: Data) : Result<Data>(HttpStatusCode.Created, data)
+    class Created<Data : Any>(data: Data) : Result<Data>(HttpStatusCode.Created, data)
 
-    class Forbidden<Data>(data: Data) : Result<Data>(HttpStatusCode.Forbidden, data)
+    class Forbidden<Data : Any>(error: String) : Result<Data>(HttpStatusCode.Forbidden, error = error)
 
-    class NotFound<Data>(data: Data) : Result<Data>(HttpStatusCode.NotFound, data)
+    class NotFound<Data : Any>(error: String) : Result<Data>(HttpStatusCode.NotFound, error = error)
 
-    class OK<Data>(data: Data) : Result<Data>(HttpStatusCode.OK, data)
+    class OK<Data : Any>(data: Data) : Result<Data>(HttpStatusCode.OK, data)
 
-    class Unauthorized<Data>(data: Data) : Result<Data>(HttpStatusCode.Unauthorized, data)
+    class Unauthorized<Data : Any>(error: String) : Result<Data>(HttpStatusCode.Unauthorized, error = error)
 
-    class UnprocessableEntity<Data>(data: Data) : Result<Data>(HttpStatusCode.UnprocessableEntity, data)
+    class UnprocessableEntity<Data : Any>(error: String) : Result<Data>(HttpStatusCode.UnprocessableEntity, error = error)
 }

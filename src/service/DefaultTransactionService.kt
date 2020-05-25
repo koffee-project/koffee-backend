@@ -60,9 +60,9 @@ class DefaultTransactionService(
             }
     }
 
-    override suspend fun getTransactionsOfUser(userId: String): Result<TransactionList?> {
+    override suspend fun getTransactionsOfUser(userId: String): Result<TransactionList> {
         return when (val user = userRepository.getById(id = userId)) {
-            null -> Result.NotFound(null)
+            null -> Result.NotFound(NO_USER_WITH_THAT_ID)
             else -> Result.OK(user.transactions)
         }
     }

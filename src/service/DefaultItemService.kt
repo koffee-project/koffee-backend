@@ -18,10 +18,10 @@ class DefaultItemService(private val itemRepository: ItemRepository) : ItemServi
         return Result.OK(items)
     }
 
-    override suspend fun getItemById(id: String): Result<Item?> {
+    override suspend fun getItemById(id: String): Result<Item> {
         return itemRepository.getById(id = id).let { item ->
             when (item) {
-                null -> Result.NotFound(null)
+                null -> Result.NotFound(NO_ITEM_WITH_THAT_ID)
                 else -> Result.OK(item)
             }
         }

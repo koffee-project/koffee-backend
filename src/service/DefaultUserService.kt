@@ -7,6 +7,7 @@ import eu.yeger.model.domain.User
 import eu.yeger.model.dto.Credentials
 import eu.yeger.model.dto.PartialUser
 import eu.yeger.model.dto.Result
+import eu.yeger.model.dto.Token
 import eu.yeger.model.dto.UserListEntry
 import eu.yeger.model.dto.UserProfile
 import eu.yeger.model.dto.asProfile
@@ -29,10 +30,10 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
         return Result.OK(entries)
     }
 
-    override suspend fun getUserById(id: String): Result<UserProfile?> {
+    override suspend fun getUserById(id: String): Result<UserProfile> {
         return userRepository.getById(id = id).let { user ->
             when (val profile = user?.asProfile()) {
-                null -> Result.NotFound(null)
+                null -> Result.NotFound(NO_USER_WITH_THAT_ID)
                 else -> Result.OK(profile)
             }
         }
@@ -73,7 +74,7 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
         }
     }
 
-    override suspend fun login(credentials: Credentials): Result<String> {
+    override suspend fun login(credentials: Credentials): Result<Token> {
         return when (val user = userRepository.getById(id = credentials.id)) {
             null -> Result.Unauthorized(ID_OR_PASSWORD_INCORRECT)
             else -> credentials.validatedForUser(user) {
@@ -85,7 +86,7 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
         }
     }
 
-    private inline fun Credentials.validatedForUser(user: User, block: () -> Result<String>): Result<String> {
+    private inline fun Credentials.validatedForUser(user: User, block: () -> Result<Token>): Result<Token> {
         return when (this matches user) {
             true -> block()
             false -> Result.Unauthorized(ID_OR_PASSWORD_INCORRECT)

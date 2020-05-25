@@ -5,8 +5,10 @@ import io.ktor.application.ApplicationCall
 import io.ktor.response.respond
 
 suspend fun ApplicationCall.respondWithResult(result: Result<*>) {
-    when (result.status.value) {
-        in 400..499 -> respond(status = result.status, message = result.data ?: result.status)
-        else -> respond(status = result.status, message = result.data ?: "")
+    val message =
+    when (result.data) {
+        null -> result.error ?: result.status.description
+        else -> result.data
     }
+    respond(status = result.status, message = message)
 }

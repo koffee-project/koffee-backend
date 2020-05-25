@@ -105,7 +105,7 @@ class UserServiceTests {
             // Then users can not be retrieved
             val result = userService.getAllUsers()
             result.status shouldBe HttpStatusCode.OK
-            result.data.size shouldBe 0
+            result.data?.size shouldBe 0
         }
     }
 
@@ -209,7 +209,7 @@ class UserServiceTests {
             val expected = listOf(firstRequest, secondRequest)
                 .map(PartialUser::asUser)
                 .map(User::asUserListEntry)
-            result.data.sortedBy(UserListEntry::id) shouldBe expected.sortedBy(UserListEntry::id)
+            result.data?.sortedBy(UserListEntry::id) shouldBe expected.sortedBy(UserListEntry::id)
         }
     }
 }

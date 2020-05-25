@@ -243,7 +243,7 @@ class ItemServiceTests {
             // Then all items are retrieved
             val result = itemService.getAllItems()
             result.status shouldBe HttpStatusCode.OK
-            result.data.sortedBy(Item::id) shouldBe listOf(firstItem, secondItem).sortedBy(Item::id)
+            result.data?.sortedBy(Item::id) shouldBe listOf(firstItem, secondItem).sortedBy(Item::id)
         }
     }
 }

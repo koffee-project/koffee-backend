@@ -13,5 +13,5 @@ interface TransactionService {
 
     suspend fun refundLastPurchase(userId: String): Result<String>
 
-    suspend fun getTransactionsOfUser(userId: String): Result<TransactionList?>
+    suspend fun getTransactionsOfUser(userId: String): Result<TransactionList>
 }

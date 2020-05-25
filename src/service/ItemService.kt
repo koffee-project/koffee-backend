@@ -7,7 +7,7 @@ interface ItemService {
 
     suspend fun getAllItems(): Result<List<Item>>
 
-    suspend fun getItemById(id: String): Result<Item?>
+    suspend fun getItemById(id: String): Result<Item>
 
     suspend fun createItem(item: Item): Result<String>
 
