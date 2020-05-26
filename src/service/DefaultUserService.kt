@@ -10,18 +10,23 @@ import eu.yeger.model.dto.Result
 import eu.yeger.model.dto.Token
 import eu.yeger.model.dto.UserListEntry
 import eu.yeger.model.dto.UserProfile
+import eu.yeger.model.dto.andThen
 import eu.yeger.model.dto.asProfile
 import eu.yeger.model.dto.asUser
 import eu.yeger.model.dto.asUserListEntry
+import eu.yeger.model.dto.map
+import eu.yeger.model.dto.mapErrorStatus
+import eu.yeger.model.dto.withResult
 import eu.yeger.repository.UserRepository
 import eu.yeger.utility.ID_OR_PASSWORD_INCORRECT
 import eu.yeger.utility.INVALID_USER_DATA
 import eu.yeger.utility.NO_ADMINISTRATOR_PRIVILEGES
-import eu.yeger.utility.NO_USER_WITH_THAT_ID
 import eu.yeger.utility.USER_CREATED_SUCCESSFULLY
 import eu.yeger.utility.USER_DELETED_SUCCESSFULLY
 import eu.yeger.utility.USER_UPDATED_SUCCESSFULLY
-import eu.yeger.utility.USER_WITH_THAT_ID_ALREADY_EXISTS
+import eu.yeger.utility.validateUserDoesNotExist
+import eu.yeger.utility.validateUserExists
+import io.ktor.http.HttpStatusCode
 
 class DefaultUserService(private val userRepository: UserRepository) : UserService {
 
@@ -31,71 +36,57 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
     }
 
     override suspend fun getUserById(id: String): Result<UserProfile> {
-        return userRepository.getById(id = id).let { user ->
-            when (val profile = user?.asProfile()) {
-                null -> Result.NotFound(NO_USER_WITH_THAT_ID)
-                else -> Result.OK(profile)
-            }
-        }
+        return userRepository
+            .validateUserExists(id)
+            .andThen { user -> Result.OK(user.asProfile()) }
     }
 
     override suspend fun createUser(partialUser: PartialUser): Result<String> {
-        return when (userRepository.hasUserWithId(id = partialUser.id)) {
-            true -> Result.Conflict(USER_WITH_THAT_ID_ALREADY_EXISTS)
-            false -> partialUser.processed { hashedUser ->
-                userRepository.insert(hashedUser)
-                Result.Created(USER_CREATED_SUCCESSFULLY)
-            }
-        }
+        return userRepository
+            .validateUserDoesNotExist(partialUser)
+            .andThen { processPartialUser(it) }
+            .withResult { hashedUser -> userRepository.insert(hashedUser) }
+            .andThen { Result.Created(USER_CREATED_SUCCESSFULLY) }
     }
 
     override suspend fun updateUser(partialUser: PartialUser): Result<String> {
-        return when (userRepository.hasUserWithId(id = partialUser.id)) {
-            true -> partialUser.processed { hashedUser ->
+        return userRepository
+            .validateUserExists(partialUser.id)
+            .andThen { processPartialUser(partialUser) }
+            .withResult { hashedUser ->
                 userRepository.update(
                     id = hashedUser.id,
                     name = hashedUser.name,
                     isAdmin = hashedUser.isAdmin,
                     password = hashedUser.password
                 )
-                Result.OK(USER_UPDATED_SUCCESSFULLY)
             }
-            false -> Result.NotFound(NO_USER_WITH_THAT_ID)
-        }
+            .andThen { Result.OK(USER_UPDATED_SUCCESSFULLY) }
     }
 
     override suspend fun deleteUserById(id: String): Result<String> {
-        return when (userRepository.hasUserWithId(id = id)) {
-            true -> {
-                userRepository.removeById(id)
-                Result.OK(USER_DELETED_SUCCESSFULLY)
-            }
-            false -> Result.NotFound(NO_USER_WITH_THAT_ID)
-        }
+        return userRepository
+            .validateUserExists(id)
+            .withResult { userRepository.removeById(id) }
+            .andThen { Result.OK(USER_DELETED_SUCCESSFULLY) }
     }
 
     override suspend fun login(credentials: Credentials): Result<Token> {
-        return when (val user = userRepository.getById(id = credentials.id)) {
-            null -> Result.Unauthorized(ID_OR_PASSWORD_INCORRECT)
-            else -> credentials.validatedForUser(user) {
-                when (val token = JWTConfiguration.makeToken(user)) {
-                    null -> Result.Forbidden(NO_ADMINISTRATOR_PRIVILEGES)
-                    else -> Result.OK(token)
-                }
-            }
-        }
+        return userRepository
+            .validateUserExists(credentials.id)
+            .mapErrorStatus { HttpStatusCode.Unauthorized }
+            .andThen { credentials.validateForUser(it) }
+            .andThen { generateTokenForUser(it) }
+            .andThen { token -> Result.OK(token) }
     }
 
-    private inline fun Credentials.validatedForUser(user: User, block: () -> Result<Token>): Result<Token> {
-        return when (this matches user) {
-            true -> block()
-            false -> Result.Unauthorized(ID_OR_PASSWORD_INCORRECT)
-        }
+    private suspend fun processPartialUser(partialUser: PartialUser): Result<User> {
+        return validatePartialUser(partialUser).map { it.asUser().withHashedPassword() }
     }
 
-    private inline fun PartialUser.processed(block: (User) -> Result<String>): Result<String> {
-        return when (this.isValid()) {
-            true -> block(this.asUser().withHashedPassword())
+    private fun validatePartialUser(partialUser: PartialUser): Result<PartialUser> {
+        return when (partialUser.isValid()) {
+            true -> Result.OK(partialUser)
             false -> Result.UnprocessableEntity(INVALID_USER_DATA)
         }
     }
@@ -106,5 +97,19 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
             (!isAdmin || password?.isNotBlank() ?: false) &&
             password?.isNotBlank() ?: true &&
             password?.length ?: 8 >= 8
+    }
+
+    private fun Credentials.validateForUser(user: User): Result<User> {
+        return when (this matches user) {
+            true -> Result.OK(user)
+            false -> Result.Unauthorized(ID_OR_PASSWORD_INCORRECT)
+        }
+    }
+
+    private fun generateTokenForUser(user: User): Result<Token> {
+        return when (val token = JWTConfiguration.makeToken(user)) {
+            null -> Result.Forbidden(NO_ADMINISTRATOR_PRIVILEGES)
+            else -> Result.OK(token)
+        }
     }
 }
