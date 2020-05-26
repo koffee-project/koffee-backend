@@ -3,52 +3,52 @@ package eu.yeger.model.dto
 import io.ktor.http.HttpStatusCode
 
 sealed class Result<T : Any>(
-    val status: HttpStatusCode,
-    val data: T? = null,
-    val error: String? = null
+    val status: HttpStatusCode
 ) {
-    class Conflict<T : Any>(error: String) : Result<T>(HttpStatusCode.Conflict, error = error)
+    class Success<T : Any>(val data: T, status: HttpStatusCode) : Result<T>(status)
 
-    class Created<T : Any>(data: T) : Result<T>(HttpStatusCode.Created, data)
+    class Failure<T : Any>(val error: String, status: HttpStatusCode) : Result<T>(status)
 
-    class Forbidden<T : Any>(error: String) : Result<T>(HttpStatusCode.Forbidden, error = error)
+    companion object {
+        fun <T : Any> conflict(error: String) = Failure<T>(error, HttpStatusCode.Conflict)
 
-    class NotFound<T : Any>(error: String) : Result<T>(HttpStatusCode.NotFound, error = error)
+        fun <T : Any> created(data: T) = Success(data, HttpStatusCode.Created)
 
-    class OK<T : Any>(data: T) : Result<T>(HttpStatusCode.OK, data)
+        fun <T : Any> forbidden(error: String) = Failure<T>(error, HttpStatusCode.Forbidden)
 
-    class Unauthorized<T : Any>(error: String) : Result<T>(HttpStatusCode.Unauthorized, error = error)
+        fun <T : Any> notFound(error: String) = Failure<T>(error, HttpStatusCode.NotFound)
 
-    class UnprocessableEntity<T : Any>(error: String) : Result<T>(HttpStatusCode.UnprocessableEntity, error = error)
-}
+        fun <T : Any> ok(data: T) = Success(data, HttpStatusCode.OK)
 
-private class Success<T : Any>(status: HttpStatusCode, data: T) : Result<T>(status, data = data)
+        fun <T : Any> unauthorized(error: String) = Failure<T>(error, HttpStatusCode.Unauthorized)
 
-private class Error<T : Any>(status: HttpStatusCode, error: String?) : Result<T>(status, error = error)
-
-suspend fun <T : Any, U : Any> Result<T>.map(transformation: suspend (T) -> U): Result<U> {
-    return when (data) {
-        null -> Error(status, error)
-        else -> Success(status, transformation(data))
+        fun <T : Any> unprocessableEntity(error: String) = Failure<T>(error, HttpStatusCode.UnprocessableEntity)
     }
 }
 
-suspend fun <T : Any> Result<T>.mapErrorStatus(transformation: suspend (HttpStatusCode) -> HttpStatusCode): Result<T> {
-    return when (error) {
-        null -> this
-        else -> Error(transformation(status), error)
+suspend fun <T : Any, U : Any> Result<T>.map(transformation: suspend (T) -> U): Result<U> {
+    return when (this) {
+        is Result.Success -> Result.Success(transformation(data), status)
+        is Result.Failure -> Result.Failure(error, status)
+    }
+}
+
+suspend fun <T : Any> Result<T>.mapFailureStatus(transformation: suspend (HttpStatusCode) -> HttpStatusCode): Result<T> {
+    return when (this) {
+        is Result.Success -> this
+        is Result.Failure -> Result.Failure(error, transformation(status))
     }
 }
 
 suspend fun <T : Any, U : Any> Result<T>.andThen(transformation: suspend (T) -> Result<U>): Result<U> {
-    return when (error) {
-        null -> transformation(data!!)
-        else -> Error(status, error)
+    return when (this) {
+        is Result.Success -> transformation(data)
+        is Result.Failure -> Result.Failure(error, status)
     }
 }
 
 suspend fun <T : Any> Result<T>.withResult(consumer: suspend (T) -> Unit): Result<T> {
-    if (data !== null) {
+    if (this is Result.Success) {
         consumer(data)
     }
     return this

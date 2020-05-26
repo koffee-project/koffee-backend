@@ -38,7 +38,7 @@ class DefaultTransactionService(
             .withResult { transaction ->
                 userRepository.addTransaction(id = userId, transaction = transaction)
             }
-            .andThen { Result.OK(FUNDING_SUCCESSFUL) }
+            .andThen { Result.ok(FUNDING_SUCCESSFUL) }
     }
 
     override suspend fun processPurchase(userId: String, purchase: Purchase): Result<String> {
@@ -50,7 +50,7 @@ class DefaultTransactionService(
                 userRepository.addTransaction(id = userId, transaction = transaction)
                 itemRepository.updateAmount(id = transaction.itemId, change = -transaction.amount)
             }
-            .andThen { Result.OK(PURCHASE_SUCCESSFUL) }
+            .andThen { Result.ok(PURCHASE_SUCCESSFUL) }
     }
 
     override suspend fun refundLastPurchase(userId: String): Result<String> {
@@ -61,26 +61,26 @@ class DefaultTransactionService(
                 userRepository.addTransaction(id = userId, transaction = refund)
                 itemRepository.updateAmount(id = refund.itemId, change = +refund.amount)
             }
-            .andThen { Result.OK(REFUND_SUCCESSFUL) }
+            .andThen { Result.ok(REFUND_SUCCESSFUL) }
     }
 
     override suspend fun getTransactionsOfUser(userId: String): Result<TransactionList> {
         return when (val user = userRepository.getById(id = userId)) {
-            null -> Result.NotFound(NO_USER_WITH_THAT_ID)
-            else -> Result.OK(user.transactions)
+            null -> Result.notFound(NO_USER_WITH_THAT_ID)
+            else -> Result.ok(user.transactions)
         }
     }
 
     private fun validateFunding(funding: Funding): Result<Transaction.Funding> {
         return when (funding.amount.hasTwoDecimalPlaces()) {
-            true -> Result.OK(Transaction.Funding(value = funding.amount))
-            false -> Result.UnprocessableEntity(INVALID_FUNDING_AMOUNT)
+            true -> Result.ok(Transaction.Funding(value = funding.amount))
+            false -> Result.unprocessableEntity(INVALID_FUNDING_AMOUNT)
         }
     }
 
     private fun validatePurchase(item: Item, purchase: Purchase): Result<Transaction.Purchase> {
         return when {
-            purchase.amount <= 0 -> Result.UnprocessableEntity(INVALID_PURCHASE_AMOUNT)
+            purchase.amount <= 0 -> Result.unprocessableEntity(INVALID_PURCHASE_AMOUNT)
             else -> {
                 val transaction = Transaction.Purchase(
                     itemId = purchase.itemId,
@@ -88,7 +88,7 @@ class DefaultTransactionService(
                     amount = purchase.amount,
                     value = -(purchase.amount * item.price)
                 )
-                Result.OK(transaction)
+                Result.ok(transaction)
             }
         }
     }
@@ -98,11 +98,11 @@ class DefaultTransactionService(
             .filter { it is Transaction.Purchase || it is Transaction.Refund }
             .maxWith(TransactionComparator)
         return when {
-            transaction == null -> Result.Conflict(NO_REFUNDABLE_PURCHASE)
-            transaction is Transaction.Refund -> Result.Conflict(LAST_PURCHASE_ALREADY_REFUNDED)
-            System.currentTimeMillis() - transaction.timestamp >= 60_000 -> Result.Conflict(REFUND_EXPIRED)
-            transaction is Transaction.Purchase -> Result.OK(transaction.asRefund())
-            else -> Result.Conflict(REFUND_NOT_POSSIBLE)
+            transaction == null -> Result.conflict(NO_REFUNDABLE_PURCHASE)
+            transaction is Transaction.Refund -> Result.conflict(LAST_PURCHASE_ALREADY_REFUNDED)
+            System.currentTimeMillis() - transaction.timestamp >= 60_000 -> Result.conflict(REFUND_EXPIRED)
+            transaction is Transaction.Purchase -> Result.ok(transaction.asRefund())
+            else -> Result.conflict(REFUND_NOT_POSSIBLE)
         }
     }
 

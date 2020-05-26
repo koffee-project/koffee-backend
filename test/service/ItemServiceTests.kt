@@ -1,6 +1,7 @@
 package eu.yeger.service
 
 import eu.yeger.model.domain.Item
+import eu.yeger.model.dto.Result
 import eu.yeger.repository.FakeItemRepository
 import eu.yeger.utility.shouldBe
 import eu.yeger.utility.testItem
@@ -25,7 +26,7 @@ class ItemServiceTests {
             itemService.createItem(testItem).status shouldBe HttpStatusCode.Created
 
             // Then item can be retrieved
-            val result = itemService.getItemById(testItem.id)
+            val result = itemService.getItemById(testItem.id) as Result.Success
             result.status shouldBe HttpStatusCode.OK
             result.data shouldBe testItem
         }
@@ -38,7 +39,7 @@ class ItemServiceTests {
             itemService.createItem(testItem).status shouldBe HttpStatusCode.Created
 
             // Then item can not be created again
-            val result = itemService.getItemById(testItem.id)
+            val result = itemService.getItemById(testItem.id) as Result.Success
             result.status shouldBe HttpStatusCode.OK
             result.data shouldBe testItem
             itemService.createItem(testItem).status shouldBe HttpStatusCode.Conflict
@@ -53,9 +54,8 @@ class ItemServiceTests {
             itemService.createItem(item).status shouldBe HttpStatusCode.UnprocessableEntity
 
             // Then item can not be retrieved
-            val result = itemService.getItemById(item.id)
+            val result = itemService.getItemById(item.id) as Result.Failure
             result.status shouldBe HttpStatusCode.NotFound
-            result.data shouldBe null
         }
     }
 
@@ -67,9 +67,8 @@ class ItemServiceTests {
             itemService.createItem(item).status shouldBe HttpStatusCode.UnprocessableEntity
 
             // Then item can not be retrieved
-            val result = itemService.getItemById(item.id)
+            val result = itemService.getItemById(item.id) as Result.Failure
             result.status shouldBe HttpStatusCode.NotFound
-            result.data shouldBe null
         }
     }
 
@@ -81,9 +80,8 @@ class ItemServiceTests {
             itemService.createItem(item).status shouldBe HttpStatusCode.UnprocessableEntity
 
             // Then item can not be retrieved
-            val result = itemService.getItemById(item.id)
+            val result = itemService.getItemById(item.id) as Result.Failure
             result.status shouldBe HttpStatusCode.NotFound
-            result.data shouldBe null
         }
     }
 
@@ -95,9 +93,8 @@ class ItemServiceTests {
             itemService.createItem(item).status shouldBe HttpStatusCode.UnprocessableEntity
 
             // Then item can not be retrieved
-            val result = itemService.getItemById(item.id)
+            val result = itemService.getItemById(item.id) as Result.Failure
             result.status shouldBe HttpStatusCode.NotFound
-            result.data shouldBe null
         }
     }
 
@@ -109,9 +106,8 @@ class ItemServiceTests {
             itemService.createItem(item).status shouldBe HttpStatusCode.UnprocessableEntity
 
             // Then item can not be retrieved
-            val result = itemService.getItemById(item.id)
+            val result = itemService.getItemById(item.id) as Result.Failure
             result.status shouldBe HttpStatusCode.NotFound
-            result.data shouldBe null
         }
     }
 
@@ -124,7 +120,7 @@ class ItemServiceTests {
             itemService.updateItem(updatedItem).status shouldBe HttpStatusCode.OK
 
             // Then retrieved item has new values
-            val result = itemService.getItemById(testItem.id)
+            val result = itemService.getItemById(testItem.id) as Result.Success
             result.status shouldBe HttpStatusCode.OK
             result.data shouldBe updatedItem
         }
@@ -137,9 +133,8 @@ class ItemServiceTests {
             itemService.updateItem(testItem).status shouldBe HttpStatusCode.NotFound
 
             // Then item was not created either
-            val result = itemService.getItemById(testItem.id)
+            val result = itemService.getItemById(testItem.id) as Result.Failure
             result.status shouldBe HttpStatusCode.NotFound
-            result.data shouldBe null
         }
     }
 
@@ -152,7 +147,7 @@ class ItemServiceTests {
             itemService.updateItem(updatedItem).status shouldBe HttpStatusCode.UnprocessableEntity
 
             // Then retrieved item was not updated
-            val result = itemService.getItemById(testItem.id)
+            val result = itemService.getItemById(testItem.id) as Result.Success
             result.status shouldBe HttpStatusCode.OK
             result.data shouldBe testItem
         }
@@ -167,7 +162,7 @@ class ItemServiceTests {
             itemService.updateItem(updatedItem).status shouldBe HttpStatusCode.UnprocessableEntity
 
             // Then retrieved item was not updated
-            val result = itemService.getItemById(testItem.id)
+            val result = itemService.getItemById(testItem.id) as Result.Success
             result.status shouldBe HttpStatusCode.OK
             result.data shouldBe testItem
         }
@@ -182,7 +177,7 @@ class ItemServiceTests {
             itemService.updateItem(updatedItem).status shouldBe HttpStatusCode.UnprocessableEntity
 
             // Then retrieved item was not updated
-            val result = itemService.getItemById(testItem.id)
+            val result = itemService.getItemById(testItem.id) as Result.Success
             result.status shouldBe HttpStatusCode.OK
             result.data shouldBe testItem
         }
@@ -197,7 +192,7 @@ class ItemServiceTests {
             itemService.updateItem(updatedItem).status shouldBe HttpStatusCode.UnprocessableEntity
 
             // Then retrieved item was not updated
-            val result = itemService.getItemById(testItem.id)
+            val result = itemService.getItemById(testItem.id) as Result.Success
             result.status shouldBe HttpStatusCode.OK
             result.data shouldBe testItem
         }
@@ -211,9 +206,8 @@ class ItemServiceTests {
             itemService.deleteItemById(testItem.id).status shouldBe HttpStatusCode.OK
 
             // Then item can not be retrieved
-            val result = itemService.getItemById(testItem.id)
+            val result = itemService.getItemById(testItem.id) as Result.Failure
             result.status shouldBe HttpStatusCode.NotFound
-            result.data shouldBe null
         }
     }
 
@@ -225,9 +219,8 @@ class ItemServiceTests {
             itemService.deleteItemById(id).status shouldBe HttpStatusCode.NotFound
 
             // Then item was not created either
-            val result = itemService.getItemById(id)
+            val result = itemService.getItemById(id) as Result.Failure
             result.status shouldBe HttpStatusCode.NotFound
-            result.data shouldBe null
         }
     }
 
@@ -241,9 +234,9 @@ class ItemServiceTests {
             itemService.createItem(secondItem).status shouldBe HttpStatusCode.Created
 
             // Then all items are retrieved
-            val result = itemService.getAllItems()
+            val result = itemService.getAllItems() as Result.Success
             result.status shouldBe HttpStatusCode.OK
-            result.data?.sortedBy(Item::id) shouldBe listOf(firstItem, secondItem).sortedBy(Item::id)
+            result.data.sortedBy(Item::id) shouldBe listOf(firstItem, secondItem).sortedBy(Item::id)
         }
     }
 }

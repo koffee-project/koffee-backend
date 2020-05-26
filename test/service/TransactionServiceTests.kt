@@ -2,6 +2,7 @@ package eu.yeger.service
 
 import eu.yeger.model.domain.Transaction
 import eu.yeger.model.dto.Funding
+import eu.yeger.model.dto.Result
 import eu.yeger.repository.FakeItemRepository
 import eu.yeger.repository.FakeUserRepository
 import eu.yeger.utility.shouldBe
@@ -40,12 +41,12 @@ class TransactionServiceTests {
             transactionService.processFunding(testUser.id, testFunding).status shouldBe HttpStatusCode.OK
 
             // Then a transaction can be retrieved
-            val userResult = userService.getUserById(testUser.id)
+            val userResult = userService.getUserById(testUser.id) as Result.Success
             userResult.status shouldBe HttpStatusCode.OK
-            userResult.data?.balance shouldBe testFunding.amount
-            val transactionResult = transactionService.getTransactionsOfUser(testUser.id)
+            userResult.data.balance shouldBe testFunding.amount
+            val transactionResult = transactionService.getTransactionsOfUser(testUser.id) as Result.Success
             transactionResult.status shouldBe HttpStatusCode.OK
-            transactionResult.data?.size shouldBe 1
+            transactionResult.data.size shouldBe 1
         }
     }
 
@@ -57,9 +58,8 @@ class TransactionServiceTests {
             transactionService.processFunding(userId, testFunding).status shouldBe HttpStatusCode.NotFound
 
             // Then user was not created either
-            val result = userService.getUserById(userId)
+            val result = userService.getUserById(userId) as Result.Failure
             result.status shouldBe HttpStatusCode.NotFound
-            result.data shouldBe null
         }
     }
 
@@ -75,12 +75,12 @@ class TransactionServiceTests {
             ).status shouldBe HttpStatusCode.UnprocessableEntity
 
             // Then funding was not processed
-            val userResult = userService.getUserById(testUser.id)
+            val userResult = userService.getUserById(testUser.id) as Result.Success
             userResult.status shouldBe HttpStatusCode.OK
-            userResult.data?.balance shouldBe 0.0
-            val transactionResult = transactionService.getTransactionsOfUser(testUser.id)
+            userResult.data.balance shouldBe 0.0
+            val transactionResult = transactionService.getTransactionsOfUser(testUser.id) as Result.Success
             transactionResult.status shouldBe HttpStatusCode.OK
-            transactionResult.data?.size shouldBe 0
+            transactionResult.data.size shouldBe 0
         }
     }
 
@@ -93,20 +93,20 @@ class TransactionServiceTests {
             transactionService.processPurchase(testUser.id, testPurchase).status shouldBe HttpStatusCode.OK
 
             // Then the transaction was processed
-            val userResult = userService.getUserById(testUser.id)
+            val userResult = userService.getUserById(testUser.id) as Result.Success
             userResult.status shouldBe HttpStatusCode.OK
-            userResult.data?.balance shouldBe -(testItem.price * testPurchase.amount)
-            val transactionResult = transactionService.getTransactionsOfUser(testUser.id)
+            userResult.data.balance shouldBe -(testItem.price * testPurchase.amount)
+            val transactionResult = transactionService.getTransactionsOfUser(testUser.id) as Result.Success
             transactionResult.status shouldBe HttpStatusCode.OK
-            val transaction = transactionResult.data?.first() as Transaction.Purchase
+            val transaction = transactionResult.data.first() as Transaction.Purchase
             transaction.run {
                 value shouldBe -(testPurchase.amount * testItem.price)
                 itemId shouldBe testItem.id
                 amount shouldBe testPurchase.amount
             }
-            val itemResult = itemService.getItemById(testItem.id)
+            val itemResult = itemService.getItemById(testItem.id) as Result.Success
             itemResult.status shouldBe HttpStatusCode.OK
-            itemResult.data?.amount shouldBe testItem.amount!! - testPurchase.amount
+            itemResult.data.amount shouldBe testItem.amount!! - testPurchase.amount
         }
     }
 
@@ -120,20 +120,20 @@ class TransactionServiceTests {
             transactionService.processPurchase(testUser.id, testPurchase).status shouldBe HttpStatusCode.OK
 
             // Then the transaction was processed
-            val userResult = userService.getUserById(testUser.id)
+            val userResult = userService.getUserById(testUser.id) as Result.Success
             userResult.status shouldBe HttpStatusCode.OK
-            userResult.data?.balance shouldBe -(testItem.price * testPurchase.amount)
-            val transactionResult = transactionService.getTransactionsOfUser(testUser.id)
+            userResult.data.balance shouldBe -(testItem.price * testPurchase.amount)
+            val transactionResult = transactionService.getTransactionsOfUser(testUser.id) as Result.Success
             transactionResult.status shouldBe HttpStatusCode.OK
-            val transaction = transactionResult.data?.first() as Transaction.Purchase
+            val transaction = transactionResult.data.first() as Transaction.Purchase
             transaction.run {
                 value shouldBe -(testPurchase.amount * testItem.price)
                 itemId shouldBe testItem.id
                 amount shouldBe testPurchase.amount
             }
-            val itemResult = itemService.getItemById(item.id)
+            val itemResult = itemService.getItemById(item.id) as Result.Success
             itemResult.status shouldBe HttpStatusCode.OK
-            itemResult.data?.amount shouldBe item.amount
+            itemResult.data.amount shouldBe item.amount
         }
     }
 
@@ -145,12 +145,12 @@ class TransactionServiceTests {
             transactionService.processPurchase(testUser.id, testPurchase).status shouldBe HttpStatusCode.NotFound
 
             // Then the transaction was not processed
-            val userResult = userService.getUserById(testUser.id)
+            val userResult = userService.getUserById(testUser.id) as Result.Success
             userResult.status shouldBe HttpStatusCode.OK
-            userResult.data?.balance shouldBe 0.0
-            val transactionResult = transactionService.getTransactionsOfUser(testUser.id)
+            userResult.data.balance shouldBe 0.0
+            val transactionResult = transactionService.getTransactionsOfUser(testUser.id) as Result.Success
             transactionResult.status shouldBe HttpStatusCode.OK
-            transactionResult.data?.size shouldBe 0
+            transactionResult.data.size shouldBe 0
         }
     }
 
@@ -172,12 +172,12 @@ class TransactionServiceTests {
             ).status shouldBe HttpStatusCode.UnprocessableEntity
 
             // Then the transaction was not processed
-            val userResult = userService.getUserById(testUser.id)
+            val userResult = userService.getUserById(testUser.id) as Result.Success
             userResult.status shouldBe HttpStatusCode.OK
-            userResult.data?.balance shouldBe 0.0
-            val transactionResult = transactionService.getTransactionsOfUser(testUser.id)
+            userResult.data.balance shouldBe 0.0
+            val transactionResult = transactionService.getTransactionsOfUser(testUser.id) as Result.Success
             transactionResult.status shouldBe HttpStatusCode.OK
-            transactionResult.data?.size shouldBe 0
+            transactionResult.data.size shouldBe 0
         }
     }
 
@@ -191,20 +191,20 @@ class TransactionServiceTests {
             transactionService.refundLastPurchase(testUser.id).status shouldBe HttpStatusCode.OK
 
             // Then the transaction and refund were processed
-            val userResult = userService.getUserById(testUser.id)
+            val userResult = userService.getUserById(testUser.id) as Result.Success
             userResult.status shouldBe HttpStatusCode.OK
-            userResult.data?.balance shouldBe 0.0
-            val transactionResult = transactionService.getTransactionsOfUser(testUser.id)
+            userResult.data.balance shouldBe 0.0
+            val transactionResult = transactionService.getTransactionsOfUser(testUser.id) as Result.Success
             transactionResult.status shouldBe HttpStatusCode.OK
-            val transaction = transactionResult.data?.last() as Transaction.Refund
+            val transaction = transactionResult.data.last() as Transaction.Refund
             transaction.run {
                 value shouldBe testPurchase.amount * testItem.price
                 itemId shouldBe testItem.id
                 amount shouldBe testPurchase.amount
             }
-            val itemResult = itemService.getItemById(testItem.id)
+            val itemResult = itemService.getItemById(testItem.id) as Result.Success
             itemResult.status shouldBe HttpStatusCode.OK
-            itemResult.data?.amount shouldBe testItem.amount
+            itemResult.data.amount shouldBe testItem.amount
         }
     }
 
@@ -219,20 +219,20 @@ class TransactionServiceTests {
             transactionService.refundLastPurchase(testUser.id).status shouldBe HttpStatusCode.OK
 
             // Then the transaction and refund were processed
-            val userResult = userService.getUserById(testUser.id)
+            val userResult = userService.getUserById(testUser.id) as Result.Success
             userResult.status shouldBe HttpStatusCode.OK
-            userResult.data?.balance shouldBe 0.0
-            val transactionResult = transactionService.getTransactionsOfUser(testUser.id)
+            userResult.data.balance shouldBe 0.0
+            val transactionResult = transactionService.getTransactionsOfUser(testUser.id) as Result.Success
             transactionResult.status shouldBe HttpStatusCode.OK
-            val transaction = transactionResult.data?.last() as Transaction.Refund
+            val transaction = transactionResult.data.last() as Transaction.Refund
             transaction.run {
                 value shouldBe testPurchase.amount * item.price
                 itemId shouldBe item.id
                 amount shouldBe testPurchase.amount
             }
-            val itemResult = itemService.getItemById(item.id)
+            val itemResult = itemService.getItemById(item.id) as Result.Success
             itemResult.status shouldBe HttpStatusCode.OK
-            itemResult.data?.amount shouldBe item.amount
+            itemResult.data.amount shouldBe item.amount
         }
     }
 
@@ -244,12 +244,12 @@ class TransactionServiceTests {
             transactionService.refundLastPurchase(testUser.id).status shouldBe HttpStatusCode.Conflict
 
             // Then no transaction was created
-            val userResult = userService.getUserById(testUser.id)
+            val userResult = userService.getUserById(testUser.id) as Result.Success
             userResult.status shouldBe HttpStatusCode.OK
-            userResult.data?.balance shouldBe 0.0
-            val transactionResult = transactionService.getTransactionsOfUser(testUser.id)
+            userResult.data.balance shouldBe 0.0
+            val transactionResult = transactionService.getTransactionsOfUser(testUser.id) as Result.Success
             transactionResult.status shouldBe HttpStatusCode.OK
-            transactionResult.data?.size shouldBe 0
+            transactionResult.data.size shouldBe 0
         }
     }
 
@@ -264,12 +264,12 @@ class TransactionServiceTests {
             transactionService.refundLastPurchase(testUser.id).status shouldBe HttpStatusCode.Conflict
 
             // Then no additional transaction was created
-            val userResult = userService.getUserById(testUser.id)
+            val userResult = userService.getUserById(testUser.id) as Result.Success
             userResult.status shouldBe HttpStatusCode.OK
-            userResult.data?.balance shouldBe 0.0
-            val transactionResult = transactionService.getTransactionsOfUser(testUser.id)
+            userResult.data.balance shouldBe 0.0
+            val transactionResult = transactionService.getTransactionsOfUser(testUser.id) as Result.Success
             transactionResult.status shouldBe HttpStatusCode.OK
-            transactionResult.data?.size shouldBe 2
+            transactionResult.data.size shouldBe 2
         }
     }
 }

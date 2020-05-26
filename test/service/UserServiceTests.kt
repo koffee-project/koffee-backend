@@ -2,6 +2,7 @@ package eu.yeger.service
 
 import eu.yeger.model.domain.User
 import eu.yeger.model.dto.PartialUser
+import eu.yeger.model.dto.Result
 import eu.yeger.model.dto.UserListEntry
 import eu.yeger.model.dto.asProfile
 import eu.yeger.model.dto.asUser
@@ -31,7 +32,7 @@ class UserServiceTests {
             userService.createUser(testPartialUser).status shouldBe HttpStatusCode.Created
 
             // Then user can be retrieved
-            val result = userService.getUserById(testUser.id)
+            val result = userService.getUserById(testUser.id) as Result.Success
             result.status shouldBe HttpStatusCode.OK
             result.data shouldBe testUser.asProfile()
         }
@@ -45,7 +46,7 @@ class UserServiceTests {
             userService.createUser(userCreationRequest).status shouldBe HttpStatusCode.Created
 
             // Then user can be retrieved
-            val result = userService.getUserById(testUser.id)
+            val result = userService.getUserById(testUser.id) as Result.Success
             result.status shouldBe HttpStatusCode.OK
             result.data shouldBe userCreationRequest.asUser().asProfile()
         }
@@ -58,7 +59,7 @@ class UserServiceTests {
             userService.createUser(testPartialUser).status shouldBe HttpStatusCode.Created
 
             // Then user can not be created again
-            val result = userService.getUserById(testUser.id)
+            val result = userService.getUserById(testUser.id) as Result.Success
             result.status shouldBe HttpStatusCode.OK
             result.data shouldBe testUser.asProfile()
             userService.createUser(testPartialUser).status shouldBe HttpStatusCode.Conflict
@@ -73,9 +74,8 @@ class UserServiceTests {
             userService.createUser(userCreationRequest).status shouldBe HttpStatusCode.UnprocessableEntity
 
             // Then user can not be retrieved
-            val result = userService.getUserById(userCreationRequest.id)
+            val result = userService.getUserById(userCreationRequest.id) as Result.Failure
             result.status shouldBe HttpStatusCode.NotFound
-            result.data shouldBe null
         }
     }
 
@@ -87,9 +87,8 @@ class UserServiceTests {
             userService.createUser(userCreationRequest).status shouldBe HttpStatusCode.UnprocessableEntity
 
             // Then user can not be retrieved
-            val result = userService.getUserById(userCreationRequest.id)
+            val result = userService.getUserById(userCreationRequest.id) as Result.Failure
             result.status shouldBe HttpStatusCode.NotFound
-            result.data shouldBe null
         }
     }
 
@@ -103,9 +102,9 @@ class UserServiceTests {
             userService.createUser(secondUserCreationRequest).status shouldBe HttpStatusCode.UnprocessableEntity
 
             // Then users can not be retrieved
-            val result = userService.getAllUsers()
+            val result = userService.getAllUsers() as Result.Success
             result.status shouldBe HttpStatusCode.OK
-            result.data?.size shouldBe 0
+            result.data.size shouldBe 0
         }
     }
 
@@ -117,9 +116,8 @@ class UserServiceTests {
             userService.createUser(adminCreationRequest).status shouldBe HttpStatusCode.UnprocessableEntity
 
             // Then user can not be retrieved
-            val result = userService.getUserById(adminCreationRequest.id)
+            val result = userService.getUserById(adminCreationRequest.id) as Result.Failure
             result.status shouldBe HttpStatusCode.NotFound
-            result.data shouldBe null
         }
     }
 
@@ -132,7 +130,7 @@ class UserServiceTests {
             userService.updateUser(updatedUser).status shouldBe HttpStatusCode.OK
 
             // Then retrieved user has new values
-            val result = userService.getUserById(testUser.id)
+            val result = userService.getUserById(testUser.id) as Result.Success
             result.status shouldBe HttpStatusCode.OK
             result.data shouldBe updatedUser.asUser().asProfile()
         }
@@ -145,9 +143,8 @@ class UserServiceTests {
             userService.updateUser(testPartialUser).status shouldBe HttpStatusCode.NotFound
 
             // Then user was not created either
-            val result = userService.getUserById(testUser.id)
+            val result = userService.getUserById(testUser.id) as Result.Failure
             result.status shouldBe HttpStatusCode.NotFound
-            result.data shouldBe null
         }
     }
 
@@ -160,7 +157,7 @@ class UserServiceTests {
             userService.updateUser(updatedUser).status shouldBe HttpStatusCode.UnprocessableEntity
 
             // Then retrieved user was not updated
-            val result = userService.getUserById(testUser.id)
+            val result = userService.getUserById(testUser.id) as Result.Success
             result.status shouldBe HttpStatusCode.OK
             result.data shouldBe testUser.asProfile()
         }
@@ -174,9 +171,8 @@ class UserServiceTests {
             userService.deleteUserById(testUser.id).status shouldBe HttpStatusCode.OK
 
             // Then user can not be retrieved
-            val result = userService.getUserById(testUser.id)
+            val result = userService.getUserById(testUser.id) as Result.Failure
             result.status shouldBe HttpStatusCode.NotFound
-            result.data shouldBe null
         }
     }
 
@@ -188,9 +184,8 @@ class UserServiceTests {
             userService.deleteUserById(userId).status shouldBe HttpStatusCode.NotFound
 
             // Then user was not created either
-            val result = userService.getUserById(userId)
+            val result = userService.getUserById(userId) as Result.Failure
             result.status shouldBe HttpStatusCode.NotFound
-            result.data shouldBe null
         }
     }
 
@@ -204,12 +199,12 @@ class UserServiceTests {
             userService.createUser(secondRequest).status shouldBe HttpStatusCode.Created
 
             // Then all users are retrieved
-            val result = userService.getAllUsers()
+            val result = userService.getAllUsers() as Result.Success
             result.status shouldBe HttpStatusCode.OK
             val expected = listOf(firstRequest, secondRequest)
                 .map(PartialUser::asUser)
                 .map(User::asUserListEntry)
-            result.data?.sortedBy(UserListEntry::id) shouldBe expected.sortedBy(UserListEntry::id)
+            result.data.sortedBy(UserListEntry::id) shouldBe expected.sortedBy(UserListEntry::id)
         }
     }
 }

@@ -9,28 +9,28 @@ import eu.yeger.repository.UserRepository
 
 suspend fun UserRepository.validateUserExists(userId: String): Result<User> {
     return when (val user = getById(id = userId)) {
-        null -> Result.NotFound(NO_USER_WITH_THAT_ID)
-        else -> Result.OK(user)
+        null -> Result.notFound(NO_USER_WITH_THAT_ID)
+        else -> Result.ok(user)
     }
 }
 
 suspend fun UserRepository.validateUserDoesNotExist(partialUser: PartialUser): Result<PartialUser> {
     return when (getById(id = partialUser.id)) {
-        null -> Result.OK(partialUser)
-        else -> Result.Conflict(USER_WITH_THAT_ID_ALREADY_EXISTS)
+        null -> Result.ok(partialUser)
+        else -> Result.conflict(USER_WITH_THAT_ID_ALREADY_EXISTS)
     }
 }
 
 suspend fun ItemRepository.validateItemExists(itemId: String): Result<Item> {
     return when (val item = getById(id = itemId)) {
-        null -> Result.NotFound(NO_ITEM_WITH_THAT_ID)
-        else -> Result.OK(item)
+        null -> Result.notFound(NO_ITEM_WITH_THAT_ID)
+        else -> Result.ok(item)
     }
 }
 
 suspend fun ItemRepository.validateItemDoesNotExist(item: Item): Result<Item> {
     return when (getById(id = item.id)) {
-        null -> Result.OK(item)
-        else -> Result.Conflict(ITEM_WITH_THAT_ID_ALREADY_EXISTS)
+        null -> Result.ok(item)
+        else -> Result.conflict(ITEM_WITH_THAT_ID_ALREADY_EXISTS)
     }
 }

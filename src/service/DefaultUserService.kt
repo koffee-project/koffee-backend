@@ -15,7 +15,7 @@ import eu.yeger.model.dto.asProfile
 import eu.yeger.model.dto.asUser
 import eu.yeger.model.dto.asUserListEntry
 import eu.yeger.model.dto.map
-import eu.yeger.model.dto.mapErrorStatus
+import eu.yeger.model.dto.mapFailureStatus
 import eu.yeger.model.dto.withResult
 import eu.yeger.repository.UserRepository
 import eu.yeger.utility.ID_OR_PASSWORD_INCORRECT
@@ -32,13 +32,13 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
 
     override suspend fun getAllUsers(): Result<List<UserListEntry>> {
         val entries = userRepository.getAll().map(User::asUserListEntry)
-        return Result.OK(entries)
+        return Result.ok(entries)
     }
 
     override suspend fun getUserById(id: String): Result<UserProfile> {
         return userRepository
             .validateUserExists(id)
-            .andThen { user -> Result.OK(user.asProfile()) }
+            .andThen { user -> Result.ok(user.asProfile()) }
     }
 
     override suspend fun createUser(partialUser: PartialUser): Result<String> {
@@ -46,7 +46,7 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
             .validateUserDoesNotExist(partialUser)
             .andThen { processPartialUser(it) }
             .withResult { hashedUser -> userRepository.insert(hashedUser) }
-            .andThen { Result.Created(USER_CREATED_SUCCESSFULLY) }
+            .andThen { Result.created(USER_CREATED_SUCCESSFULLY) }
     }
 
     override suspend fun updateUser(partialUser: PartialUser): Result<String> {
@@ -61,23 +61,23 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
                     password = hashedUser.password
                 )
             }
-            .andThen { Result.OK(USER_UPDATED_SUCCESSFULLY) }
+            .andThen { Result.ok(USER_UPDATED_SUCCESSFULLY) }
     }
 
     override suspend fun deleteUserById(id: String): Result<String> {
         return userRepository
             .validateUserExists(id)
             .withResult { userRepository.removeById(id) }
-            .andThen { Result.OK(USER_DELETED_SUCCESSFULLY) }
+            .andThen { Result.ok(USER_DELETED_SUCCESSFULLY) }
     }
 
     override suspend fun login(credentials: Credentials): Result<Token> {
         return userRepository
             .validateUserExists(credentials.id)
-            .mapErrorStatus { HttpStatusCode.Unauthorized }
+            .mapFailureStatus { HttpStatusCode.Unauthorized }
             .andThen { credentials.validateForUser(it) }
             .andThen { generateTokenForUser(it) }
-            .andThen { token -> Result.OK(token) }
+            .andThen { token -> Result.ok(token) }
     }
 
     private suspend fun processPartialUser(partialUser: PartialUser): Result<User> {
@@ -86,8 +86,8 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
 
     private fun validatePartialUser(partialUser: PartialUser): Result<PartialUser> {
         return when (partialUser.isValid()) {
-            true -> Result.OK(partialUser)
-            false -> Result.UnprocessableEntity(INVALID_USER_DATA)
+            true -> Result.ok(partialUser)
+            false -> Result.unprocessableEntity(INVALID_USER_DATA)
         }
     }
 
@@ -101,15 +101,15 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
 
     private fun Credentials.validateForUser(user: User): Result<User> {
         return when (this matches user) {
-            true -> Result.OK(user)
-            false -> Result.Unauthorized(ID_OR_PASSWORD_INCORRECT)
+            true -> Result.ok(user)
+            false -> Result.unauthorized(ID_OR_PASSWORD_INCORRECT)
         }
     }
 
     private fun generateTokenForUser(user: User): Result<Token> {
         return when (val token = JWTConfiguration.makeToken(user)) {
-            null -> Result.Forbidden(NO_ADMINISTRATOR_PRIVILEGES)
-            else -> Result.OK(token)
+            null -> Result.forbidden(NO_ADMINISTRATOR_PRIVILEGES)
+            else -> Result.ok(token)
         }
     }
 }
