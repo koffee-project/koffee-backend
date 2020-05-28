@@ -2,14 +2,12 @@ package eu.yeger.utility
 
 const val NO_USER_WITH_THAT_ID = "User with that ID does not exist."
 const val USER_WITH_THAT_ID_ALREADY_EXISTS = "User with that ID already exists."
-const val USER_CREATED_SUCCESSFULLY = "User created successfully."
 const val USER_UPDATED_SUCCESSFULLY = "User updated successfully."
 const val USER_DELETED_SUCCESSFULLY = "User deleted successfully."
 const val INVALID_USER_DATA = "Invalid user data."
 
 const val NO_ITEM_WITH_THAT_ID = "Item with that ID does not exist."
 const val ITEM_WITH_THAT_ID_ALREADY_EXISTS = "Item with that ID already exists."
-const val ITEM_CREATED_SUCCESSFULLY = "Item created successfully."
 const val ITEM_UPDATED_SUCCESSFULLY = "Item updated successfully."
 const val ITEM_DELETED_SUCCESSFULLY = "Item deleted successfully."
 const val INVALID_ITEM_DATA = "Invalid item data."
