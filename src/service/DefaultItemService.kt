@@ -6,7 +6,6 @@ import eu.yeger.model.dto.andThen
 import eu.yeger.model.dto.withResult
 import eu.yeger.repository.ItemRepository
 import eu.yeger.utility.INVALID_ITEM_DATA
-import eu.yeger.utility.ITEM_CREATED_SUCCESSFULLY
 import eu.yeger.utility.ITEM_DELETED_SUCCESSFULLY
 import eu.yeger.utility.ITEM_UPDATED_SUCCESSFULLY
 import eu.yeger.utility.hasTwoDecimalPlaces
@@ -31,7 +30,7 @@ class DefaultItemService(private val itemRepository: ItemRepository) : ItemServi
             .validateItemDoesNotExist(item)
             .andThen { validateItem(it) }
             .withResult { itemRepository.insert(it) }
-            .andThen { Result.created(ITEM_CREATED_SUCCESSFULLY) }
+            .andThen { Result.created(item.id) }
     }
 
     override suspend fun updateItem(item: Item): Result<String> {

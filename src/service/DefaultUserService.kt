@@ -21,7 +21,6 @@ import eu.yeger.repository.UserRepository
 import eu.yeger.utility.ID_OR_PASSWORD_INCORRECT
 import eu.yeger.utility.INVALID_USER_DATA
 import eu.yeger.utility.NO_ADMINISTRATOR_PRIVILEGES
-import eu.yeger.utility.USER_CREATED_SUCCESSFULLY
 import eu.yeger.utility.USER_DELETED_SUCCESSFULLY
 import eu.yeger.utility.USER_UPDATED_SUCCESSFULLY
 import eu.yeger.utility.validateUserDoesNotExist
@@ -46,7 +45,7 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
             .validateUserDoesNotExist(partialUser)
             .andThen { processPartialUser(it) }
             .withResult { hashedUser -> userRepository.insert(hashedUser) }
-            .andThen { Result.created(USER_CREATED_SUCCESSFULLY) }
+            .andThen { Result.created(partialUser.id) }
     }
 
     override suspend fun updateUser(partialUser: PartialUser): Result<String> {
