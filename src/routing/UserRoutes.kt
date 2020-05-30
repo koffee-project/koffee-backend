@@ -10,8 +10,11 @@ import eu.yeger.utility.encodeBase64
 import eu.yeger.utility.respondWithResult
 import io.ktor.application.call
 import io.ktor.auth.authenticate
+import io.ktor.http.content.PartData
+import io.ktor.http.content.readAllParts
+import io.ktor.http.content.streamProvider
 import io.ktor.request.receive
-import io.ktor.request.receiveStream
+import io.ktor.request.receiveMultipart
 import io.ktor.routing.Route
 import io.ktor.routing.delete
 import io.ktor.routing.get
@@ -97,9 +100,14 @@ fun Route.userRoutes() {
 
                 post {
                     val id = call.parameters["id"]!!
-                    val encodedImage = call.receiveStream()
-                        .use { input -> input.readBytes() }
-                        .fold(byteArrayOf()) { acc, bytes -> acc + bytes }
+                    val encodedImage = call.receiveMultipart()
+                        .readAllParts()
+                        .fold(byteArrayOf()) { acc, part ->
+                            when (part) {
+                                is PartData.FileItem -> acc + part.streamProvider().readBytes()
+                                else -> acc
+                            }
+                        }
                         .encodeBase64()
                     val result = imageService.saveProfileImageForUser(id, encodedImage)
                     call.respondWithResult(result)
