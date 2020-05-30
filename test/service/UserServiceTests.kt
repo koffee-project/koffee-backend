@@ -7,6 +7,7 @@ import eu.yeger.model.dto.UserListEntry
 import eu.yeger.model.dto.asProfile
 import eu.yeger.model.dto.asUser
 import eu.yeger.model.dto.asUserListEntry
+import eu.yeger.repository.FakeImageRepository
 import eu.yeger.repository.FakeUserRepository
 import eu.yeger.utility.shouldBe
 import eu.yeger.utility.testPartialUser
@@ -22,7 +23,7 @@ class UserServiceTests {
 
     @BeforeTest
     fun setup() {
-        userService = DefaultUserService(userRepository = FakeUserRepository())
+        userService = DefaultUserService(userRepository = FakeUserRepository(), imageRepository = FakeImageRepository())
     }
 
     @Test

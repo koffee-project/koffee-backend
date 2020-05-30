@@ -3,6 +3,7 @@ package eu.yeger.service
 import eu.yeger.model.domain.Transaction
 import eu.yeger.model.dto.Funding
 import eu.yeger.model.dto.Result
+import eu.yeger.repository.FakeImageRepository
 import eu.yeger.repository.FakeItemRepository
 import eu.yeger.repository.FakeUserRepository
 import eu.yeger.utility.shouldBe
@@ -28,7 +29,8 @@ class TransactionServiceTests {
     fun setup() {
         val userRepository = FakeUserRepository()
         val itemRepository = FakeItemRepository()
-        userService = DefaultUserService(userRepository)
+        val imageRepository = FakeImageRepository()
+        userService = DefaultUserService(userRepository, imageRepository)
         itemService = DefaultItemService(itemRepository)
         transactionService = DefaultTransactionService(userRepository, itemRepository)
     }

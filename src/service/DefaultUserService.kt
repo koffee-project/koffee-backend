@@ -17,6 +17,7 @@ import eu.yeger.model.dto.asUserListEntry
 import eu.yeger.model.dto.map
 import eu.yeger.model.dto.mapFailureStatus
 import eu.yeger.model.dto.withResult
+import eu.yeger.repository.ImageRepository
 import eu.yeger.repository.UserRepository
 import eu.yeger.utility.ID_OR_PASSWORD_INCORRECT
 import eu.yeger.utility.INVALID_USER_DATA
@@ -27,7 +28,10 @@ import eu.yeger.utility.validateUserDoesNotExist
 import eu.yeger.utility.validateUserExists
 import io.ktor.http.HttpStatusCode
 
-class DefaultUserService(private val userRepository: UserRepository) : UserService {
+class DefaultUserService(
+    private val userRepository: UserRepository,
+    private val imageRepository: ImageRepository
+) : UserService {
 
     override suspend fun getAllUsers(): Result<List<UserListEntry>> {
         val entries = userRepository.getAll().map(User::asUserListEntry)
@@ -66,7 +70,10 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
     override suspend fun deleteUserById(id: String): Result<String> {
         return userRepository
             .validateUserExists(id)
-            .withResult { userRepository.removeById(id) }
+            .withResult {
+                userRepository.removeById(id)
+                imageRepository.removeByUserId(id)
+            }
             .andThen { Result.ok(USER_DELETED_SUCCESSFULLY) }
     }
 
