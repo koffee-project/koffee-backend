@@ -1,6 +1,8 @@
 package eu.yeger.di
 
+import eu.yeger.repository.ImageRepository
 import eu.yeger.repository.ItemRepository
+import eu.yeger.repository.MongoImageRepository
 import eu.yeger.repository.MongoItemRepository
 import eu.yeger.repository.MongoUserRepository
 import eu.yeger.repository.UserRepository
@@ -13,5 +15,9 @@ val repositoryModule = module {
 
     single<ItemRepository> {
         MongoItemRepository(get())
+    }
+
+    single<ImageRepository> {
+        MongoImageRepository(get())
     }
 }

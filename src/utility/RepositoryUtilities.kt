@@ -1,9 +1,11 @@
 package eu.yeger.utility
 
 import eu.yeger.model.domain.Item
+import eu.yeger.model.domain.ProfileImage
 import eu.yeger.model.domain.User
 import eu.yeger.model.dto.PartialUser
 import eu.yeger.model.dto.Result
+import eu.yeger.repository.ImageRepository
 import eu.yeger.repository.ItemRepository
 import eu.yeger.repository.UserRepository
 
@@ -32,5 +34,12 @@ suspend fun ItemRepository.validateItemDoesNotExist(item: Item): Result<Item> {
     return when (getById(id = item.id)) {
         null -> Result.ok(item)
         else -> Result.conflict(ITEM_WITH_THAT_ID_ALREADY_EXISTS)
+    }
+}
+
+suspend fun ImageRepository.validateProfileImageExists(userId: String): Result<ProfileImage> {
+    return when (val profileImage = getByUserId(id = userId)) {
+        null -> Result.notFound(NO_IMAGE_FOR_THAT_USER_ID)
+        else -> Result.ok(profileImage)
     }
 }

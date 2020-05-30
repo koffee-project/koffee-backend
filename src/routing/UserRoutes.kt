@@ -3,18 +3,27 @@ package eu.yeger.routing
 import eu.yeger.model.dto.Funding
 import eu.yeger.model.dto.PartialUser
 import eu.yeger.model.dto.Purchase
+import eu.yeger.service.ImageService
 import eu.yeger.service.TransactionService
 import eu.yeger.service.UserService
+import eu.yeger.utility.encodeBase64
 import eu.yeger.utility.respondWithResult
 import io.ktor.application.call
 import io.ktor.auth.authenticate
 import io.ktor.request.receive
-import io.ktor.routing.*
+import io.ktor.request.receiveStream
+import io.ktor.routing.Route
+import io.ktor.routing.delete
+import io.ktor.routing.get
+import io.ktor.routing.post
+import io.ktor.routing.put
+import io.ktor.routing.route
 import org.koin.ktor.ext.inject
 
 fun Route.userRoutes() {
-    val userService: UserService by inject()
+    val imageService: ImageService by inject()
     val transactionService: TransactionService by inject()
+    val userService: UserService by inject()
 
     route("users") {
         get {
@@ -77,6 +86,30 @@ fun Route.userRoutes() {
                 val id = call.parameters["id"]!!
                 val result = transactionService.getTransactionsOfUser(id)
                 call.respondWithResult(result)
+            }
+
+            route("image") {
+                get {
+                    val id = call.parameters["id"]!!
+                    val result = imageService.getProfileImageByUserId(id)
+                    call.respondWithResult(result)
+                }
+
+                post {
+                    val id = call.parameters["id"]!!
+                    val encodedImage = call.receiveStream()
+                        .use { input -> input.readBytes() }
+                        .fold(byteArrayOf()) { acc, bytes -> acc + bytes }
+                        .encodeBase64()
+                    val result = imageService.saveProfileImageForUser(id, encodedImage)
+                    call.respondWithResult(result)
+                }
+
+                delete {
+                    val id = call.parameters["id"]!!
+                    val result = imageService.deleteProfileImageByUserId(id)
+                    call.respondWithResult(result)
+                }
             }
         }
     }
