@@ -11,7 +11,6 @@ import eu.yeger.utility.IMAGE_DELETED_SUCCESSFULLY
 import eu.yeger.utility.IMAGE_UPLOADED_SUCCESSFULLY
 import eu.yeger.utility.validateProfileImageExists
 import eu.yeger.utility.validateUserExists
-import org.bson.internal.Base64
 
 class DefaultImageService(
     private val userRepository: UserRepository,
@@ -20,14 +19,13 @@ class DefaultImageService(
 
     override suspend fun getProfileImageByUserId(id: String): Result<ByteArray> {
         return imageRepository.validateProfileImageExists(id)
-            .map { profileImage -> Base64.decode(profileImage.encodedImage) }
-            .andThen { Result.ok(it) }
+            .andThen { Result.ok(it.encodedImage) }
     }
 
-    override suspend fun saveProfileImageForUser(id: String, encodedImage: String): Result<String> {
+    override suspend fun saveProfileImageForUser(id: String, image: ByteArray): Result<String> {
         return userRepository.validateUserExists(id)
-            .map { user -> ProfileImage(user.id, encodedImage) }
-            .withResult { image -> imageRepository.insert(image) }
+            .map { user -> ProfileImage(user.id, image) }
+            .withResult { imageRepository.insert(it) }
             .andThen { Result.created(IMAGE_UPLOADED_SUCCESSFULLY) }
     }
 

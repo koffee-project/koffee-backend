@@ -6,7 +6,6 @@ import eu.yeger.model.dto.Purchase
 import eu.yeger.service.ImageService
 import eu.yeger.service.TransactionService
 import eu.yeger.service.UserService
-import eu.yeger.utility.encodeBase64
 import eu.yeger.utility.respondWithResult
 import io.ktor.application.call
 import io.ktor.auth.authenticate
@@ -108,7 +107,6 @@ fun Route.userRoutes() {
                                 else -> acc
                             }
                         }
-                        .encodeBase64()
                     val result = imageService.saveProfileImageForUser(id, encodedImage)
                     call.respondWithResult(result)
                 }

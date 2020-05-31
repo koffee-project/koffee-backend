@@ -1,8 +1,8 @@
 package eu.yeger.model.domain
 
-data class ProfileImage(
+class ProfileImage(
     val userId: String,
-    val encodedImage: String
+    val encodedImage: ByteArray
 ) : Entity {
     override val id: String
         get() = userId
