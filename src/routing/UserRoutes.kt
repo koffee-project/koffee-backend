@@ -6,6 +6,7 @@ import eu.yeger.model.dto.Purchase
 import eu.yeger.service.ImageService
 import eu.yeger.service.TransactionService
 import eu.yeger.service.UserService
+import eu.yeger.utility.encodeBase64
 import eu.yeger.utility.respondWithResult
 import io.ktor.application.call
 import io.ktor.auth.authenticate
@@ -97,6 +98,12 @@ fun Route.userRoutes() {
                     call.respondWithResult(result)
                 }
 
+                get("timestamp") {
+                    val id = call.parameters["id"]!!
+                    val result = imageService.getProfileImageTimestampByUserId(id)
+                    call.respondWithResult(result)
+                }
+
                 post {
                     val id = call.parameters["id"]!!
                     val encodedImage = call.receiveMultipart()
@@ -105,8 +112,8 @@ fun Route.userRoutes() {
                             when (part) {
                                 is PartData.FileItem -> acc + part.streamProvider().readBytes()
                                 else -> acc
-                            }
-                        }
+                            }.also { part.dispose() }
+                        }.encodeBase64()
                     val result = imageService.saveProfileImageForUser(id, encodedImage)
                     call.respondWithResult(result)
                 }

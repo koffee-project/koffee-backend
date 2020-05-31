@@ -11,7 +11,7 @@ class FakeImageRepository : ImageRepository {
     }
 
     override suspend fun insert(profileImage: ProfileImage) {
-        profileImages[profileImage.userId] = profileImage
+        profileImages[profileImage.id] = profileImage
     }
 
     override suspend fun removeByUserId(id: String) {

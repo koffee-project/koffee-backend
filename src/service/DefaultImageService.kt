@@ -17,14 +17,19 @@ class DefaultImageService(
     private val imageRepository: ImageRepository
 ) : ImageService {
 
-    override suspend fun getProfileImageByUserId(id: String): Result<ByteArray> {
+    override suspend fun getProfileImageByUserId(id: String): Result<ProfileImage> {
         return imageRepository.validateProfileImageExists(id)
-            .andThen { Result.ok(it.encodedImage) }
+            .andThen { Result.ok(it) }
     }
 
-    override suspend fun saveProfileImageForUser(id: String, image: ByteArray): Result<String> {
+    override suspend fun getProfileImageTimestampByUserId(id: String): Result<Long> {
+        return imageRepository.validateProfileImageExists(id)
+            .andThen { Result.ok(it.timestamp) }
+    }
+
+    override suspend fun saveProfileImageForUser(id: String, image: String): Result<String> {
         return userRepository.validateUserExists(id)
-            .map { user -> ProfileImage(user.id, image) }
+            .map { user -> ProfileImage(user.id, image, System.currentTimeMillis()) }
             .withResult { imageRepository.insert(it) }
             .andThen { Result.created(IMAGE_UPLOADED_SUCCESSFULLY) }
     }
