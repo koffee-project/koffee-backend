@@ -1,0 +1,28 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>andThen - koffee-backend</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">koffee-backend</a>&nbsp;/&nbsp;<a href="index.html">eu.yeger.model.dto</a>&nbsp;/&nbsp;<a href="./and-then.html">andThen</a><br/>
+<br/>
+<h1>andThen</h1>
+<a name="eu.yeger.model.dto$andThen(eu.yeger.model.dto.Result((eu.yeger.model.dto.andThen.T)), kotlin.coroutines.SuspendFunction1((eu.yeger.model.dto.andThen.T, eu.yeger.model.dto.Result((eu.yeger.model.dto.andThen.U)))))"></a>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">T</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html"><span class="identifier">Any</span></a><span class="symbol">, </span><span class="identifier">U</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html"><span class="identifier">Any</span></a><span class="symbol">&gt;</span> <a href="-result/index.html"><span class="identifier">Result</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span><span class="symbol">.</span><span class="identifier">andThen</span><span class="symbol">(</span><span class="identifier" id="eu.yeger.model.dto$andThen(eu.yeger.model.dto.Result((eu.yeger.model.dto.andThen.T)), kotlin.coroutines.SuspendFunction1((eu.yeger.model.dto.andThen.T, eu.yeger.model.dto.Result((eu.yeger.model.dto.andThen.U)))))/transformation">transformation</span><span class="symbol">:</span>&nbsp;<span class="keyword">suspend </span><span class="symbol">(</span><span class="identifier">T</span><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="-result/index.html"><span class="identifier">Result</span></a><span class="symbol">&lt;</span><span class="identifier">U</span><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="-result/index.html"><span class="identifier">Result</span></a><span class="symbol">&lt;</span><span class="identifier">U</span><span class="symbol">&gt;</span></code>
+<p>Transforms the data of <a href="-result/index.html">Result</a>s if they are <a href="-result/-success/index.html">Result.Success</a>es.</p>
+<h3>Parameters</h3>
+<p><a name="T"></a>
+<code>T</code> - The source type.</p>
+<p><a name="U"></a>
+<code>U</code> - The target type.</p>
+<p><a name="transformation"></a>
+<code>transformation</code> - The transformation operation. Can be used to turn into <a href="-result/-failure/index.html">Result.Failure</a>s.</p>
+<p><strong>Receiver</strong><br/>
+The source <a href="-result/index.html">Result</a>.</p>
+<p><strong>Return</strong><br/>
+The new <a href="-result/index.html">Result</a>.</p>
+<p><strong>Author</strong><br/>
+Jan Müller</p>
+</BODY>
+</HTML>

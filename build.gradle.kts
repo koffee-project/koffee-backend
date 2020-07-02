@@ -72,7 +72,7 @@ tasks {
 
     withType<org.jetbrains.dokka.gradle.DokkaTask> {
         outputFormat = "html"
-        outputDirectory = "$buildDir/dokka"
+        outputDirectory = "docs"
 
         configuration {
             reportUndocumented = false

@@ -1,0 +1,111 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>MongoUserRepository - koffee-backend</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">koffee-backend</a>&nbsp;/&nbsp;<a href="../index.html">eu.yeger.repository</a>&nbsp;/&nbsp;<a href="./index.html">MongoUserRepository</a><br/>
+<br/>
+<h1>MongoUserRepository</h1>
+<code><span class="keyword">class </span><span class="identifier">MongoUserRepository</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-user-repository/index.html"><span class="identifier">UserRepository</span></a></code>
+<p><a href="../-user-repository/index.html">UserRepository</a> based on MongoDB.</p>
+<p><strong>Author</strong><br/>
+Jan Müller</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-init-.html">&lt;init&gt;</a></h4>
+</td>
+<td>
+<p><a href="../-user-repository/index.html">UserRepository</a> based on MongoDB.</p>
+<code><span class="identifier">MongoUserRepository</span><span class="symbol">(</span><span class="identifier" id="eu.yeger.repository.MongoUserRepository$<init>(org.litote.kmongo.coroutine.CoroutineDatabase)/database">database</span><span class="symbol">:</span>&nbsp;<span class="identifier">CoroutineDatabase</span><span class="symbol">)</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="add-transaction.html">addTransaction</a></h4>
+</td>
+<td>
+<p>Adds a <a href="../../eu.yeger.model.domain/-transaction/index.html">Transaction</a> to a <a href="../../eu.yeger.model.domain/-user/index.html">User</a> from the repository.</p>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><span class="identifier">addTransaction</span><span class="symbol">(</span><span class="identifier" id="eu.yeger.repository.MongoUserRepository$addTransaction(kotlin.String, eu.yeger.model.domain.Transaction)/id">id</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="eu.yeger.repository.MongoUserRepository$addTransaction(kotlin.String, eu.yeger.model.domain.Transaction)/transaction">transaction</span><span class="symbol">:</span>&nbsp;<a href="../../eu.yeger.model.domain/-transaction/index.html"><span class="identifier">Transaction</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="get-all.html">getAll</a></h4>
+</td>
+<td>
+<p>Retrieves all <a href="../../eu.yeger.model.domain/-user/index.html">User</a>s from the repository.</p>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><span class="identifier">getAll</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../eu.yeger.model.domain/-user/index.html"><span class="identifier">User</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="get-by-id.html">getById</a></h4>
+</td>
+<td>
+<p>Retrieves a <a href="../../eu.yeger.model.domain/-user/index.html">User</a> from the repository.</p>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><span class="identifier">getById</span><span class="symbol">(</span><span class="identifier" id="eu.yeger.repository.MongoUserRepository$getById(kotlin.String)/id">id</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="../../eu.yeger.model.domain/-user/index.html"><span class="identifier">User</span></a><span class="symbol">?</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="has-user-with-id.html">hasUserWithId</a></h4>
+</td>
+<td>
+<p>Checks if the repository contains a specific <a href="../../eu.yeger.model.domain/-user/index.html">User</a>.</p>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><span class="identifier">hasUserWithId</span><span class="symbol">(</span><span class="identifier" id="eu.yeger.repository.MongoUserRepository$hasUserWithId(kotlin.String)/id">id</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="insert.html">insert</a></h4>
+</td>
+<td>
+<p>Inserts a <a href="../../eu.yeger.model.domain/-user/index.html">User</a> into the repository.</p>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><span class="identifier">insert</span><span class="symbol">(</span><span class="identifier" id="eu.yeger.repository.MongoUserRepository$insert(eu.yeger.model.domain.User)/user">user</span><span class="symbol">:</span>&nbsp;<a href="../../eu.yeger.model.domain/-user/index.html"><span class="identifier">User</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="remove-by-id.html">removeById</a></h4>
+</td>
+<td>
+<p>Removes a <a href="../../eu.yeger.model.domain/-user/index.html">User</a> from the repository.</p>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><span class="identifier">removeById</span><span class="symbol">(</span><span class="identifier" id="eu.yeger.repository.MongoUserRepository$removeById(kotlin.String)/id">id</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="update.html">update</a></h4>
+</td>
+<td>
+<p>Updates a <a href="../../eu.yeger.model.domain/-user/index.html">User</a> from the repository.</p>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><span class="identifier">update</span><span class="symbol">(</span><span class="identifier" id="eu.yeger.repository.MongoUserRepository$update(kotlin.String, kotlin.String, kotlin.Boolean, kotlin.String)/id">id</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="eu.yeger.repository.MongoUserRepository$update(kotlin.String, kotlin.String, kotlin.Boolean, kotlin.String)/name">name</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="eu.yeger.repository.MongoUserRepository$update(kotlin.String, kotlin.String, kotlin.Boolean, kotlin.String)/isAdmin">isAdmin</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">, </span><span class="identifier" id="eu.yeger.repository.MongoUserRepository$update(kotlin.String, kotlin.String, kotlin.Boolean, kotlin.String)/password">password</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Extension Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="../../eu.yeger.utility/validate-user-does-not-exist.html">validateUserDoesNotExist</a></h4>
+</td>
+<td>
+<p>Validates that the <a href="../../eu.yeger.model.domain/-user/index.html">User</a> with the given id does not exist in the <a href="../-user-repository/index.html">UserRepository</a>.</p>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><a href="../-user-repository/index.html"><span class="identifier">UserRepository</span></a><span class="symbol">.</span><span class="identifier">validateUserDoesNotExist</span><span class="symbol">(</span><span class="identifier" id="eu.yeger.utility$validateUserDoesNotExist(eu.yeger.repository.UserRepository, eu.yeger.model.dto.PartialUser)/partialUser">partialUser</span><span class="symbol">:</span>&nbsp;<a href="../../eu.yeger.model.dto/-partial-user/index.html"><span class="identifier">PartialUser</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="../../eu.yeger.model.dto/-result/index.html"><span class="identifier">Result</span></a><span class="symbol">&lt;</span><a href="../../eu.yeger.model.dto/-partial-user/index.html"><span class="identifier">PartialUser</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="../../eu.yeger.utility/validate-user-exists.html">validateUserExists</a></h4>
+</td>
+<td>
+<p>Validates that the <a href="../../eu.yeger.model.domain/-user/index.html">User</a> with the given id exists in the <a href="../-user-repository/index.html">UserRepository</a>.</p>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><a href="../-user-repository/index.html"><span class="identifier">UserRepository</span></a><span class="symbol">.</span><span class="identifier">validateUserExists</span><span class="symbol">(</span><span class="identifier" id="eu.yeger.utility$validateUserExists(eu.yeger.repository.UserRepository, kotlin.String)/userId">userId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="../../eu.yeger.model.dto/-result/index.html"><span class="identifier">Result</span></a><span class="symbol">&lt;</span><a href="../../eu.yeger.model.domain/-user/index.html"><span class="identifier">User</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>
