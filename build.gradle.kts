@@ -12,6 +12,7 @@ plugins {
     kotlin("jvm") version "1.3.72"
     id("com.github.johnrengelman.shadow") version "5.2.0"
     id("org.jlleitschuh.gradle.ktlint") version "9.2.1"
+    id("org.jetbrains.dokka") version "0.10.1"
 }
 
 group = "eu.yeger"
@@ -67,6 +68,11 @@ tasks {
 
     withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
         archiveFileName.set("${project.name}.jar")
+    }
+
+    withType<org.jetbrains.dokka.gradle.DokkaTask> {
+        outputFormat = "html"
+        outputDirectory = "$buildDir/dokka"
     }
 
     compileKotlin {
