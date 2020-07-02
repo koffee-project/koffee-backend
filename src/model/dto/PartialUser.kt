@@ -25,6 +25,8 @@ data class PartialUser(
 /**
  * Extension method for turning [PartialUser]s into [User]s without [Transaction]s.
  *
+ * @receiver The source [PartialUser].
+ *
  * @author Jan Müller
  */
 fun PartialUser.asUser() = User(

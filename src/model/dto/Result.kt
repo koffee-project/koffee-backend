@@ -113,6 +113,7 @@ sealed class Result<T : Any>(
 /**
  * Transforms the data of [Result]s if they are [Result.Success]es.
  *
+ * @receiver The source [Result].
  * @param T The source type.
  * @param U The target type.
  * @param transformation The transformation operation.
@@ -130,6 +131,7 @@ suspend fun <T : Any, U : Any> Result<T>.map(transformation: suspend (T) -> U): 
 /**
  * Transforms the failure status of [Result]s if they are [Result.Failure]s.
  *
+ * @receiver The source [Result].
  * @param T The [Result] type.
  * @param transformation The transformation operation.
  * @return The new [Result].
@@ -146,6 +148,7 @@ suspend fun <T : Any> Result<T>.mapFailureStatus(transformation: suspend (HttpSt
 /**
  * Transforms the data of [Result]s if they are [Result.Success]es.
  *
+ * @receiver The source [Result].
  * @param T The source type.
  * @param U The target type.
  * @param transformation The transformation operation. Can be used to turn into [Result.Failure]s.
@@ -163,6 +166,7 @@ suspend fun <T : Any, U : Any> Result<T>.andThen(transformation: suspend (T) -> 
 /**
  * Consumes the data of [Result]s if they are [Result.Success]es.
  *
+ * @receiver The source [Result].
  * @param T The source type.
  * @param consumer The consuming operation.
  * @return The identity of the [Result].

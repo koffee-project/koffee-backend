@@ -10,8 +10,9 @@ import eu.yeger.repository.ItemRepository
 import eu.yeger.repository.UserRepository
 
 /**
- * Validates that the [User] with the given id exists.
+ * Validates that the [User] with the given id exists in the [UserRepository].
  *
+ * @receiver The [UserRepository].
  * @param userId The id of the [User].
  * @return The [Result] of the operation.
  *
@@ -25,8 +26,9 @@ suspend fun UserRepository.validateUserExists(userId: String): Result<User> {
 }
 
 /**
- * Validates that the [User] with the given id does not exist.
+ * Validates that the [User] with the given id does not exist in the [UserRepository].
  *
+ * @receiver The [UserRepository].
  * @param partialUser The [PartialUser] containing the [User]'s id.
  * @return The [Result] of the operation.
  *
@@ -40,8 +42,9 @@ suspend fun UserRepository.validateUserDoesNotExist(partialUser: PartialUser): R
 }
 
 /**
- * Validates that the [Item] with the given id exists.
+ * Validates that the [Item] with the given id exists in the [ItemRepository].
  *
+ * @receiver The [ItemRepository].
  * @param itemId The id of the [Item].
  * @return The [Result] of the operation.
  *
@@ -55,8 +58,9 @@ suspend fun ItemRepository.validateItemExists(itemId: String): Result<Item> {
 }
 
 /**
- * Validates that the [Item] with the given id does not exist.
+ * Validates that the [Item] with the given id does not exist in the [ItemRepository].
  *
+ * @receiver The [ItemRepository].
  * @param item The [Item] containing the id.
  * @return The [Result] of the operation.
  *
@@ -70,8 +74,9 @@ suspend fun ItemRepository.validateItemDoesNotExist(item: Item): Result<Item> {
 }
 
 /**
- * Validates that the [ProfileImage] with the given id of a [User] exists.
+ * Validates that the [ProfileImage] with the given id of a [User] exists in the [ImageRepository].
  *
+ * @receiver The [ImageRepository].
  * @param userId The id of the [User].
  * @return The [Result] of the operation.
  *

@@ -23,7 +23,7 @@ object JWTConfiguration {
     private val algorithm = Algorithm.HMAC256(readDockerSecret(Arguments.hmacSecret) ?: "secret")
 
     private const val duration = 3_600_000 * 24 // 24 hours
-    
+
     val verifier: JWTVerifier = JWT
         .require(algorithm)
         .withAudience(audience)

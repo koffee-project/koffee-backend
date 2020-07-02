@@ -21,6 +21,8 @@ data class UserProfile(
 /**
  * Extension method for turning [User]s into [UserProfile]s by extracting metadata and calculating their balances.
  *
+ * @receiver The source [User].
+ *
  * @author Jan Müller
  */
 fun User.asProfile() = UserProfile(

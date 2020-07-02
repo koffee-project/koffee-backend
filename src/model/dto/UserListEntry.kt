@@ -18,6 +18,8 @@ data class UserListEntry(
 /**
  * Extension method for turning a [User] into a [UserListEntry] by extracting its metadata.
  *
+ * @receiver The source [User].
+ *
  * @author Jan Müller
  */
 fun User.asUserListEntry() = UserListEntry(

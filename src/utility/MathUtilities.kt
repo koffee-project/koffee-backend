@@ -1,7 +1,9 @@
 package eu.yeger.utility
 
 /**
- * Checks if a double value has no more than two relevant decimal places.
+ * Checks if a [Double] has no more than two relevant decimal places.
+ *
+ * @receiver The [Double] value.
  *
  * @author Jan Müller
  */

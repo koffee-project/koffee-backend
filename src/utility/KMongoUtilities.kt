@@ -4,14 +4,15 @@ import com.mongodb.client.model.Filters
 import com.mongodb.client.model.UpdateOptions
 import com.mongodb.client.model.Updates
 import eu.yeger.model.domain.Entity
-import kotlin.reflect.KProperty
 import org.bson.conversions.Bson
 import org.litote.kmongo.coroutine.CoroutineCollection
 import org.litote.kmongo.path
+import kotlin.reflect.KProperty
 
 /**
  * Upserts an [Entity].
  *
+ * @receiver The target collection.
  * @param T The type of the [Entity].
  * @param entity The [Entity] to be upserted.
  * @param options The options for upserting.
@@ -28,6 +29,7 @@ suspend fun <T : Entity> CoroutineCollection<T>.upsert(entity: T, options: Updat
 /**
  * Creates an update Bson for incrementing numbers.
  *
+ * @receiver The target [KProperty].
  * @param amount The amount to increment by.
  * @return The update bson.
  *
@@ -38,6 +40,7 @@ infix fun KProperty<Number?>.incrementBy(amount: Number): Bson = Updates.inc(thi
 /**
  * Creates an update Bson for pushing elements.
  *
+ * @receiver The target [KProperty].
  * @param T The type of the element.
  * @param element The element to be pushed.
  * @return The update bson.
@@ -49,6 +52,7 @@ infix fun <T> KProperty<Iterable<T>?>.push(element: T): Bson = Updates.push(this
 /**
  * Creates an update Bson.
  *
+ * @receiver The target [KProperty].
  * @param T The type of the value.
  * @param newValue The value to be set.
  * @return The update bson.
@@ -60,6 +64,7 @@ infix fun <T> KProperty<T>.to(newValue: T): Bson = Updates.set(this.path(), newV
 /**
  * Combines a list of Bsons with update semantics.
  *
+ * @receiver The list of Bsons.
  * @return The update Bson.
  *
  * @author Jan Müller
@@ -69,6 +74,7 @@ fun List<Bson>.combineAsUpdate(): Bson = Updates.combine(this)
 /**
  * Creates a filter from a list of Bsons with AND semantics.
  *
+ * @receiver The list of Bsons.
  * @return The filter Bson.
  *
  * @author Jan Müller
