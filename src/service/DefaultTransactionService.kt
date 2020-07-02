@@ -17,7 +17,6 @@ import eu.yeger.utility.INVALID_FUNDING_AMOUNT
 import eu.yeger.utility.INVALID_PURCHASE_AMOUNT
 import eu.yeger.utility.LAST_PURCHASE_ALREADY_REFUNDED
 import eu.yeger.utility.NO_REFUNDABLE_PURCHASE
-import eu.yeger.utility.NO_USER_WITH_THAT_ID
 import eu.yeger.utility.PURCHASE_SUCCESSFUL
 import eu.yeger.utility.REFUND_EXPIRED
 import eu.yeger.utility.REFUND_NOT_POSSIBLE
@@ -26,6 +25,11 @@ import eu.yeger.utility.hasTwoDecimalPlaces
 import eu.yeger.utility.validateItemExists
 import eu.yeger.utility.validateUserExists
 
+/**
+ * Default [TransactionService] implementation.
+ *
+ * @author Jan Müller
+ */
 class DefaultTransactionService(
     private val userRepository: UserRepository,
     private val itemRepository: ItemRepository
@@ -65,10 +69,9 @@ class DefaultTransactionService(
     }
 
     override suspend fun getTransactionsOfUser(userId: String): Result<TransactionList> {
-        return when (val user = userRepository.getById(id = userId)) {
-            null -> Result.notFound(NO_USER_WITH_THAT_ID)
-            else -> Result.ok(user.transactions)
-        }
+        return userRepository
+            .validateUserExists(userId)
+            .andThen { user -> Result.ok(user.transactions) }
     }
 
     private fun validateFunding(funding: Funding): Result<Transaction.Funding> {

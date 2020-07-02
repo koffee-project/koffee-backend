@@ -12,6 +12,11 @@ import eu.yeger.utility.hasTwoDecimalPlaces
 import eu.yeger.utility.validateItemDoesNotExist
 import eu.yeger.utility.validateItemExists
 
+/**
+ * Default [ItemService] implementation.
+ *
+ * @author Jan Müller
+ */
 class DefaultItemService(private val itemRepository: ItemRepository) : ItemService {
 
     override suspend fun getAllItems(): Result<List<Item>> {
