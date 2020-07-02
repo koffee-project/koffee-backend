@@ -9,7 +9,7 @@ import io.ktor.auth.Principal
  * @property name The name of the [User].
  * @property transactions The user's list of [Transaction]s.
  * @property isAdmin Indicates whether the [User] has admin privileges.
- * @property password The optional password of the user.
+ * @property password The optional password of the [User].
  *
  * @author Jan Müller
  */

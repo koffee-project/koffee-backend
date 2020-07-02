@@ -8,6 +8,8 @@ import io.ktor.auth.Credential
  *
  * @property id The [User]'s id.
  * @property password The [User]'s password.
+ *
+ * @author Jan Müller
  */
 class Credentials(
     val id: String,
