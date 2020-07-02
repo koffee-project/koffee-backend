@@ -10,6 +10,11 @@ import eu.yeger.service.TransactionService
 import eu.yeger.service.UserService
 import org.koin.dsl.module
 
+/**
+ * The service Koin module.
+ *
+ * @author Jan Müller
+ */
 val serviceModule = module {
     single<UserService> {
         DefaultUserService(get(), get())

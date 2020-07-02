@@ -8,6 +8,12 @@ import eu.yeger.repository.MongoUserRepository
 import eu.yeger.repository.UserRepository
 import org.koin.dsl.module
 
+/**
+ * The repository Koin module.
+ * Uses MongoDB repositories.
+ *
+ * @author Jan Müller
+ */
 val repositoryModule = module {
     single<UserRepository> {
         MongoUserRepository(get())

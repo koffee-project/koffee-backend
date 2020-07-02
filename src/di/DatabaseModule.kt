@@ -5,6 +5,11 @@ import org.koin.dsl.module
 import org.litote.kmongo.coroutine.coroutine
 import org.litote.kmongo.reactivestreams.KMongo
 
+/**
+ * The MongoDB Koin module.
+ *
+ * @author Jan Müller
+ */
 val databaseModule = module {
     single {
         KMongo

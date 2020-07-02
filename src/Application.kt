@@ -20,8 +20,22 @@ import org.koin.ktor.ext.Koin
 import org.koin.ktor.ext.inject
 import org.slf4j.event.Level
 
+/**
+ * Starts the engine for this server.
+ *
+ * @param args The arguments for this server.
+ */
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
+/**
+ * Defines the main application module for this server.
+ * Installs and configures Koin, CallLogging and ContentNegotiation.
+ * Also initializes the default admin.
+ *
+ * @receiver The target application.
+ *
+ * @author Jan Müller
+ */
 @Suppress("unused") // Referenced in application.conf
 fun Application.mainModule() {
     install(Koin) {
@@ -42,6 +56,13 @@ fun Application.mainModule() {
     initializeDefaultAdmin()
 }
 
+/**
+ * Initializes the default admin using the respective Docker secret.
+ *
+ * @receiver The application providing the Koin context.
+ *
+ * @author Jan Müller
+ */
 fun Application.initializeDefaultAdmin() {
     val userRepository: UserRepository by inject()
 
