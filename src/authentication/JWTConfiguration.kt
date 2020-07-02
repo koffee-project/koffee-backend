@@ -9,6 +9,11 @@ import eu.yeger.model.dto.Token
 import eu.yeger.utility.readDockerSecret
 import java.util.Date
 
+/**
+ * The configuration used by the authentication module.
+ *
+ * @author Jan Müller
+ */
 object JWTConfiguration {
 
     private val issuer = Arguments.url
@@ -18,13 +23,19 @@ object JWTConfiguration {
     private val algorithm = Algorithm.HMAC256(readDockerSecret(Arguments.hmacSecret) ?: "secret")
 
     private const val duration = 3_600_000 * 24 // 24 hours
-
+    
     val verifier: JWTVerifier = JWT
         .require(algorithm)
         .withAudience(audience)
         .withIssuer(issuer)
         .build()
 
+    /**
+     * Generates a [Token] for a [User].
+     *
+     * @param user The [User] that owns the token.
+     * @return The generated [Token] or null if [user] is not an admin.
+     */
     fun makeToken(user: User): Token? {
         val expiration = Date(System.currentTimeMillis() + duration)
         val token = when (user.isAdmin) {
