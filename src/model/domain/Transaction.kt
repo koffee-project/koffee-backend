@@ -82,6 +82,8 @@ sealed class Transaction {
 /**
  * Extension method for turning [Transaction.Purchase]s into [Transaction.Refund]s.
  *
+ * @receiver The source [Transaction.Purchase].
+ *
  * @author Jan Müller
  */
 fun Transaction.Purchase.asRefund() = Transaction.Refund(

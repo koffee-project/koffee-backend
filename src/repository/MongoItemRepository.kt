@@ -8,6 +8,11 @@ import org.litote.kmongo.coroutine.CoroutineDatabase
 import org.litote.kmongo.eq
 import org.litote.kmongo.ne
 
+/**
+ * [ItemRepository] based on MongoDB.
+ *
+ * @author Jan Müller
+ */
 class MongoItemRepository(database: CoroutineDatabase) : ItemRepository {
 
     private val itemCollection = database.getCollection<Item>()

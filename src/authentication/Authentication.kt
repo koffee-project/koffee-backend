@@ -6,6 +6,13 @@ import io.ktor.auth.Authentication
 import io.ktor.auth.jwt.JWTPrincipal
 import io.ktor.auth.jwt.jwt
 
+/**
+ * Installs and configures the JWT Authentication module using [JWTConfiguration].
+ *
+ * @receiver The target application.
+ *
+ * @author Jan Müller
+ */
 fun Application.authenticationModule() {
     install(Authentication) {
         jwt {

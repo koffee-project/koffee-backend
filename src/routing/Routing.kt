@@ -13,6 +13,13 @@ import io.ktor.routing.get
 import io.ktor.routing.route
 import io.ktor.routing.routing
 
+/**
+ * Installs and configures the routing and StatusPages modules.
+ *
+ * @receiver The target application.
+ *
+ * @author Jan Müller
+ */
 fun Application.routingModule() = routing {
     route("/") {
         get {

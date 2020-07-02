@@ -9,6 +9,11 @@ import eu.yeger.utility.upsert
 import org.litote.kmongo.coroutine.CoroutineDatabase
 import org.litote.kmongo.eq
 
+/**
+ * [UserRepository] based on MongoDB.
+ *
+ * @author Jan Müller
+ */
 class MongoUserRepository(database: CoroutineDatabase) : UserRepository {
 
     private val userCollection = database.getCollection<User>()

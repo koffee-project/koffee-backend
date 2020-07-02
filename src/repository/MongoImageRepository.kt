@@ -4,6 +4,11 @@ import eu.yeger.model.domain.ProfileImage
 import eu.yeger.utility.upsert
 import org.litote.kmongo.coroutine.CoroutineDatabase
 
+/**
+ * [ImageRepository] based on MongoDB.
+ *
+ * @author Jan Müller
+ */
 class MongoImageRepository(database: CoroutineDatabase) : ImageRepository {
 
     private val imageCollection = database.getCollection<ProfileImage>()

@@ -9,6 +9,13 @@ import io.ktor.routing.Route
 import io.ktor.routing.post
 import org.koin.ktor.ext.inject
 
+/**
+ * Appends authentication-related routes to the base route.
+ *
+ * @receiver The base route.
+ *
+ * @author Jan Müller
+ */
 fun Route.authenticationRoutes() {
     val userService: UserService by inject()
 

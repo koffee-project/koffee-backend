@@ -14,6 +14,13 @@ import io.ktor.routing.put
 import io.ktor.routing.route
 import org.koin.ktor.ext.inject
 
+/**
+ * Appends item-related routes to the base route.
+ *
+ * @receiver The base route.
+ *
+ * @author Jan Müller
+ */
 fun Route.itemRoutes() {
     val itemService: ItemService by inject()
 

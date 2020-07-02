@@ -28,6 +28,11 @@ import eu.yeger.utility.validateUserDoesNotExist
 import eu.yeger.utility.validateUserExists
 import io.ktor.http.HttpStatusCode
 
+/**
+ * Default [UserService] implementation.
+ *
+ * @author Jan Müller
+ */
 class DefaultUserService(
     private val userRepository: UserRepository,
     private val imageRepository: ImageRepository

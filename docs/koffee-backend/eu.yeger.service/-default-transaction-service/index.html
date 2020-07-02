@@ -1,0 +1,70 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>DefaultTransactionService - koffee-backend</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">koffee-backend</a>&nbsp;/&nbsp;<a href="../index.html">eu.yeger.service</a>&nbsp;/&nbsp;<a href="./index.html">DefaultTransactionService</a><br/>
+<br/>
+<h1>DefaultTransactionService</h1>
+<code><span class="keyword">class </span><span class="identifier">DefaultTransactionService</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-transaction-service/index.html"><span class="identifier">TransactionService</span></a></code>
+<p>Default <a href="../-transaction-service/index.html">TransactionService</a> implementation.</p>
+<p><strong>Author</strong><br/>
+Jan Müller</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-init-.html">&lt;init&gt;</a></h4>
+</td>
+<td>
+<p>Default <a href="../-transaction-service/index.html">TransactionService</a> implementation.</p>
+<code><span class="identifier">DefaultTransactionService</span><span class="symbol">(</span><span class="identifier" id="eu.yeger.service.DefaultTransactionService$<init>(eu.yeger.repository.UserRepository, eu.yeger.repository.ItemRepository)/userRepository">userRepository</span><span class="symbol">:</span>&nbsp;<a href="../../eu.yeger.repository/-user-repository/index.html"><span class="identifier">UserRepository</span></a><span class="symbol">, </span><span class="identifier" id="eu.yeger.service.DefaultTransactionService$<init>(eu.yeger.repository.UserRepository, eu.yeger.repository.ItemRepository)/itemRepository">itemRepository</span><span class="symbol">:</span>&nbsp;<a href="../../eu.yeger.repository/-item-repository/index.html"><span class="identifier">ItemRepository</span></a><span class="symbol">)</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="get-transactions-of-user.html">getTransactionsOfUser</a></h4>
+</td>
+<td>
+<p>Returns all <a href="../../eu.yeger.model.domain/-transaction/index.html">Transaction</a>s of the <a href="../../eu.yeger.model.domain/-user/index.html">User</a> with the given id.
+Must validate that the <a href="../../eu.yeger.model.domain/-user/index.html">User</a> exists.</p>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><span class="identifier">getTransactionsOfUser</span><span class="symbol">(</span><span class="identifier" id="eu.yeger.service.DefaultTransactionService$getTransactionsOfUser(kotlin.String)/userId">userId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="../../eu.yeger.model.dto/-result/index.html"><span class="identifier">Result</span></a><span class="symbol">&lt;</span><a href="../../eu.yeger.model.domain/-transaction-list/index.html"><span class="identifier">TransactionList</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="process-funding.html">processFunding</a></h4>
+</td>
+<td>
+<p>Processes a <a href="../../eu.yeger.model.dto/-funding/index.html">Funding</a> for the <a href="../../eu.yeger.model.domain/-user/index.html">User</a> with the given id.
+Must validate that the <a href="../../eu.yeger.model.domain/-user/index.html">User</a> exists and the <a href="../../eu.yeger.model.dto/-funding/index.html">Funding</a> is valid.</p>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><span class="identifier">processFunding</span><span class="symbol">(</span><span class="identifier" id="eu.yeger.service.DefaultTransactionService$processFunding(kotlin.String, eu.yeger.model.dto.Funding)/userId">userId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="eu.yeger.service.DefaultTransactionService$processFunding(kotlin.String, eu.yeger.model.dto.Funding)/funding">funding</span><span class="symbol">:</span>&nbsp;<a href="../../eu.yeger.model.dto/-funding/index.html"><span class="identifier">Funding</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="../../eu.yeger.model.dto/-result/index.html"><span class="identifier">Result</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="process-purchase.html">processPurchase</a></h4>
+</td>
+<td>
+<p>Processes a <a href="../../eu.yeger.model.dto/-purchase/index.html">Purchase</a> for the <a href="../../eu.yeger.model.domain/-user/index.html">User</a> with the given id.
+Must validate that the <a href="../../eu.yeger.model.domain/-user/index.html">User</a> and <a href="../../eu.yeger.model.domain/-item/index.html">Item</a> exist and the <a href="../../eu.yeger.model.dto/-purchase/index.html">Purchase</a> is valid.</p>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><span class="identifier">processPurchase</span><span class="symbol">(</span><span class="identifier" id="eu.yeger.service.DefaultTransactionService$processPurchase(kotlin.String, eu.yeger.model.dto.Purchase)/userId">userId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="eu.yeger.service.DefaultTransactionService$processPurchase(kotlin.String, eu.yeger.model.dto.Purchase)/purchase">purchase</span><span class="symbol">:</span>&nbsp;<a href="../../eu.yeger.model.dto/-purchase/index.html"><span class="identifier">Purchase</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="../../eu.yeger.model.dto/-result/index.html"><span class="identifier">Result</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="refund-last-purchase.html">refundLastPurchase</a></h4>
+</td>
+<td>
+<p>Processes a refund for the <a href="../../eu.yeger.model.domain/-user/index.html">User</a> with the given id.
+Must validate that the <a href="../../eu.yeger.model.domain/-user/index.html">User</a> exists and has a refundable <a href="../../eu.yeger.model.domain/-transaction/index.html">Transaction</a>.</p>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><span class="identifier">refundLastPurchase</span><span class="symbol">(</span><span class="identifier" id="eu.yeger.service.DefaultTransactionService$refundLastPurchase(kotlin.String)/userId">userId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="../../eu.yeger.model.dto/-result/index.html"><span class="identifier">Result</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>
