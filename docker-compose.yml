@@ -1,0 +1,36 @@
+version: "3.7"
+
+services:
+  koffee:
+    container_name: koffee
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - ./environments/domain.env
+      - ./environments/koffee.env
+    ports:
+      - 8080:8080
+    depends_on:
+      - mongo
+    restart: unless-stopped
+    networks:
+      - koffee-network
+    secrets:
+      - default_admin
+      - hmac_secret
+  mongo:
+    container_name: mongo
+    image: mongo
+    restart: unless-stopped
+    networks:
+      - koffee-network
+
+networks:
+  koffee-network:
+
+secrets:
+  default_admin:
+    file: ./secrets/default_admin.secret
+  hmac_secret:
+    file: ./secrets/hmac_secret.secret

@@ -1,0 +1,56 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>JWTConfiguration - koffee-backend</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">koffee-backend</a>&nbsp;/&nbsp;<a href="../index.html">eu.yeger.authentication</a>&nbsp;/&nbsp;<a href="./index.html">JWTConfiguration</a><br/>
+<br/>
+<h1>JWTConfiguration</h1>
+<code><span class="keyword">object </span><span class="identifier">JWTConfiguration</span></code>
+<p>The configuration used by the authentication module.</p>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="audience.html">audience</a></h4>
+</td>
+<td>
+<p>The JWT audience.</p>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">audience</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="realm.html">realm</a></h4>
+</td>
+<td>
+<p>The JWT realm.</p>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">realm</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="verifier.html">verifier</a></h4>
+</td>
+<td>
+<p>The JWT verifier.</p>
+<code><span class="keyword">val </span><span class="identifier">verifier</span><span class="symbol">: </span><span class="identifier">JWTVerifier</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="make-token.html">makeToken</a></h4>
+</td>
+<td>
+<p>Generates a <a href="../../eu.yeger.model.dto/-token/index.html">Token</a> for a <a href="../../eu.yeger.model.domain/-user/index.html">User</a>.</p>
+<code><span class="keyword">fun </span><span class="identifier">makeToken</span><span class="symbol">(</span><span class="identifier" id="eu.yeger.authentication.JWTConfiguration$makeToken(eu.yeger.model.domain.User)/user">user</span><span class="symbol">:</span>&nbsp;<a href="../../eu.yeger.model.domain/-user/index.html"><span class="identifier">User</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="../../eu.yeger.model.dto/-token/index.html"><span class="identifier">Token</span></a><span class="symbol">?</span></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

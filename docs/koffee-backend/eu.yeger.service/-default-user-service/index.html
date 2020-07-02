@@ -1,0 +1,89 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>DefaultUserService - koffee-backend</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">koffee-backend</a>&nbsp;/&nbsp;<a href="../index.html">eu.yeger.service</a>&nbsp;/&nbsp;<a href="./index.html">DefaultUserService</a><br/>
+<br/>
+<h1>DefaultUserService</h1>
+<code><span class="keyword">class </span><span class="identifier">DefaultUserService</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-user-service/index.html"><span class="identifier">UserService</span></a></code>
+<p>Default <a href="../-user-service/index.html">UserService</a> implementation.</p>
+<p><strong>Author</strong><br/>
+Jan Müller</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-init-.html">&lt;init&gt;</a></h4>
+</td>
+<td>
+<p>Default <a href="../-user-service/index.html">UserService</a> implementation.</p>
+<code><span class="identifier">DefaultUserService</span><span class="symbol">(</span><span class="identifier" id="eu.yeger.service.DefaultUserService$<init>(eu.yeger.repository.UserRepository, eu.yeger.repository.ImageRepository)/userRepository">userRepository</span><span class="symbol">:</span>&nbsp;<a href="../../eu.yeger.repository/-user-repository/index.html"><span class="identifier">UserRepository</span></a><span class="symbol">, </span><span class="identifier" id="eu.yeger.service.DefaultUserService$<init>(eu.yeger.repository.UserRepository, eu.yeger.repository.ImageRepository)/imageRepository">imageRepository</span><span class="symbol">:</span>&nbsp;<a href="../../eu.yeger.repository/-image-repository/index.html"><span class="identifier">ImageRepository</span></a><span class="symbol">)</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="create-user.html">createUser</a></h4>
+</td>
+<td>
+<p>Creates a <a href="../../eu.yeger.model.domain/-user/index.html">User</a>.
+Must validate that the <a href="../../eu.yeger.model.domain/-user/index.html">User</a> does not exist and the data is valid.
+Must hash the password.</p>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><span class="identifier">createUser</span><span class="symbol">(</span><span class="identifier" id="eu.yeger.service.DefaultUserService$createUser(eu.yeger.model.dto.PartialUser)/partialUser">partialUser</span><span class="symbol">:</span>&nbsp;<a href="../../eu.yeger.model.dto/-partial-user/index.html"><span class="identifier">PartialUser</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="../../eu.yeger.model.dto/-result/index.html"><span class="identifier">Result</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="delete-user-by-id.html">deleteUserById</a></h4>
+</td>
+<td>
+<p>Deletes a <a href="../../eu.yeger.model.domain/-user/index.html">User</a> by id.
+Must validate that the <a href="../../eu.yeger.model.domain/-user/index.html">User</a> exists.</p>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><span class="identifier">deleteUserById</span><span class="symbol">(</span><span class="identifier" id="eu.yeger.service.DefaultUserService$deleteUserById(kotlin.String)/id">id</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="../../eu.yeger.model.dto/-result/index.html"><span class="identifier">Result</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="get-all-users.html">getAllUsers</a></h4>
+</td>
+<td>
+<p>Returns all <a href="../../eu.yeger.model.domain/-user/index.html">User</a>s.</p>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><span class="identifier">getAllUsers</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="../../eu.yeger.model.dto/-result/index.html"><span class="identifier">Result</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../eu.yeger.model.dto/-user-list-entry/index.html"><span class="identifier">UserListEntry</span></a><span class="symbol">&gt;</span><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="get-user-by-id.html">getUserById</a></h4>
+</td>
+<td>
+<p>Returns the <a href="../../eu.yeger.model.domain/-user/index.html">User</a> with the given id.
+Must validate that the <a href="../../eu.yeger.model.domain/-user/index.html">User</a> exists.</p>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><span class="identifier">getUserById</span><span class="symbol">(</span><span class="identifier" id="eu.yeger.service.DefaultUserService$getUserById(kotlin.String)/id">id</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="../../eu.yeger.model.dto/-result/index.html"><span class="identifier">Result</span></a><span class="symbol">&lt;</span><a href="../../eu.yeger.model.dto/-user-profile/index.html"><span class="identifier">UserProfile</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="login.html">login</a></h4>
+</td>
+<td>
+<p>Performs a login using the given <a href="../../eu.yeger.model.dto/-credentials/index.html">Credentials</a>.
+Must validate that the <a href="../../eu.yeger.model.domain/-user/index.html">User</a> exists and that the credentials are valid.</p>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><span class="identifier">login</span><span class="symbol">(</span><span class="identifier" id="eu.yeger.service.DefaultUserService$login(eu.yeger.model.dto.Credentials)/credentials">credentials</span><span class="symbol">:</span>&nbsp;<a href="../../eu.yeger.model.dto/-credentials/index.html"><span class="identifier">Credentials</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="../../eu.yeger.model.dto/-result/index.html"><span class="identifier">Result</span></a><span class="symbol">&lt;</span><a href="../../eu.yeger.model.dto/-token/index.html"><span class="identifier">Token</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="update-user.html">updateUser</a></h4>
+</td>
+<td>
+<p>Updates a <a href="../../eu.yeger.model.domain/-user/index.html">User</a>.
+Must validate that the <a href="../../eu.yeger.model.domain/-user/index.html">User</a> exists and the data is valid.
+Must hash the password.</p>
+<code><span class="keyword">suspend</span> <span class="keyword">fun </span><span class="identifier">updateUser</span><span class="symbol">(</span><span class="identifier" id="eu.yeger.service.DefaultUserService$updateUser(eu.yeger.model.dto.PartialUser)/partialUser">partialUser</span><span class="symbol">:</span>&nbsp;<a href="../../eu.yeger.model.dto/-partial-user/index.html"><span class="identifier">PartialUser</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="../../eu.yeger.model.dto/-result/index.html"><span class="identifier">Result</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

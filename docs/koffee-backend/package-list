@@ -1,0 +1,27 @@
+$dokka.format:html
+$dokka.linkExtension:html
+$dokka.location:eu.yeger$initializeDefaultAdmin(io.ktor.application.Application)eu.yeger/io.ktor.application.-application/initialize-default-admin.html
+$dokka.location:eu.yeger$mainModule(io.ktor.application.Application)eu.yeger/io.ktor.application.-application/main-module.html
+$dokka.location:eu.yeger.authentication$authenticationModule(io.ktor.application.Application)eu.yeger.authentication/io.ktor.application.-application/authentication-module.html
+$dokka.location:eu.yeger.routing$authenticationRoutes(io.ktor.routing.Route)eu.yeger.routing/io.ktor.routing.-route/authentication-routes.html
+$dokka.location:eu.yeger.routing$itemRoutes(io.ktor.routing.Route)eu.yeger.routing/io.ktor.routing.-route/item-routes.html
+$dokka.location:eu.yeger.routing$routingModule(io.ktor.application.Application)eu.yeger.routing/io.ktor.application.-application/routing-module.html
+$dokka.location:eu.yeger.routing$userRoutes(io.ktor.routing.Route)eu.yeger.routing/io.ktor.routing.-route/user-routes.html
+$dokka.location:eu.yeger.utility$combineAsFilter(kotlin.collections.List((org.bson.conversions.Bson)))eu.yeger.utility/kotlin.collections.-list/combine-as-filter.html
+$dokka.location:eu.yeger.utility$combineAsUpdate(kotlin.collections.List((org.bson.conversions.Bson)))eu.yeger.utility/kotlin.collections.-list/combine-as-update.html
+$dokka.location:eu.yeger.utility$encodeBase64(kotlin.ByteArray)eu.yeger.utility/kotlin.-byte-array/encode-base64.html
+$dokka.location:eu.yeger.utility$hasTwoDecimalPlaces(kotlin.Double)eu.yeger.utility/kotlin.-double/has-two-decimal-places.html
+$dokka.location:eu.yeger.utility$incrementBy(kotlin.reflect.KProperty((kotlin.Number)), kotlin.Number)eu.yeger.utility/kotlin.reflect.-k-property/increment-by.html
+$dokka.location:eu.yeger.utility$push(kotlin.reflect.KProperty((kotlin.collections.Iterable((eu.yeger.utility.push.T)))), eu.yeger.utility.push.T)eu.yeger.utility/kotlin.reflect.-k-property/push.html
+$dokka.location:eu.yeger.utility$respondWithResult(io.ktor.application.ApplicationCall, eu.yeger.model.dto.Result((kotlin.Any)))eu.yeger.utility/io.ktor.application.-application-call/respond-with-result.html
+$dokka.location:eu.yeger.utility$to(kotlin.reflect.KProperty((eu.yeger.utility.to.T)), eu.yeger.utility.to.T)eu.yeger.utility/kotlin.reflect.-k-property/to.html
+$dokka.location:eu.yeger.utility$upsert(org.litote.kmongo.coroutine.CoroutineCollection((eu.yeger.utility.upsert.T)), eu.yeger.utility.upsert.T, com.mongodb.client.model.UpdateOptions)eu.yeger.utility/org.litote.kmongo.coroutine.-coroutine-collection/upsert.html
+eu.yeger
+eu.yeger.authentication
+eu.yeger.di
+eu.yeger.model.domain
+eu.yeger.model.dto
+eu.yeger.repository
+eu.yeger.routing
+eu.yeger.service
+eu.yeger.utility
