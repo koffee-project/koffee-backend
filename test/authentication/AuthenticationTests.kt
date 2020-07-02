@@ -16,8 +16,8 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.jackson.jackson
 import io.ktor.server.testing.setBody
 import io.ktor.server.testing.withTestApplication
-import kotlin.test.Test
 import org.koin.ktor.ext.Koin
+import kotlin.test.Test
 
 class AuthenticationTests {
 
@@ -72,8 +72,8 @@ class AuthenticationTests {
             setBody(
                 """
                     {
-                        "id": "ad",
-                        "password": "min"
+                        "id": "admin",
+                        "password": "wrong"
                     }
                 """.trimIndent()
             )
