@@ -4,6 +4,9 @@ import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
 import eu.yeger.Arguments
+import eu.yeger.authentication.JWTConfiguration.audience
+import eu.yeger.authentication.JWTConfiguration.realm
+import eu.yeger.authentication.JWTConfiguration.verifier
 import eu.yeger.model.domain.User
 import eu.yeger.model.dto.Token
 import eu.yeger.utility.readDockerSecret
@@ -11,6 +14,10 @@ import java.util.Date
 
 /**
  * The configuration used by the authentication module.
+ *
+ * @property audience The JWT audience.
+ * @property realm The JWT realm.
+ * @property verifier The JWT verifier.
  *
  * @author Jan Müller
  */

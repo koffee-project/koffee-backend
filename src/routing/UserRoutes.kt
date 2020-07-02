@@ -23,6 +23,13 @@ import io.ktor.routing.put
 import io.ktor.routing.route
 import org.koin.ktor.ext.inject
 
+/**
+ * Appends user-related routes to the base route.
+ *
+ * @receiver The base route.
+ *
+ * @author Jan Müller
+ */
 fun Route.userRoutes() {
     val imageService: ImageService by inject()
     val transactionService: TransactionService by inject()

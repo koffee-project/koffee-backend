@@ -73,6 +73,10 @@ tasks {
     withType<org.jetbrains.dokka.gradle.DokkaTask> {
         outputFormat = "html"
         outputDirectory = "$buildDir/dokka"
+
+        configuration {
+            reportUndocumented = false
+        }
     }
 
     compileKotlin {
