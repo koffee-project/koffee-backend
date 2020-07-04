@@ -72,8 +72,8 @@ class AuthenticationTests {
             setBody(
                 """
                     {
-                        "id": "ad",
-                        "password": "min"
+                        "id": "admin",
+                        "password": "wrong"
                     }
                 """.trimIndent()
             )
