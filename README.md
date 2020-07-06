@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.com/DerYeger/koffee-backend.svg?token=juB9bV6tFyoA5v7Hx1o4&branch=develop)](https://travis-ci.com/DerYeger/koffee-backend)
 
+Documentation is available at http://koffee-backend.yeger.eu/.
+
 ## Routes
 
 All routes use JSON.
@@ -23,6 +25,14 @@ All routes use JSON.
 - amount: Int
 
 ##### POST /users/:id/purchases/refund
+
+##### GET /users/:id/image
+
+##### GET /users/:id/image/timestamp
+
+##### POST /users/:id/image
+
+##### DELETE /users/:id/image
 
 ##### GET /items
 
@@ -112,9 +122,9 @@ The secret string used by the HMAC algorithm for JWT verification and signing.
 - [x] 04.05.2020 – Authentifizierung von Administratoren beim Backend
 - [x] 11.05.2020 – Endpunkte zum Erstellen, Aktualisieren und Löschen von Artikeln bauen
 - [x] 18.05.2020 – Aufbau und Struktur der App
-- [ ] 25.05.2020 – Mockups der Benutzeroberflächen
+- [X] 25.05.2020 – Mockups der Benutzeroberflächen
 - [x] 01.06.2020 – Endpunkt „Guthaben aufladen“ bauen 
-- [ ] 08.06.2020 – Bildschirm „Administratorfunktionen“ bauen
+- [X] 08.06.2020 – Bildschirm „Administratorfunktionen“ bauen
 - [x] 22.06.2020 – Endpunkte „Nutzerliste“, „Kaufen“ und „Stornieren“ bauen
 - [x] 06.07.2020 – Bildschirm „Nutzerauswahl“, „Artikelliste“ und „Kaufen“ bauen
 - [ ] 13.07.2020 – Erster Testlauf mit Feedbackphase
