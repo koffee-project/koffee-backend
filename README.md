@@ -38,7 +38,7 @@ All routes use JSON.
 
 ##### GET /items/:id
 
-#### With authentication
+### With authentication
 
 ##### POST /users
 
