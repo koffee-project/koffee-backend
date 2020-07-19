@@ -49,14 +49,14 @@ All routes use JSON for content delivery.
 - id: String
 - name: String
 - isAdmin: Boolean
-- password: String (optional)
+- password: String (Optional)
 
 ##### PUT /users
 
 - id: String
 - name: String
 - isAdmin: Boolean
-- password: String (optional)
+- password: String (Optional)
 
 ##### DELETE /users/:id
 
@@ -68,14 +68,14 @@ All routes use JSON for content delivery.
 
 - id: String
 - name: String
-- amount: Int (optional)
+- amount: Int (Optional)
 - price: Double
 
 ##### PUT /items
 
 - id: String
 - name: String
-- amount: Int (optional)
+- amount: Int (Optional)
 - price: Double
 
 ##### DELETE /items/:id
@@ -118,6 +118,63 @@ The secret string used by the HMAC algorithm for JWT verification and signing.
 5. Run `docker-compose -f docker-compose-production.yml build` and `docker-compose -f docker-compose-production.yml up -d`.
 6. The server is now accessible at `https://your.domain/koffee`.
 7. Run `docker-compose -f docker-compose-production.yml down` to stop the server.
+
+## Database
+
+This section contains the schemas used by the MongoDB.
+
+### User
+
+- id: String
+- name: String
+- isAdmin: Boolean
+- password: String (Nullable, only present if isAdmin is true)
+- transactions: TransactionList
+
+### TransactionList
+
+- transactions: List\<Transaction>
+
+### Profile Image
+
+- id: String
+- encodedImage: String
+- timestamp: String
+
+### Item
+
+- id: String
+- name: String
+- amount: Int (Nullable)
+- price: Double
+
+### Transactions
+
+There are three types of transactions. The type field is required for polymorphism.
+
+#### Funding
+
+- type: String (Is always "funding")
+- value: Double
+- timestamp: Long
+
+#### Purchase
+
+- type: String (Is always "purchase")
+- value: Double
+- timestamp: Long
+- itemId: String
+- itemName: String
+- amount: Int
+
+#### Refund
+
+- type: String (Is always "refund")
+- value: Double
+- timestamp: Long
+- itemId: String
+- itemName: String
+- amount: Int
 
 ## Timetable
 
