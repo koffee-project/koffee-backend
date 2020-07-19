@@ -121,7 +121,13 @@ The secret string used by the HMAC algorithm for JWT verification and signing.
 
 ## Database
 
-This section contains the schemas used by the MongoDB.
+The entire database can be dumped and restored using the following commands.\
+Note: The parameter `koffee-database` needs to be changed if the name of the database has been modified in `koffee.env`.
+
+Backup: `docker-compose exec -T mongo mongodump --archive --gzip --db koffee-database > dump.gz`\
+Restore: `docker-compose exec -T mongo mongorestore --archive --gzip < dump.gz`
+
+The following sections describe the schemas used by the MongoDB.
 
 ### User
 
