@@ -6,7 +6,7 @@ Documentation is available at http://koffee-backend.yeger.eu/.
 
 ## Routes
 
-All routes use JSON.
+All routes use JSON for content delivery.
 
 ### Without authentication
 
@@ -26,11 +26,15 @@ All routes use JSON.
 
 ##### POST /users/:id/purchases/refund
 
+- No body required.
+
 ##### GET /users/:id/image
 
 ##### GET /users/:id/image/timestamp
 
 ##### POST /users/:id/image
+
+- Image file as multipart body.
 
 ##### DELETE /users/:id/image
 
@@ -45,14 +49,14 @@ All routes use JSON.
 - id: String
 - name: String
 - isAdmin: Boolean
-- password: String?
+- password: String (optional)
 
 ##### PUT /users
 
 - id: String
 - name: String
 - isAdmin: Boolean
-- password: String?
+- password: String (optional)
 
 ##### DELETE /users/:id
 
@@ -64,14 +68,14 @@ All routes use JSON.
 
 - id: String
 - name: String
-- amount: Int?
+- amount: Int (optional)
 - price: Double
 
 ##### PUT /items
 
 - id: String
 - name: String
-- amount: Int?
+- amount: Int (optional)
 - price: Double
 
 ##### DELETE /items/:id
