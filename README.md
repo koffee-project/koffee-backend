@@ -102,7 +102,7 @@ HMAC_SECRET=yoursecretstring
 1. Build the project using the Gradle `build` task.
 2. Create the required secret.
 3. Change the `URL` environment variable in `./environments/domain.env` as necessary.
-4. Run `docker-compose build` and `docker-compose up --build -d`.
+4. Run `docker-compose up --build -d`.
 5. The server is now accessible at `http://localhost:8080`.
 6. Run `docker-compose down` to stop the server.
 
