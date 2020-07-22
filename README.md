@@ -84,26 +84,23 @@ All routes use JSON for content delivery.
 
 Secrets are stored in `.secret` files in the `secrets` directory and excluded from git.
 
-### default_admin.secret
+### koffee.secret
 
-Configuration of the default admin as seen below.
+Configuration of the default admin and the secret string used by the HMAC algorithm for JWT verification and signing.
 
 ```
 ID=koffee-admin-id
 NAME=koffee-admin-name
 PASSWORD=koffee-admin-password
+HMAC_SECRET=yoursecretstring
 ```
-
-### hmac_secret.secret
-
-The secret string used by the HMAC algorithm for JWT verification and signing.
 
 ## Deployment
 
 ### Development
 
 1. Build the project using the Gradle `build` task.
-2. Create the required secrets.
+2. Create the required secret.
 3. Change the `URL` environment variable in `./environments/domain.env` as necessary.
 4. Run `docker-compose build` and `docker-compose up -d`.
 5. The server is now accessible at `http://localhost:8080`.
@@ -112,7 +109,7 @@ The secret string used by the HMAC algorithm for JWT verification and signing.
 ### Production
 
 1. Build the project using the Gradle `build` task.
-2. Create the required secrets.
+2. Create the required secret.
 3. Change the `URL` environment variable in `./environments/domain.env` to a valid domain pointing to the host machine.
 4. Ensure that ports 80 and 443 are forwarded to the host machine.
 5. Run `docker-compose -f docker-compose-production.yml build` and `docker-compose -f docker-compose-production.yml up -d`.

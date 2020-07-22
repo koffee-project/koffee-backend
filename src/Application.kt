@@ -66,7 +66,7 @@ fun Application.mainModule() {
 fun Application.initializeDefaultAdmin() {
     val userRepository: UserRepository by inject()
 
-    val defaultAdminSecrets = loadDockerSecrets(fileName = Arguments.defaultAdminSecret)
+    val defaultAdminSecrets = loadDockerSecrets(fileName = Arguments.koffeeSecret)
 
     val defaultAdmin = User(
         id = defaultAdminSecrets["ID"] ?: "admin",
