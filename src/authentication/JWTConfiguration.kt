@@ -9,7 +9,7 @@ import eu.yeger.authentication.JWTConfiguration.realm
 import eu.yeger.authentication.JWTConfiguration.verifier
 import eu.yeger.model.domain.User
 import eu.yeger.model.dto.Token
-import eu.yeger.utility.readDockerSecret
+import eu.yeger.utility.loadDockerSecrets
 import java.util.Date
 
 /**
@@ -27,7 +27,7 @@ object JWTConfiguration {
     const val audience = "jwt-audience"
     const val realm = "koffee-backend"
 
-    private val algorithm = Algorithm.HMAC256(readDockerSecret(Arguments.hmacSecret) ?: "secret")
+    private val algorithm = Algorithm.HMAC256(loadDockerSecrets(Arguments.koffeeSecret)["HMAC_SECRET"] ?: "secret")
 
     private const val duration = 3_600_000 * 24 // 24 hours
 

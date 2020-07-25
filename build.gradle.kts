@@ -16,7 +16,7 @@ plugins {
 }
 
 group = "eu.yeger"
-version = "0.0.1"
+version = "1.0.0"
 
 application {
     mainClassName = "io.ktor.server.netty.EngineMain"
@@ -72,7 +72,6 @@ tasks {
 
     withType<org.jetbrains.dokka.gradle.DokkaTask> {
         outputFormat = "html"
-        outputDirectory = "docs"
 
         configuration {
             reportUndocumented = false
@@ -93,8 +92,7 @@ tasks {
 
     test {
         environment(
-            "DEFAULT_ADMIN_SECRET" to "",
-            "HMAC_SECRET" to "",
+            "KOFFEE_SECRET" to "",
             "URL" to "yeger.eu"
         )
     }
