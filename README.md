@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.com/DerYeger/koffee-backend.svg?token=juB9bV6tFyoA5v7Hx1o4&branch=develop)](https://travis-ci.com/DerYeger/koffee-backend)
 
-Documentation is available at http://koffee-backend.yeger.eu/.
+Documentation is available [here](https://koffee.yeger.eu/).
 
 ## Routes
 

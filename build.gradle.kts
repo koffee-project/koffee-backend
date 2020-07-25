@@ -72,7 +72,6 @@ tasks {
 
     withType<org.jetbrains.dokka.gradle.DokkaTask> {
         outputFormat = "html"
-        outputDirectory = "docs"
 
         configuration {
             reportUndocumented = false
