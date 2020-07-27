@@ -8,7 +8,7 @@ Documentation is available [here](https://koffee.yeger.eu/).
 
 All routes use JSON for content delivery.
 
-### Without authentication
+### Without eu.yeger.koffee.authentication
 
 ##### POST /login
 
@@ -42,7 +42,7 @@ All routes use JSON for content delivery.
 
 ##### GET /items/:id
 
-### With authentication
+### With eu.yeger.koffee.authentication
 
 ##### POST /users
 
