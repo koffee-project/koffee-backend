@@ -1,18 +1,18 @@
-val arkenv_version: String by project
-val docker_secrets_java_version: String by project
-val jbcrypt_version: String by project
-val kmongo_version: String by project
-val koin_version: String by project
-val kotlin_version: String by project
-val ktor_version: String by project
-val logback_version: String by project
+val arkenvVersion: String by project
+val dockerSecretsJavaVersion: String by project
+val jbcryptVersion: String by project
+val kmongoVersion: String by project
+val koinVersion: String by project
+val kotlinVersion: String by project
+val ktorVersion: String by project
+val logbackVersion: String by project
 
 plugins {
     application
-    kotlin("jvm") version "1.3.72"
-    id("com.github.johnrengelman.shadow") version "5.2.0"
-    id("org.jlleitschuh.gradle.ktlint") version "9.2.1"
-    id("org.jetbrains.dokka") version "0.10.1"
+    kotlin("jvm")
+    id("org.jetbrains.dokka")
+    id("org.jlleitschuh.gradle.ktlint")
+    id("com.github.johnrengelman.shadow")
 }
 
 group = "eu.yeger"
@@ -40,45 +40,37 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version")
-    implementation("io.ktor:ktor-server-netty:$ktor_version")
-    implementation("ch.qos.logback:logback-classic:$logback_version")
-    implementation("io.ktor:ktor-server-core:$ktor_version")
-    implementation("io.ktor:ktor-server-host-common:$ktor_version")
-    implementation("io.ktor:ktor-auth:$ktor_version")
-    implementation("io.ktor:ktor-auth-jwt:$ktor_version")
-    implementation("io.ktor:ktor-jackson:$ktor_version")
-    implementation("io.ktor:ktor-client-core:$ktor_version")
-    implementation("io.ktor:ktor-client-core-jvm:$ktor_version")
-    implementation("io.ktor:ktor-client-cio:$ktor_version")
-    implementation("org.litote.kmongo:kmongo-coroutine:$kmongo_version")
-    implementation("org.koin:koin-ktor:$koin_version")
-    implementation("org.mindrot:jbcrypt:$jbcrypt_version")
-    implementation("com.apurebase:arkenv:$arkenv_version")
-    implementation("com.cars:docker-secrets:$docker_secrets_java_version")
-    testImplementation("io.ktor:ktor-server-tests:$ktor_version")
-    testImplementation("io.ktor:ktor-client-mock:$ktor_version")
-    testImplementation("io.ktor:ktor-client-mock-jvm:$ktor_version")
+    // Kotlin dependencies
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion")
+
+    // Ktor dependencies
+    implementation("io.ktor:ktor-server-netty:$ktorVersion")
+    implementation("io.ktor:ktor-server-core:$ktorVersion")
+    implementation("io.ktor:ktor-server-host-common:$ktorVersion")
+    implementation("io.ktor:ktor-auth:$ktorVersion")
+    implementation("io.ktor:ktor-auth-jwt:$ktorVersion")
+    implementation("io.ktor:ktor-jackson:$ktorVersion")
+    implementation("io.ktor:ktor-client-core:$ktorVersion")
+    implementation("io.ktor:ktor-client-core-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-client-cio:$ktorVersion")
+
+    // Other dependencies
+    implementation("com.apurebase:arkenv:$arkenvVersion")
+    implementation("com.cars:docker-secrets:$dockerSecretsJavaVersion")
+    implementation("org.mindrot:jbcrypt:$jbcryptVersion")
+    implementation("org.litote.kmongo:kmongo-coroutine:$kmongoVersion")
+    implementation("org.koin:koin-ktor:$koinVersion")
+    implementation("ch.qos.logback:logback-classic:$logbackVersion")
+
+    // Test dependencies
+    testImplementation("io.ktor:ktor-server-tests:$ktorVersion")
+    testImplementation("io.ktor:ktor-client-mock:$ktorVersion")
+    testImplementation("io.ktor:ktor-client-mock-jvm:$ktorVersion")
 }
 
 tasks {
-    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        kotlinOptions.jvmTarget = "1.8"
-    }
-
-    withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
-        archiveFileName.set("${project.name}.jar")
-    }
-
-    withType<org.jetbrains.dokka.gradle.DokkaTask> {
-        outputFormat = "html"
-
-        configuration {
-            reportUndocumented = false
-        }
-    }
-
     compileKotlin {
+        kotlinOptions.jvmTarget = "1.8"
         // Format the code before compilation
         dependsOn(ktlintFormat)
     }
@@ -95,5 +87,9 @@ tasks {
             "KOFFEE_SECRET" to "",
             "URL" to "yeger.eu"
         )
+    }
+
+    shadowJar {
+        archiveFileName.set("${project.name}.jar")
     }
 }
