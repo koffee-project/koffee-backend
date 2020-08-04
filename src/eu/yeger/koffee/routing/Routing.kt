@@ -14,7 +14,7 @@ import io.ktor.routing.route
 import io.ktor.routing.routing
 
 /**
- * Installs and configures the eu.yeger.koffee.routing and StatusPages modules.
+ * Installs and configures the routing and StatusPages modules.
  *
  * @receiver The target application.
  *

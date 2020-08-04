@@ -1,5 +1,6 @@
 package eu.yeger.koffee.model.dto
 
+import eu.yeger.koffee.model.domain.ProfileImage
 import eu.yeger.koffee.model.domain.Transaction
 import eu.yeger.koffee.model.domain.TransactionList
 import eu.yeger.koffee.model.domain.User
@@ -29,10 +30,11 @@ data class PartialUser(
  *
  * @author Jan Müller
  */
-fun PartialUser.asUser() = User(
+fun PartialUser.asDomainUser(profileImage: ProfileImage? = null) = User(
     id = id,
     name = name,
     transactions = TransactionList(emptyList()),
     isAdmin = isAdmin,
-    password = password
+    password = password,
+    profileImage = profileImage
 )

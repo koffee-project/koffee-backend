@@ -26,5 +26,6 @@ const val ID_OR_PASSWORD_INCORRECT = "ID or password incorrect."
 const val NO_ADMINISTRATOR_PRIVILEGES = "User does not have administrator privileges."
 
 const val NO_IMAGE_FOR_THAT_USER_ID = "No profile image associated with that ID."
+const val IMAGE_TOO_LARGE = "Image too large."
 const val IMAGE_UPLOADED_SUCCESSFULLY = "Image uploaded successfully."
 const val IMAGE_DELETED_SUCCESSFULLY = "Image deleted successfully."

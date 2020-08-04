@@ -1,5 +1,6 @@
 package eu.yeger.koffee.repository
 
+import eu.yeger.koffee.model.domain.ProfileImage
 import eu.yeger.koffee.model.domain.Transaction
 import eu.yeger.koffee.model.domain.TransactionList
 import eu.yeger.koffee.model.domain.User
@@ -35,6 +36,18 @@ class FakeUserRepository : UserRepository {
     override suspend fun addTransaction(id: String, transaction: Transaction) {
         users[id]?.let { oldUser ->
             users[id] = oldUser.copy(transactions = TransactionList(oldUser.transactions + transaction))
+        }
+    }
+
+    override suspend fun addProfileImage(id: String, profileImage: ProfileImage) {
+        users[id]?.let { oldUser ->
+            users[id] = oldUser.copy(profileImage = profileImage)
+        }
+    }
+
+    override suspend fun removeProfileImage(id: String) {
+        users[id]?.let { oldUser ->
+            users[id] = oldUser.copy(profileImage = null)
         }
     }
 }

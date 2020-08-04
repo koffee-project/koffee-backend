@@ -4,10 +4,11 @@ import com.mongodb.client.model.Filters
 import com.mongodb.client.model.UpdateOptions
 import com.mongodb.client.model.Updates
 import eu.yeger.koffee.model.domain.Entity
-import kotlin.reflect.KProperty
 import org.bson.conversions.Bson
 import org.litote.kmongo.coroutine.CoroutineCollection
+import org.litote.kmongo.eq
 import org.litote.kmongo.path
+import kotlin.reflect.KProperty
 
 /**
  * Upserts an [Entity].
@@ -25,6 +26,19 @@ suspend fun <T : Entity> CoroutineCollection<T>.upsert(entity: T, options: Updat
         update = entity,
         options = options.upsert(true)
     )
+
+/**
+ * Updates an [Entity] by its id.
+ *
+ * @receiver The target collection.
+ * @param T The type of the [Entity].
+ * @param id The id of the [Entity].
+ * @param update The update Bson.
+ *
+ * @author Jan Müller
+ */
+suspend fun <T : Entity> CoroutineCollection<T>.updateById(id: String, update: Bson) =
+    findOneAndUpdate(filter = Entity::id eq id, update)
 
 /**
  * Creates an update Bson for incrementing numbers.

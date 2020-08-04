@@ -10,14 +10,14 @@ import eu.yeger.koffee.model.domain.Item
 interface ItemRepository {
 
     /**
-     * Retrieves all [Item]s from the eu.yeger.koffee.repository.
+     * Retrieves all [Item]s from the repository.
      *
      * @return All available [Item]s.
      */
     suspend fun getAll(): List<Item>
 
     /**
-     * Retrieves an [Item] from the eu.yeger.koffee.repository.
+     * Retrieves an [Item] from the repository.
      *
      * @param id The id of the [Item].
      * @return The [Item] if available.
@@ -25,29 +25,29 @@ interface ItemRepository {
     suspend fun getById(id: String): Item?
 
     /**
-     * Checks if the eu.yeger.koffee.repository contains a specific [Item].
+     * Checks if the repository contains a specific [Item].
      *
      * @param id The id of the [Item].
-     * @return true if the eu.yeger.koffee.repository contains the [Item].
+     * @return true if the repository contains the [Item].
      */
     suspend fun hasItemWithId(id: String): Boolean
 
     /**
-     * Inserts an [Item] into the eu.yeger.koffee.repository.
+     * Inserts an [Item] into the repository.
      *
      * @param item The [Item] to be inserted.
      */
     suspend fun insert(item: Item)
 
     /**
-     * Removes an [Item] from the eu.yeger.koffee.repository.
+     * Removes an [Item] from the repository.
      *
      * @param id The id of the [Item] to be removed.
      */
     suspend fun removeById(id: String)
 
     /**
-     * Updates the amount of an [Item] from the eu.yeger.koffee.repository.
+     * Updates the amount of an [Item] from the repository.
      *
      * @param id The id of the [Item] to be updated.
      * @param change The delta to be changed.

@@ -1,11 +1,9 @@
 package eu.yeger.koffee.utility
 
 import eu.yeger.koffee.model.domain.Item
-import eu.yeger.koffee.model.domain.ProfileImage
 import eu.yeger.koffee.model.domain.User
 import eu.yeger.koffee.model.dto.PartialUser
 import eu.yeger.koffee.model.dto.Result
-import eu.yeger.koffee.repository.ImageRepository
 import eu.yeger.koffee.repository.ItemRepository
 import eu.yeger.koffee.repository.UserRepository
 
@@ -70,21 +68,5 @@ suspend fun ItemRepository.validateItemDoesNotExist(item: Item): Result<Item> {
     return when (getById(id = item.id)) {
         null -> Result.ok(item)
         else -> Result.conflict(ITEM_WITH_THAT_ID_ALREADY_EXISTS)
-    }
-}
-
-/**
- * Validates that the [ProfileImage] with the given id of a [User] exists in the [ImageRepository].
- *
- * @receiver The [ImageRepository].
- * @param userId The id of the [User].
- * @return The [Result] of the operation.
- *
- * @author Jan Müller
- */
-suspend fun ImageRepository.validateProfileImageExists(userId: String): Result<ProfileImage> {
-    return when (val profileImage = getByUserId(id = userId)) {
-        null -> Result.notFound(NO_IMAGE_FOR_THAT_USER_ID)
-        else -> Result.ok(profileImage)
     }
 }

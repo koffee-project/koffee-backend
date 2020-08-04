@@ -18,5 +18,6 @@ data class User(
     val name: String,
     val transactions: TransactionList,
     val isAdmin: Boolean,
-    val password: String?
+    val password: String?,
+    val profileImage: ProfileImage?
 ) : Principal, Entity

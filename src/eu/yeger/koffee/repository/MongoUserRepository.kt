@@ -1,13 +1,17 @@
 package eu.yeger.koffee.repository
 
+import eu.yeger.koffee.model.domain.ProfileImage
 import eu.yeger.koffee.model.domain.Transaction
 import eu.yeger.koffee.model.domain.User
 import eu.yeger.koffee.utility.combineAsUpdate
 import eu.yeger.koffee.utility.push
 import eu.yeger.koffee.utility.to
+import eu.yeger.koffee.utility.updateById
 import eu.yeger.koffee.utility.upsert
 import org.litote.kmongo.coroutine.CoroutineDatabase
 import org.litote.kmongo.eq
+import org.litote.kmongo.setValue
+import org.litote.kmongo.unset
 
 /**
  * [UserRepository] based on MongoDB.
@@ -50,5 +54,13 @@ class MongoUserRepository(database: CoroutineDatabase) : UserRepository {
             filter = User::id eq id,
             update = User::transactions push transaction
         )
+    }
+
+    override suspend fun addProfileImage(id: String, profileImage: ProfileImage) {
+        userCollection.updateById(id, setValue(User::profileImage, profileImage))
+    }
+
+    override suspend fun removeProfileImage(id: String) {
+        userCollection.updateById(id, unset(User::profileImage))
     }
 }
