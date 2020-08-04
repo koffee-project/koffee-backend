@@ -99,7 +99,7 @@ class DefaultTransactionService(
     private fun getRefundableTransaction(user: User): Result<Transaction.Refund> {
         val transaction = user.transactions
             .filter { it is Transaction.Purchase || it is Transaction.Refund }
-            .maxWith(TransactionComparator)
+            .maxWithOrNull(TransactionComparator)
         return when {
             transaction == null -> Result.conflict(NO_REFUNDABLE_PURCHASE)
             transaction is Transaction.Refund -> Result.conflict(LAST_PURCHASE_ALREADY_REFUNDED)
