@@ -3,7 +3,6 @@ package eu.yeger.koffee.service
 import eu.yeger.koffee.authentication.JWTConfiguration
 import eu.yeger.koffee.authentication.matches
 import eu.yeger.koffee.authentication.withHashedPassword
-import eu.yeger.koffee.model.domain.ProfileImage
 import eu.yeger.koffee.model.domain.User
 import eu.yeger.koffee.model.dto.Credentials
 import eu.yeger.koffee.model.dto.PartialUser
@@ -51,7 +50,7 @@ class DefaultUserService(
     override suspend fun createUser(partialUser: PartialUser): Result<String> {
         return userRepository
             .validateUserDoesNotExist(partialUser)
-            .andThen { processPartialUser(partialUser, profileImage = null) }
+            .andThen { processPartialUser(partialUser) }
             .withResult { hashedUser -> userRepository.insert(hashedUser) }
             .andThen { Result.created(partialUser.id) }
     }
@@ -59,7 +58,7 @@ class DefaultUserService(
     override suspend fun updateUser(partialUser: PartialUser): Result<String> {
         return userRepository
             .validateUserExists(partialUser.id)
-            .andThen { user -> processPartialUser(partialUser, user.profileImage) }
+            .andThen { processPartialUser(partialUser) }
             .withResult { hashedUser ->
                 userRepository.update(
                     id = hashedUser.id,
@@ -87,8 +86,8 @@ class DefaultUserService(
             .andThen { token -> Result.ok(token) }
     }
 
-    private suspend fun processPartialUser(partialUser: PartialUser, profileImage: ProfileImage?): Result<User> {
-        return validatePartialUser(partialUser).map { it.asDomainUser(profileImage).withHashedPassword() }
+    private suspend fun processPartialUser(partialUser: PartialUser): Result<User> {
+        return validatePartialUser(partialUser).map { it.asDomainUser().withHashedPassword() }
     }
 
     private fun validatePartialUser(partialUser: PartialUser): Result<PartialUser> {
