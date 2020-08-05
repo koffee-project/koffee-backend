@@ -1,6 +1,7 @@
 val arkenvVersion: String by project
 val dockerSecretsJavaVersion: String by project
 val jbcryptVersion: String by project
+val jUnitVersion: String by project
 val kmongoVersion: String by project
 val koinVersion: String by project
 val kotlinVersion: String by project
@@ -66,6 +67,8 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
 
     // Test dependencies
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$jUnitVersion")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:$jUnitVersion")
     testImplementation("io.ktor:ktor-server-tests:$ktorVersion")
     testImplementation("io.ktor:ktor-client-mock:$ktorVersion")
     testImplementation("io.ktor:ktor-client-mock-jvm:$ktorVersion")
@@ -88,9 +91,12 @@ tasks {
     test {
         environment(
             "KOFFEE_SECRET" to "",
-            "URL" to "yeger.eu"
+            "URL" to "yeger.eu",
+            "DATABASE_HOST" to "localhost",
+            "DATABASE_PORT" to "27017"
         )
         dependsOn(startManagedMongoDb)
+        useJUnitPlatform()
     }
 
     shadowJar {

@@ -1,6 +1,6 @@
 package eu.yeger.koffee.utility
 
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class UtilityTests {
 

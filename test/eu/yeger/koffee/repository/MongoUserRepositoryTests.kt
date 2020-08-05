@@ -8,10 +8,10 @@ import eu.yeger.koffee.utility.shouldBe
 import eu.yeger.koffee.utility.shouldContain
 import eu.yeger.koffee.utility.testItem
 import eu.yeger.koffee.utility.testUser
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
-import kotlin.test.Test
 import kotlinx.coroutines.runBlocking
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.litote.kmongo.coroutine.CoroutineDatabase
 import org.litote.kmongo.coroutine.coroutine
 import org.litote.kmongo.reactivestreams.KMongo
@@ -22,13 +22,13 @@ class MongoUserRepositoryTests {
 
     private lateinit var mongoUserRepository: MongoUserRepository
 
-    @BeforeTest
+    @BeforeEach
     fun setup() {
         database = KMongo.createClient().coroutine.getDatabase("mongo-user-repository-tests-database")
         mongoUserRepository = MongoUserRepository(database)
     }
 
-    @AfterTest
+    @AfterEach
     fun teardown() {
         runBlocking {
             database.drop()
@@ -59,7 +59,6 @@ class MongoUserRepositoryTests {
             mongoUserRepository.insert(secondUser)
             val retrievedUsers = mongoUserRepository.getAll().map(User::asProfile)
             retrievedUsers.size shouldBe 2
-            println(retrievedUsers)
             retrievedUsers shouldContain testUser.asProfile()
             retrievedUsers shouldContain secondUser.asProfile()
         }

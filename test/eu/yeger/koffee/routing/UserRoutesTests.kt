@@ -15,7 +15,7 @@ import io.ktor.jackson.jackson
 import io.ktor.routing.route
 import io.ktor.routing.routing
 import io.ktor.server.testing.withTestApplication
-import kotlin.test.Test
+import org.junit.jupiter.api.Test
 import org.koin.ktor.ext.Koin
 
 class UserRoutesTests {

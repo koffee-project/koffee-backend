@@ -4,10 +4,10 @@ import eu.yeger.koffee.model.domain.Item
 import eu.yeger.koffee.utility.shouldBe
 import eu.yeger.koffee.utility.shouldContain
 import eu.yeger.koffee.utility.testItem
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
-import kotlin.test.Test
 import kotlinx.coroutines.runBlocking
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.litote.kmongo.coroutine.CoroutineDatabase
 import org.litote.kmongo.coroutine.coroutine
 import org.litote.kmongo.reactivestreams.KMongo
@@ -18,13 +18,13 @@ class MongoItemRepositoryTests {
 
     private lateinit var mongoItemRepository: MongoItemRepository
 
-    @BeforeTest
+    @BeforeEach
     fun setup() {
         database = KMongo.createClient().coroutine.getDatabase("mongo-item-repository-tests-database")
         mongoItemRepository = MongoItemRepository(database)
     }
 
-    @AfterTest
+    @AfterEach
     fun teardown() {
         runBlocking {
             database.drop()

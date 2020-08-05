@@ -5,9 +5,9 @@ import eu.yeger.koffee.repository.FakeUserRepository
 import eu.yeger.koffee.utility.shouldBe
 import eu.yeger.koffee.utility.testUser
 import io.ktor.http.HttpStatusCode
-import kotlin.test.BeforeTest
-import kotlin.test.Test
 import kotlinx.coroutines.runBlocking
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 private const val testImageString = "42"
 
@@ -15,7 +15,7 @@ class ProfileImageServiceTests {
 
     private lateinit var profileImageService: ProfileImageService
 
-    @BeforeTest
+    @BeforeEach
     fun setup() {
         val userRepository = FakeUserRepository()
         runBlocking {

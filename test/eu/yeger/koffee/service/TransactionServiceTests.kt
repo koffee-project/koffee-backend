@@ -12,9 +12,9 @@ import eu.yeger.koffee.utility.testPartialUser
 import eu.yeger.koffee.utility.testPurchase
 import eu.yeger.koffee.utility.testUser
 import io.ktor.http.HttpStatusCode
-import kotlin.test.BeforeTest
-import kotlin.test.Test
 import kotlinx.coroutines.runBlocking
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class TransactionServiceTests {
 
@@ -24,7 +24,7 @@ class TransactionServiceTests {
 
     private lateinit var transactionService: TransactionService
 
-    @BeforeTest
+    @BeforeEach
     fun setup() {
         val userRepository = FakeUserRepository()
         val itemRepository = FakeItemRepository()
