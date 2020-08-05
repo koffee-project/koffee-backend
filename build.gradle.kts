@@ -42,7 +42,8 @@ repositories {
 
 dependencies {
     // Kotlin dependencies
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion")
+    implementation(kotlin("stdlib-jdk8", version = kotlinVersion))
+    implementation(kotlin("reflect", version = kotlinVersion))
 
     // Ktor dependencies
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
