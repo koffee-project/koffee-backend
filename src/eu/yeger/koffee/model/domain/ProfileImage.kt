@@ -8,7 +8,7 @@ package eu.yeger.koffee.model.domain
  *
  * @author Jan Müller
  */
-class ProfileImage(
+data class ProfileImage(
     val encodedImage: String,
     val timestamp: Long
 )

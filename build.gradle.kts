@@ -13,6 +13,7 @@ plugins {
     id("org.jetbrains.dokka")
     id("org.jlleitschuh.gradle.ktlint")
     id("com.github.johnrengelman.shadow")
+    id("com.sourcemuse.mongo")
 }
 
 group = "eu.yeger"
@@ -87,9 +88,15 @@ tasks {
             "KOFFEE_SECRET" to "",
             "URL" to "yeger.eu"
         )
+        dependsOn(startManagedMongoDb)
     }
 
     shadowJar {
         archiveFileName.set("${project.name}.jar")
     }
+}
+
+mongo {
+    auth = false
+    logging = "none"
 }
