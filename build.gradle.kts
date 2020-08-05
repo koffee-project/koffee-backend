@@ -14,6 +14,7 @@ plugins {
     id("org.jlleitschuh.gradle.ktlint")
     id("com.github.johnrengelman.shadow")
     id("com.sourcemuse.mongo")
+    jacoco
 }
 
 group = "eu.yeger"
@@ -94,6 +95,13 @@ tasks {
 
     shadowJar {
         archiveFileName.set("${project.name}.jar")
+    }
+
+    jacocoTestReport {
+        reports {
+            xml.isEnabled = true
+            html.isEnabled = false
+        }
     }
 }
 
