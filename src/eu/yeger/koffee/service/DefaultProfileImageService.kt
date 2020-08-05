@@ -13,6 +13,8 @@ import eu.yeger.koffee.utility.IMAGE_UPLOADED_SUCCESSFULLY
 import eu.yeger.koffee.utility.NO_IMAGE_FOR_THAT_USER_ID
 import eu.yeger.koffee.utility.validateUserExists
 
+private const val MAX_IMAGE_STRING_LENGTH = 1_000_000
+
 /**
  * Default [ProfileImageService] implementation.
  *
@@ -52,7 +54,7 @@ class DefaultProfileImageService(
 
     private fun validateProfileImage(profileImage: ProfileImage): Result<ProfileImage> {
         return when {
-            profileImage.encodedImage.length > 1000000 -> Result.unprocessableEntity(IMAGE_TOO_LARGE)
+            profileImage.encodedImage.length > MAX_IMAGE_STRING_LENGTH -> Result.unprocessableEntity(IMAGE_TOO_LARGE)
             else -> Result.ok(profileImage)
         }
     }

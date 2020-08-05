@@ -1,5 +1,6 @@
 package eu.yeger.koffee.utility
 
+import com.cars.framework.secrets.DockerSecretLoadException
 import com.cars.framework.secrets.DockerSecrets
 
 /**
@@ -16,7 +17,7 @@ fun loadDockerSecrets(fileName: String? = null): Map<String, String> {
             null -> DockerSecrets.load()
             else -> DockerSecrets.loadFromFile(fileName)
         }
-    } catch (e: Exception) {
+    } catch (e: DockerSecretLoadException) {
         emptyMap()
     }
 }
