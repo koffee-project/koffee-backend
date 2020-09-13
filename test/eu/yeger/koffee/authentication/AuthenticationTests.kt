@@ -16,7 +16,7 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.jackson.jackson
 import io.ktor.server.testing.setBody
 import io.ktor.server.testing.withTestApplication
-import kotlin.test.Test
+import org.junit.jupiter.api.Test
 import org.koin.ktor.ext.Koin
 
 class AuthenticationTests {

@@ -6,15 +6,15 @@ import eu.yeger.koffee.repository.FakeItemRepository
 import eu.yeger.koffee.utility.shouldBe
 import eu.yeger.koffee.utility.testItem
 import io.ktor.http.HttpStatusCode
-import kotlin.test.BeforeTest
-import kotlin.test.Test
 import kotlinx.coroutines.runBlocking
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class ItemServiceTests {
 
     private lateinit var itemService: ItemService
 
-    @BeforeTest
+    @BeforeEach
     fun setup() {
         itemService = DefaultItemService(itemRepository = FakeItemRepository())
     }

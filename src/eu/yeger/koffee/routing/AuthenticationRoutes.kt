@@ -10,7 +10,7 @@ import io.ktor.routing.post
 import org.koin.ktor.ext.inject
 
 /**
- * Appends eu.yeger.koffee.authentication-related routes to the base route.
+ * Appends authentication-related routes to the base route.
  *
  * @receiver The base route.
  *

@@ -6,7 +6,7 @@ import eu.yeger.koffee.model.domain.User
 import eu.yeger.koffee.model.dto.Funding
 import eu.yeger.koffee.model.dto.PartialUser
 import eu.yeger.koffee.model.dto.Purchase
-import eu.yeger.koffee.model.dto.asUser
+import eu.yeger.koffee.model.dto.asDomainUser
 import io.ktor.server.testing.TestApplicationRequest
 
 val testItem = Item(
@@ -23,7 +23,7 @@ val testPartialUser = PartialUser(
     password = "testPassword"
 )
 
-val testUser = testPartialUser.asUser()
+val testUser = testPartialUser.asDomainUser()
 
 val testFunding = Funding(
     amount = 42.0

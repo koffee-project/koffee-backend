@@ -3,7 +3,6 @@ package eu.yeger.koffee.service
 import eu.yeger.koffee.model.domain.Transaction
 import eu.yeger.koffee.model.dto.Funding
 import eu.yeger.koffee.model.dto.Result
-import eu.yeger.koffee.repository.FakeImageRepository
 import eu.yeger.koffee.repository.FakeItemRepository
 import eu.yeger.koffee.repository.FakeUserRepository
 import eu.yeger.koffee.utility.shouldBe
@@ -13,9 +12,9 @@ import eu.yeger.koffee.utility.testPartialUser
 import eu.yeger.koffee.utility.testPurchase
 import eu.yeger.koffee.utility.testUser
 import io.ktor.http.HttpStatusCode
-import kotlin.test.BeforeTest
-import kotlin.test.Test
 import kotlinx.coroutines.runBlocking
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class TransactionServiceTests {
 
@@ -25,12 +24,11 @@ class TransactionServiceTests {
 
     private lateinit var transactionService: TransactionService
 
-    @BeforeTest
+    @BeforeEach
     fun setup() {
         val userRepository = FakeUserRepository()
         val itemRepository = FakeItemRepository()
-        val imageRepository = FakeImageRepository()
-        userService = DefaultUserService(userRepository, imageRepository)
+        userService = DefaultUserService(userRepository)
         itemService = DefaultItemService(itemRepository)
         transactionService = DefaultTransactionService(userRepository, itemRepository)
     }

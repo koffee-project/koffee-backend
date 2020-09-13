@@ -13,7 +13,7 @@ import eu.yeger.koffee.utility.loadDockerSecrets
 import java.util.Date
 
 /**
- * The configuration used by the eu.yeger.koffee.authentication module.
+ * The configuration used by the authentication module.
  *
  * @property audience The JWT audience.
  * @property realm The JWT realm.

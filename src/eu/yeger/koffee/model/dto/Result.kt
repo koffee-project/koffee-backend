@@ -138,7 +138,9 @@ suspend fun <T : Any, U : Any> Result<T>.map(transformation: suspend (T) -> U): 
  *
  * @author Jan Müller
  */
-suspend fun <T : Any> Result<T>.mapFailureStatus(transformation: suspend (HttpStatusCode) -> HttpStatusCode): Result<T> {
+suspend fun <T : Any> Result<T>.mapFailureStatus(
+    transformation: suspend (HttpStatusCode) -> HttpStatusCode
+): Result<T> {
     return when (this) {
         is Result.Success -> this
         is Result.Failure -> Result.Failure(error, transformation(status))

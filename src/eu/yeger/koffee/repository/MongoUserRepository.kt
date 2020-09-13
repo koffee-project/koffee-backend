@@ -1,13 +1,16 @@
 package eu.yeger.koffee.repository
 
+import eu.yeger.koffee.model.domain.ProfileImage
 import eu.yeger.koffee.model.domain.Transaction
 import eu.yeger.koffee.model.domain.User
 import eu.yeger.koffee.utility.combineAsUpdate
 import eu.yeger.koffee.utility.push
 import eu.yeger.koffee.utility.to
+import eu.yeger.koffee.utility.updateById
 import eu.yeger.koffee.utility.upsert
 import org.litote.kmongo.coroutine.CoroutineDatabase
-import org.litote.kmongo.eq
+import org.litote.kmongo.setValue
+import org.litote.kmongo.unset
 
 /**
  * [UserRepository] based on MongoDB.
@@ -35,10 +38,7 @@ class MongoUserRepository(database: CoroutineDatabase) : UserRepository {
             User::password to password
         ).combineAsUpdate()
 
-        userCollection.findOneAndUpdate(
-            filter = User::id eq id,
-            update = update
-        )
+        userCollection.updateById(id, update = update)
     }
 
     override suspend fun removeById(id: String) {
@@ -46,9 +46,14 @@ class MongoUserRepository(database: CoroutineDatabase) : UserRepository {
     }
 
     override suspend fun addTransaction(id: String, transaction: Transaction) {
-        userCollection.findOneAndUpdate(
-            filter = User::id eq id,
-            update = User::transactions push transaction
-        )
+        userCollection.updateById(id, update = User::transactions push transaction)
+    }
+
+    override suspend fun addProfileImage(id: String, profileImage: ProfileImage) {
+        userCollection.updateById(id, update = setValue(User::profileImage, profileImage))
+    }
+
+    override suspend fun removeProfileImage(id: String) {
+        userCollection.updateById(id, update = unset(User::profileImage))
     }
 }

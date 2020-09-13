@@ -1,5 +1,6 @@
 package eu.yeger.koffee.repository
 
+import eu.yeger.koffee.model.domain.ProfileImage
 import eu.yeger.koffee.model.domain.Transaction
 import eu.yeger.koffee.model.domain.User
 
@@ -11,14 +12,14 @@ import eu.yeger.koffee.model.domain.User
 interface UserRepository {
 
     /**
-     * Retrieves all [User]s from the eu.yeger.koffee.repository.
+     * Retrieves all [User]s from the repository.
      *
      * @return All available [User]s.
      */
     suspend fun getAll(): List<User>
 
     /**
-     * Retrieves a [User] from the eu.yeger.koffee.repository.
+     * Retrieves a [User] from the repository.
      *
      * @param id The id of the [User].
      * @return The [User] if available.
@@ -26,22 +27,22 @@ interface UserRepository {
     suspend fun getById(id: String): User?
 
     /**
-     * Checks if the eu.yeger.koffee.repository contains a specific [User].
+     * Checks if the repository contains a specific [User].
      *
      * @param id The id of the [User].
-     * @return true if the eu.yeger.koffee.repository contains the [User].
+     * @return true if the repository contains the [User].
      */
     suspend fun hasUserWithId(id: String): Boolean
 
     /**
-     * Inserts a [User] into the eu.yeger.koffee.repository.
+     * Inserts a [User] into the repository.
      *
      * @param user The [User] to be inserted.
      */
     suspend fun insert(user: User)
 
     /**
-     * Updates a [User] from the eu.yeger.koffee.repository.
+     * Updates a [User] from the repository.
      *
      * @param id The id of the [User] to be updated.
      * @param name The new name of the [User].
@@ -51,17 +52,32 @@ interface UserRepository {
     suspend fun update(id: String, name: String, isAdmin: Boolean, password: String?)
 
     /**
-     * Removes a [User] from the eu.yeger.koffee.repository.
+     * Removes a [User] from the repository.
      *
      * @param id The id of the [User] to be removed.
      */
     suspend fun removeById(id: String)
 
     /**
-     * Adds a [Transaction] to a [User] from the eu.yeger.koffee.repository.
+     * Adds a [Transaction] to a [User] from the repository.
      *
      * @param id The id of the [User].
      * @param transaction The [Transaction] to be added.
      */
     suspend fun addTransaction(id: String, transaction: Transaction)
+
+    /**
+     * Adds a [ProfileImage] to a [User] from the repository.
+     *
+     * @param id The id of the [User].
+     * @param profileImage The [ProfileImage] to be added.
+     */
+    suspend fun addProfileImage(id: String, profileImage: ProfileImage)
+
+    /**
+     * Removes the [ProfileImage] of a [User] from the repository.
+     *
+     * @param id The id of the [User].
+     */
+    suspend fun removeProfileImage(id: String)
 }

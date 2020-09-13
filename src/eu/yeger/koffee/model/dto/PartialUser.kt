@@ -29,10 +29,11 @@ data class PartialUser(
  *
  * @author Jan Müller
  */
-fun PartialUser.asUser() = User(
+fun PartialUser.asDomainUser() = User(
     id = id,
     name = name,
     transactions = TransactionList(emptyList()),
     isAdmin = isAdmin,
-    password = password
+    password = password,
+    profileImage = null
 )

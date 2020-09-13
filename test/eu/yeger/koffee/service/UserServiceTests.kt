@@ -4,26 +4,25 @@ import eu.yeger.koffee.model.domain.User
 import eu.yeger.koffee.model.dto.PartialUser
 import eu.yeger.koffee.model.dto.Result
 import eu.yeger.koffee.model.dto.UserListEntry
+import eu.yeger.koffee.model.dto.asDomainUser
 import eu.yeger.koffee.model.dto.asProfile
-import eu.yeger.koffee.model.dto.asUser
 import eu.yeger.koffee.model.dto.asUserListEntry
-import eu.yeger.koffee.repository.FakeImageRepository
 import eu.yeger.koffee.repository.FakeUserRepository
 import eu.yeger.koffee.utility.shouldBe
 import eu.yeger.koffee.utility.testPartialUser
 import eu.yeger.koffee.utility.testUser
 import io.ktor.http.HttpStatusCode
-import kotlin.test.BeforeTest
-import kotlin.test.Test
 import kotlinx.coroutines.runBlocking
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class UserServiceTests {
 
     private lateinit var userService: UserService
 
-    @BeforeTest
+    @BeforeEach
     fun setup() {
-        userService = DefaultUserService(userRepository = FakeUserRepository(), imageRepository = FakeImageRepository())
+        userService = DefaultUserService(userRepository = FakeUserRepository())
     }
 
     @Test
@@ -49,7 +48,7 @@ class UserServiceTests {
             // Then user can be retrieved
             val result = userService.getUserById(testUser.id) as Result.Success
             result.status shouldBe HttpStatusCode.OK
-            result.data shouldBe userCreationRequest.asUser().asProfile()
+            result.data shouldBe userCreationRequest.asDomainUser().asProfile()
         }
     }
 
@@ -133,7 +132,7 @@ class UserServiceTests {
             // Then retrieved user has new values
             val result = userService.getUserById(testUser.id) as Result.Success
             result.status shouldBe HttpStatusCode.OK
-            result.data shouldBe updatedUser.asUser().asProfile()
+            result.data shouldBe updatedUser.asDomainUser().asProfile()
         }
     }
 
@@ -203,7 +202,7 @@ class UserServiceTests {
             val result = userService.getAllUsers() as Result.Success
             result.status shouldBe HttpStatusCode.OK
             val expected = listOf(firstRequest, secondRequest)
-                .map(PartialUser::asUser)
+                .map(PartialUser::asDomainUser)
                 .map(User::asUserListEntry)
             result.data.sortedBy(UserListEntry::id) shouldBe expected.sortedBy(UserListEntry::id)
         }

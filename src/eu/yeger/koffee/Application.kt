@@ -73,7 +73,8 @@ fun Application.initializeDefaultAdmin() {
         name = defaultAdminSecrets["NAME"] ?: "admin",
         transactions = TransactionList(emptyList()),
         isAdmin = true,
-        password = defaultAdminSecrets["PASSWORD"] ?: "admin"
+        password = defaultAdminSecrets["PASSWORD"] ?: "admin",
+        profileImage = null
     ).withHashedPassword()
 
     runBlocking {

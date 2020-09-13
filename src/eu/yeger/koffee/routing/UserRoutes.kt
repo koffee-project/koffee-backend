@@ -3,7 +3,7 @@ package eu.yeger.koffee.routing
 import eu.yeger.koffee.model.dto.Funding
 import eu.yeger.koffee.model.dto.PartialUser
 import eu.yeger.koffee.model.dto.Purchase
-import eu.yeger.koffee.service.ImageService
+import eu.yeger.koffee.service.ProfileImageService
 import eu.yeger.koffee.service.TransactionService
 import eu.yeger.koffee.service.UserService
 import eu.yeger.koffee.utility.encodeBase64
@@ -31,7 +31,7 @@ import org.koin.ktor.ext.inject
  * @author Jan Müller
  */
 fun Route.userRoutes() {
-    val imageService: ImageService by inject()
+    val profileImageService: ProfileImageService by inject()
     val transactionService: TransactionService by inject()
     val userService: UserService by inject()
 
@@ -101,13 +101,13 @@ fun Route.userRoutes() {
             route("image") {
                 get {
                     val id = call.parameters["id"]!!
-                    val result = imageService.getProfileImageByUserId(id)
+                    val result = profileImageService.getProfileImageByUserId(id)
                     call.respondWithResult(result)
                 }
 
                 get("timestamp") {
                     val id = call.parameters["id"]!!
-                    val result = imageService.getProfileImageTimestampByUserId(id)
+                    val result = profileImageService.getProfileImageTimestampByUserId(id)
                     call.respondWithResult(result)
                 }
 
@@ -121,13 +121,13 @@ fun Route.userRoutes() {
                                 else -> acc
                             }.also { part.dispose() }
                         }.encodeBase64()
-                    val result = imageService.saveProfileImageForUser(id, encodedImage)
+                    val result = profileImageService.saveProfileImageForUser(id, encodedImage)
                     call.respondWithResult(result)
                 }
 
                 delete {
                     val id = call.parameters["id"]!!
-                    val result = imageService.deleteProfileImageByUserId(id)
+                    val result = profileImageService.deleteProfileImageByUserId(id)
                     call.respondWithResult(result)
                 }
             }

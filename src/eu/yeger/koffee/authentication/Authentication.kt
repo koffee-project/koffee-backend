@@ -19,7 +19,11 @@ fun Application.authenticationModule() {
             realm = JWTConfiguration.realm
             verifier(JWTConfiguration.verifier)
             validate { credential ->
-                if (credential.payload.audience.contains(JWTConfiguration.audience)) JWTPrincipal(credential.payload) else null
+                if (credential.payload.audience.contains(JWTConfiguration.audience)) {
+                    JWTPrincipal(credential.payload)
+                } else {
+                    null
+                }
             }
         }
     }

@@ -11,13 +11,12 @@ import eu.yeger.koffee.model.dto.Token
 import eu.yeger.koffee.model.dto.UserListEntry
 import eu.yeger.koffee.model.dto.UserProfile
 import eu.yeger.koffee.model.dto.andThen
+import eu.yeger.koffee.model.dto.asDomainUser
 import eu.yeger.koffee.model.dto.asProfile
-import eu.yeger.koffee.model.dto.asUser
 import eu.yeger.koffee.model.dto.asUserListEntry
 import eu.yeger.koffee.model.dto.map
 import eu.yeger.koffee.model.dto.mapFailureStatus
 import eu.yeger.koffee.model.dto.withResult
-import eu.yeger.koffee.repository.ImageRepository
 import eu.yeger.koffee.repository.UserRepository
 import eu.yeger.koffee.utility.ID_OR_PASSWORD_INCORRECT
 import eu.yeger.koffee.utility.INVALID_USER_DATA
@@ -34,8 +33,7 @@ import io.ktor.http.HttpStatusCode
  * @author Jan Müller
  */
 class DefaultUserService(
-    private val userRepository: UserRepository,
-    private val imageRepository: ImageRepository
+    private val userRepository: UserRepository
 ) : UserService {
 
     override suspend fun getAllUsers(): Result<List<UserListEntry>> {
@@ -52,7 +50,7 @@ class DefaultUserService(
     override suspend fun createUser(partialUser: PartialUser): Result<String> {
         return userRepository
             .validateUserDoesNotExist(partialUser)
-            .andThen { processPartialUser(it) }
+            .andThen { processPartialUser(partialUser) }
             .withResult { hashedUser -> userRepository.insert(hashedUser) }
             .andThen { Result.created(partialUser.id) }
     }
@@ -75,10 +73,7 @@ class DefaultUserService(
     override suspend fun deleteUserById(id: String): Result<String> {
         return userRepository
             .validateUserExists(id)
-            .withResult {
-                userRepository.removeById(id)
-                imageRepository.removeByUserId(id)
-            }
+            .withResult { userRepository.removeById(id) }
             .andThen { Result.ok(USER_DELETED_SUCCESSFULLY) }
     }
 
@@ -92,7 +87,7 @@ class DefaultUserService(
     }
 
     private suspend fun processPartialUser(partialUser: PartialUser): Result<User> {
-        return validatePartialUser(partialUser).map { it.asUser().withHashedPassword() }
+        return validatePartialUser(partialUser).map { it.asDomainUser().withHashedPassword() }
     }
 
     private fun validatePartialUser(partialUser: PartialUser): Result<PartialUser> {
