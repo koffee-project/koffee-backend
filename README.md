@@ -1,8 +1,13 @@
 # Koffee Backend
 
-[![Build Status](https://travis-ci.com/DerYeger/koffee-backend.svg?token=juB9bV6tFyoA5v7Hx1o4&branch=develop)](https://travis-ci.com/DerYeger/koffee-backend)
+<p align="center">
+    <a href="https://www.apache.org/licenses/LICENSE-2.0"><img alt="License" src="https://img.shields.io/github/license/koffee-project/koffee-backend?color=e9d0b9&style=for-the-badge"></a>
+    <a href="https://travis-ci.com/koffee-project/koffee-backend"><img alt="Build" src="https://img.shields.io/travis/com/deryeger/refunk?color=a9755c&style=for-the-badge"></a>
+    <a href="https://codecov.io/gh/koffee-project/koffee-backend"><img alt="Coverage" src="https://img.shields.io/codecov/c/github/koffee-project/koffee-backend?color=b4534b&style=for-the-badge"></a>
+    <a href="https://koffee.yeger.eu"><img alt="Documentation" src="https://img.shields.io/badge/Documentation-Available-blue?color=bc9a7c&style=for-the-badge"></a>
+</p>
 
-Documentation is available [here](https://koffee.yeger.eu/).
+> Backend for a digital kitty.
 
 ## Deployment
 
