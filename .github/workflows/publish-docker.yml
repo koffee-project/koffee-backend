@@ -1,0 +1,24 @@
+name: Publish Docker
+
+on:
+  push:
+    branches: [ develop ]
+    
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@main
+    - uses: actions/setup-java@v1
+      with:
+        java-version: 14
+    - uses: eskatos/gradle-command-action@v1
+      with:
+        arguments: build
+    - name: Publish to Registry
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: deryeger/koffee-backend
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        default_branch: develop
