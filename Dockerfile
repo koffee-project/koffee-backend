@@ -1,4 +1,4 @@
-FROM openjdk:8-jre-alpine
+FROM openjdk:8-jre-alpine@sha256:b2ad93b079b1495488cc01375de799c402d45086015a120c105ea00e1be0fd52
 
 ENV APPLICATION_USER ktor
 RUN adduser -D -g '' $APPLICATION_USER

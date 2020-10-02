@@ -18,12 +18,12 @@ services:
       - koffee_secret
   mongo:
     container_name: mongo
-    image: mongo
+    image: mongo@sha256:31f6433f7cfcd2180483e40728cbf97142df1e85de36d80d75c93e5e7fe10405
     restart: unless-stopped
     networks:
       - koffee-network
   letsencrypt:
-    image: linuxserver/letsencrypt
+    image: linuxserver/letsencrypt@sha256:b7d7028641713003237f73bc12f81c2e9104d96cacd3bb64d55dbc55b807855e
     container_name: letsencrypt
     cap_add:
       - NET_ADMIN
