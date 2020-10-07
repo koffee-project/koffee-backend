@@ -4,11 +4,11 @@ import com.mongodb.client.model.Filters
 import com.mongodb.client.model.UpdateOptions
 import com.mongodb.client.model.Updates
 import eu.yeger.koffee.model.domain.Entity
-import kotlin.reflect.KProperty
 import org.bson.conversions.Bson
 import org.litote.kmongo.coroutine.CoroutineCollection
 import org.litote.kmongo.eq
 import org.litote.kmongo.path
+import kotlin.reflect.KProperty
 
 /**
  * Upserts an [Entity].

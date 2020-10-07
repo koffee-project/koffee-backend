@@ -46,13 +46,14 @@ object JWTConfiguration {
     fun makeToken(user: User): Token? {
         val expiration = Date(System.currentTimeMillis() + duration)
         val token = when (user.isAdmin) {
-            true -> JWT.create()
-                .withSubject("Authentication")
-                .withAudience(audience)
-                .withIssuer(issuer)
-                .withClaim("id", user.id)
-                .withExpiresAt(expiration)
-                .sign(algorithm)
+            true ->
+                JWT.create()
+                    .withSubject("Authentication")
+                    .withAudience(audience)
+                    .withIssuer(issuer)
+                    .withClaim("id", user.id)
+                    .withExpiresAt(expiration)
+                    .sign(algorithm)
             false -> return null
         }
         return Token(token, expiration.time)

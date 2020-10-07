@@ -9,4 +9,4 @@ package eu.yeger.koffee.utility
  */
 fun Double.hasTwoDecimalPlaces() =
     isFinite() &&
-    (this * 100).toInt().toDouble() == this * 100
+        (this * 100).toInt().toDouble() == this * 100
