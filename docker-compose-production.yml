@@ -23,7 +23,7 @@ services:
     networks:
       - koffee-network
   letsencrypt:
-    image: linuxserver/letsencrypt@sha256:0ea2ff32c3eb6fe013ef0581c7f72795a9f8122019eed8bb3cecd7528183c956
+    image: linuxserver/letsencrypt@sha256:f0445e01096ad8bda18301cc8f3035d1e5b068ebfe90b85b0742fb98addb7f31
     container_name: letsencrypt
     cap_add:
       - NET_ADMIN
