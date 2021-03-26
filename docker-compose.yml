@@ -20,7 +20,7 @@ services:
       - koffee_secret
   mongo:
     container_name: mongo
-    image: mongo@sha256:cf5bf281ad2e055a5ca33c3a2f58c30b6b3ad4af8fea0066690ed7b3968f9b54
+    image: mongo@sha256:75a5f624bd6d14254e0d84c2833f576109672750aaf2bf01d61cb5ead44f4505
     restart: unless-stopped
     networks:
       - koffee-network
