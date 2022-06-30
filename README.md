@@ -1,6 +1,6 @@
 # Koffee Backend
 
-<p align="left">
+<p>
     <a href="https://www.apache.org/licenses/LICENSE-2.0"><img alt="License" src="https://img.shields.io/github/license/koffee-project/koffee-backend?color=e9d0b9&style=for-the-badge"></a>
     <a href="https://travis-ci.com/koffee-project/koffee-backend"><img alt="Build" src="https://img.shields.io/travis/com/koffee-project/koffee-backend/develop?color=a9755c&style=for-the-badge"></a>
     <a href="https://codecov.io/gh/koffee-project/koffee-backend"><img alt="Coverage" src="https://img.shields.io/codecov/c/github/koffee-project/koffee-backend?color=b4534b&style=for-the-badge"></a>
