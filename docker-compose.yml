@@ -10,7 +10,7 @@ services:
       - ./environments/domain.env
       - ./environments/koffee.env
     ports:
-      - 8080:8080
+      - "8080:8080"
     depends_on:
       - mongo
     restart: unless-stopped
