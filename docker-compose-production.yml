@@ -31,8 +31,8 @@ services:
       - ./environments/domain.env
       - ./environments/letsencrypt.env
     ports:
-      - 443:443
-      - 80:80
+      - "443:443"
+      - "80:80"
     volumes:
       - type: bind
         source: ./koffee.subfolder.conf
