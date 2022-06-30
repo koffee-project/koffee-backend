@@ -21,13 +21,3 @@ fun loadDockerSecrets(fileName: String? = null): Map<String, String> {
         emptyMap()
     }
 }
-
-/**
- * Reads a single Docker secret with the given name.
- *
- * @param name The name of the secret.
- * @return The value of the secret.
- *
- * @author Jan Müller
- */
-fun readDockerSecret(name: String): String? = loadDockerSecrets()[name]
