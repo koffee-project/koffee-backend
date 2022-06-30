@@ -97,7 +97,8 @@ class MongoUserRepositoryTests {
             mongoUserRepository.hasUserWithId(testUser.id) shouldBe true
             val funding = Transaction.Funding(value = 42.0)
             mongoUserRepository.addTransaction(testUser.id, funding)
-            val purchase = Transaction.Purchase(value = -42.0, amount = 1, itemId = testItem.id, itemName = testItem.name)
+            val purchase =
+                Transaction.Purchase(value = -42.0, amount = 1, itemId = testItem.id, itemName = testItem.name)
             mongoUserRepository.addTransaction(testUser.id, purchase)
             val refund = Transaction.Refund(value = 42.0, amount = 1, itemId = testItem.id, itemName = testItem.name)
             mongoUserRepository.addTransaction(testUser.id, refund)

@@ -105,7 +105,9 @@ class DefaultTransactionService(
         return when {
             transaction == null -> Result.conflict(NO_REFUNDABLE_PURCHASE)
             transaction is Transaction.Refund -> Result.conflict(LAST_PURCHASE_ALREADY_REFUNDED)
-            System.currentTimeMillis() - transaction.timestamp >= REFUND_INTERVAL_MILLIS -> Result.conflict(REFUND_EXPIRED)
+            System.currentTimeMillis() - transaction.timestamp >= REFUND_INTERVAL_MILLIS -> Result.conflict(
+                REFUND_EXPIRED
+            )
             transaction is Transaction.Purchase -> Result.ok(transaction.asRefund())
             else -> Result.conflict(REFUND_NOT_POSSIBLE)
         }

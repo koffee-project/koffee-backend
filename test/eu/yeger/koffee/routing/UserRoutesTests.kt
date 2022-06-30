@@ -84,17 +84,18 @@ class UserRoutesTests {
     }
 
     @Test
-    fun `verify that POST-users-$id-purchases-refund does not require authentication`() = withTestApplication(testModule) {
-        // When route is accessed
-        val call = handleRequest {
-            method = HttpMethod.Post
-            uri = "/users/admin/purchases/refund"
-        }
+    fun `verify that POST-users-$id-purchases-refund does not require authentication`() =
+        withTestApplication(testModule) {
+            // When route is accessed
+            val call = handleRequest {
+                method = HttpMethod.Post
+                uri = "/users/admin/purchases/refund"
+            }
 
-        // Then the request is accepted
-        call.requestHandled shouldBe true
-        call.response.status() shouldBe HttpStatusCode.Conflict
-    }
+            // Then the request is accepted
+            call.requestHandled shouldBe true
+            call.response.status() shouldBe HttpStatusCode.Conflict
+        }
 
     @Test
     fun `verify that POST-users does require authentication`() = withTestApplication(testModule) {

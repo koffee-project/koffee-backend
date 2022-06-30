@@ -102,7 +102,7 @@ class DefaultUserService(
             name.isNotBlank() &&
             (!isAdmin || password?.isNotBlank() ?: false) &&
             password?.isNotBlank() ?: true &&
-            password?.length ?: 8 >= 8
+            (password?.length ?: 8) >= 8
     }
 
     private fun Credentials.validateForUser(user: User): Result<User> {

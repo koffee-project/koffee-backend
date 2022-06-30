@@ -28,7 +28,10 @@ class ProfileImageServiceTests {
     fun `verify that images can be created`() {
         runBlocking {
             // When profile image is created
-            profileImageService.saveProfileImageForUser(testUser.id, testImageString).status shouldBe HttpStatusCode.Created
+            profileImageService.saveProfileImageForUser(
+                testUser.id,
+                testImageString
+            ).status shouldBe HttpStatusCode.Created
 
             // Then profile image can be retrieved
             val imageResult = profileImageService.getProfileImageByUserId(testUser.id) as Result.Success
@@ -58,7 +61,10 @@ class ProfileImageServiceTests {
     fun `verify that images can be deleted`() {
         runBlocking {
             // When profile image is deleted
-            profileImageService.saveProfileImageForUser(testUser.id, testImageString).status shouldBe HttpStatusCode.Created
+            profileImageService.saveProfileImageForUser(
+                testUser.id,
+                testImageString
+            ).status shouldBe HttpStatusCode.Created
             profileImageService.deleteProfileImageByUserId(testUser.id).status shouldBe HttpStatusCode.OK
 
             // Then profile image cannot be retrieved
